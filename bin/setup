@@ -19,7 +19,9 @@ FileUtils.chdir APP_ROOT do
 
   # Install system dependencies if Homebrew is installed
   if command_available?("brew")
-    system("brew bundle check --no-lock --no-upgrade") || system!("brew bundle --no-upgrade --no-lock")
+    # Older/newer versions of brew-bundle may not support --no-lock/--no-upgrade flags.
+    # Use a conservative check/install which works across environments.
+    system("brew bundle check") || system!("brew bundle install")
   end
 
   puts "== Installing dependencies =="
@@ -29,15 +31,18 @@ FileUtils.chdir APP_ROOT do
   # Install foreman system wide
   system! "gem install foreman"
 
-  # Install yarn system wide
-  system! "npm install -g yarn" unless command_available?("yarn")
+  # Skip JS/Yarn steps when no package.json is present to make bin/setup safe for CI
+  # Only run JS steps if this project has a package.json
+  if File.exist?(File.join(APP_ROOT, "package.json"))
+    system! "npm install -g yarn" unless command_available?("yarn")
+    system("bin/yarn") || warn("bin/yarn failed — ensure Yarn is installed or package.json is valid")
 
-  # Install JavaScript dependencies if using Yarn
-  system("bin/yarn")
-
-  puts "\n== Compiling CSS & JS =="
-  system! "bin/yarn run build"
-  system! "bin/yarn run build:css"
+    puts "\n== Compiling CSS & JS =="
+    system! "bin/yarn run build"
+    system! "bin/yarn run build:css"
+  else
+    puts "\n== Skipping JS steps: no package.json found =="
+  end
 
   # puts "\n== Copying sample files =="
   # unless File.exist?("config/database.yml")
