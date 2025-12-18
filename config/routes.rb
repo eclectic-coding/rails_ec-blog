@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resource :session
+  resources :passwords, param: :token
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   root to: 'static#home'
