@@ -26,6 +26,17 @@ Layout/EmptyLineBetweenDefs:
   Enabled: true
   NumberOfEmptyLines: 1
 
+Layout/AccessModifierIndentation:
+  Enabled: true
+  # Set to 'outdent' to align access modifiers with the class/module keywords
+  # Set to 'indent' to align them with the methods they modify (the Rails style)
+  EnforcedStyle: indent
+
+Layout/IndentationConsistency:
+  Enabled: true
+  # 'normal' style ensures consistent indentation across all sections (public/private/protected)
+  EnforcedStyle: normal
+
 Layout/IndentationWidth:
   Width: 2
 

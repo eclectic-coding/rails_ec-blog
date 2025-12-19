@@ -95,4 +95,3 @@ RSpec.describe "Passwords", type: :request do
     end
   end
 end
-

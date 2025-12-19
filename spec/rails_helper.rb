@@ -2,6 +2,8 @@ if ENV["RAILS_ENV"] ||= "test"
   require "simplecov"
   SimpleCov.start "rails" do
     add_filter "/lib/"
+    add_filter "/app/channels/"
+    add_filter "/app/jobs/"
   end
 end
 
