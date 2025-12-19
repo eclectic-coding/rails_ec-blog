@@ -78,12 +78,6 @@ jobs:
           - 5432:5432
         options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
-      # redis:
-      #   image: valkey/valkey:8
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-
     steps:
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev
@@ -95,6 +89,44 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+      # Add Node + JS deps + build so asset pipeline is available in CI tests
+      - name: Install Node.js 22 (NodeSource)
+        run: |
+          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+
+      - name: Cache node modules and npm/yarn caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.npm
+            ~/.cache/yarn
+          key: node-${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock', 'package-lock.json') }}
+          restore-keys: |
+            node-${{ runner.os }}-
+
+      - name: Install JS dependencies
+        # Use yarn if present, fallback to npm ci
+        run: |
+          if [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile
+          elif [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "No JS lockfile found; skipping JS dependency install"
+          fi
+
+      - name: Build / Precompile assets
+        env:
+          RAILS_ENV: test
+        run: |
+          # If the project uses importmap/asset pipeline, precompile assets for test env
+          if bin/rails -v >/dev/null 2>&1; then
+            RAILS_ENV=test bin/rails assets:precompile
+          else
+            echo "Rails binstub not found; skipping assets precompile"
+          fi
 
       - name: Run tests
         env:
