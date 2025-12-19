@@ -5,10 +5,12 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <% if authenticated? && Current.is_admin? %>
+        <ul class="navbar-nav ms-auto">
           <li class="nav-item"><%= link_to "Login", "#", class: "nav-link" %></li>
           <li class="nav-item"><%= link_to "Sign Up", "#", class: "nav-link" %></li>
-      </ul>
+        </ul>
+      <% end %>
     </div>
   </div>
 </nav>
