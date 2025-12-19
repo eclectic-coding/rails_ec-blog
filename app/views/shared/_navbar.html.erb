@@ -5,10 +5,14 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><%= link_to "Login", "#", class: "nav-link" %></li>
-          <li class="nav-item"><%= link_to "Sign Up", "#", class: "nav-link" %></li>
-      </ul>
+      <% if authenticated? %>
+        <ul class="navbar-nav ms-auto">
+          <% if admin? %>
+            <li class="nav-item"><%= link_to "Admin", admin_dashboard_show_path, class: "nav-link" %></li>
+          <% end %>
+          <li class="nav-item"><%= link_to "Sign Out", session_path, method: :delete, class: "nav-link" %></li>
+        </ul>
+      <% end %>
     </div>
   </div>
 </nav>

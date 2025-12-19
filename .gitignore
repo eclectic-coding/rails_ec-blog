@@ -132,3 +132,6 @@ build-iPhoneSimulator/
 n
 
 config/certs/*
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
