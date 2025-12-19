@@ -4,7 +4,7 @@ module Authentication
   included do
     before_action :require_authentication
     helper_method :authenticated?
-    helper_method :admin_only!
+    helper_method :current_user, :admin?
   end
 
   class_methods do
@@ -16,13 +16,21 @@ module Authentication
   private
 
     def admin_only!
-      unless Current.user&.admin?
+      unless admin?
         redirect_to root_path, alert: "You are not authorized to access this page."
       end
     end
 
     def authenticated?
-      resume_session
+      !!resume_session
+    end
+
+    def admin?
+      Current.user&.admin?
+    end
+
+    def current_user
+      Current.user
     end
 
     def require_authentication
