@@ -17,6 +17,7 @@ require "capybara/rails"
 require "capybara/rspec"
 require "fuubar"
 require "webmock/rspec"
+require "factory_bot_rails"
 
 Rails.root.glob("spec/support/**/*.rb").sort.each { |f| require f }
 
@@ -38,9 +39,6 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.include FactoryBot::Syntax::Methods
   # config.include Warden::Test::Helpers # helpers for system tests
-  # config.include Devise::Test::IntegrationHelpers, type: :request
-  # config.include Devise::Test::IntegrationHelpers, type: :component
-  # config.include Devise::Test::ControllerHelpers, type: :view
   config.include Turbo::FramesHelper, type: :system
   config.include Turbo::StreamsHelper, type: :system
 
