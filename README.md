@@ -10,6 +10,3 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
-
-* Database initialization
-
