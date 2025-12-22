@@ -36,7 +36,16 @@
 
                       <td><%= article.title %></td>
                       <td><%= article.content %></td>
-                      <td><%= article.published_at %></td>
+                      <td>
+                        <% if article.published_date.present? %>
+                          <%= article.published_date.to_s %>
+                          <% if article.published_time.present? %>
+                            &nbsp;at&nbsp;<%= article.published_time.strftime('%H:%M') %>
+                          <% end %>
+                        <% else %>
+                          —
+                        <% end %>
+                      </td>
                       <td><%= article.is_published %></td>
                       <td><%= article.user %></td>
 

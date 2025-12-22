@@ -11,7 +11,14 @@
 
   <div>
     <strong>Published at:</strong>
-    <%= article.published_at %>
+    <% if article.published_date.present? %>
+      <%= article.published_date.to_s %>
+      <% if article.published_time.present? %>
+        &nbsp;at&nbsp;<%= article.published_time.strftime('%H:%M') %>
+      <% end %>
+    <% else %>
+      —
+    <% end %>
   </div>
 
   <div>
