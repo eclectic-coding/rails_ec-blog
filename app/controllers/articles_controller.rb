@@ -1,16 +1,15 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy ]
+  before_action :set_article, only: %i[ edit update destroy ]
+  before_action :set_visible_article, only: %i[ show ]
 
-  # allow unauthenticated users to view index and show; also skip authentication for admin actions
-  # so admin_only! can block unauthenticated users without redirecting them to the sign-in page.
   allow_unauthenticated_access only: %i[index show new create edit update destroy]
 
-  # restrict creation, editing, and deletion to admin users
   before_action :admin_only!, only: %i[new create edit update destroy]
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.all
+    resume_session
+    @articles = Article.visible_to(current_user)
   end
 
   # GET /articles/1 or /articles/1.json
@@ -65,13 +64,25 @@ class ArticlesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_article
-      @article = Article.find(params.require(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def article_params
-      params.require(:article).permit(:title, :content, :published_at, :is_published, :user_id)
+  def set_article
+    @article = Article.find(params.require(:id))
+  end
+
+  def set_visible_article
+    begin
+      resume_session
+      @article = Article.visible_to(current_user).find(params.require(:id))
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "Article not found." }
+        format.json { head :not_found }
+      end
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def article_params
+    params.require(:article).permit(:title, :content, :published_at, :is_published, :user_id)
+  end
 end

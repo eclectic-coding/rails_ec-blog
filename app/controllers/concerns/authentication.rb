@@ -29,6 +29,8 @@ module Authentication
   end
 
   def admin?
+    # Ensure we try to restore the session from the signed cookie before checking admin
+    resume_session
     Current.user&.admin?
   end
 

@@ -13,16 +13,14 @@ require 'rails_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
 RSpec.describe "/articles", type: :request do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Article. As you add validations to Article, be sure to
-  # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    # Use FactoryBot to provide valid article attributes and ensure a user exists
+    attributes_for(:article).merge(user_id: create(:user).id, is_published: true)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    # Missing required title (Article validates presence of title)
+    attributes_for(:article).merge(title: nil, user_id: create(:user).id)
   }
 
   describe "GET /index" do
@@ -31,12 +29,46 @@ RSpec.describe "/articles", type: :request do
       get articles_url
       expect(response).to be_successful
     end
+
+    it "shows only published articles to unauthenticated users" do
+      published = Article.create! valid_attributes.merge(title: "Published", is_published: true)
+      draft = Article.create! valid_attributes.merge(title: "Draft", is_published: false)
+
+      get articles_url
+      expect(response).to be_successful
+      expect(response.body).to include("Published")
+      expect(response.body).not_to include("Draft")
+    end
+
+    it "shows all articles to admin users" do
+      published = Article.create! valid_attributes.merge(title: "Published", is_published: true)
+      draft = Article.create! valid_attributes.merge(title: "Draft", is_published: false)
+
+      sign_in_as(create(:user))
+      get articles_url
+      expect(response).to be_successful
+      expect(response.body).to include("Published")
+      expect(response.body).to include("Draft")
+    end
   end
 
   describe "GET /show" do
     it "renders a successful response" do
       article = Article.create! valid_attributes
       get article_url(article)
+      expect(response).to be_successful
+    end
+
+    it "blocks unpublished articles for non-admins" do
+      draft = Article.create! valid_attributes.merge(title: "DraftShow", is_published: false)
+      get article_url(draft)
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "allows admins to view unpublished articles" do
+      draft = Article.create! valid_attributes.merge(title: "DraftShow", is_published: false)
+      sign_in_as(create(:user))
+      get article_url(draft)
       expect(response).to be_successful
     end
   end
@@ -51,6 +83,7 @@ RSpec.describe "/articles", type: :request do
   describe "GET /edit" do
     it "renders a successful response" do
       article = Article.create! valid_attributes
+      sign_in_as(create(:user))
       get edit_article_url(article)
       expect(response).to be_successful
     end
@@ -59,12 +92,14 @@ RSpec.describe "/articles", type: :request do
   describe "POST /create" do
     context "with valid parameters" do
       it "creates a new Article" do
+        sign_in_as(create(:user))
         expect {
           post articles_url, params: { article: valid_attributes }
         }.to change(Article, :count).by(1)
       end
 
       it "redirects to the created article" do
+        sign_in_as(create(:user))
         post articles_url, params: { article: valid_attributes }
         expect(response).to redirect_to(article_url(Article.last))
       end
@@ -72,12 +107,14 @@ RSpec.describe "/articles", type: :request do
 
     context "with invalid parameters" do
       it "does not create a new Article" do
+        sign_in_as(create(:user))
         expect {
           post articles_url, params: { article: invalid_attributes }
         }.to change(Article, :count).by(0)
       end
 
-      it "renders a response with 422 status (i.e. to display the 'new' template)" do
+      it "renders a response with 422 status (i.e. to display the 'new' template)'" do
+        sign_in_as(create(:user))
         post articles_url, params: { article: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -87,18 +124,26 @@ RSpec.describe "/articles", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          title: "Updated Title",
+          content: "Updated content",
+          published_at: Time.current,
+          is_published: true
+        }
       }
 
       it "updates the requested article" do
         article = Article.create! valid_attributes
+        sign_in_as(create(:user))
         patch article_url(article), params: { article: new_attributes }
         article.reload
-        skip("Add assertions for updated state")
+        expect(article.title).to eq(new_attributes[:title])
+        expect(article.content).to eq(new_attributes[:content])
       end
 
       it "redirects to the article" do
         article = Article.create! valid_attributes
+        sign_in_as(create(:user))
         patch article_url(article), params: { article: new_attributes }
         article.reload
         expect(response).to redirect_to(article_url(article))
@@ -108,6 +153,7 @@ RSpec.describe "/articles", type: :request do
     context "with invalid parameters" do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
         article = Article.create! valid_attributes
+        sign_in_as(create(:user))
         patch article_url(article), params: { article: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_content)
       end
@@ -117,6 +163,7 @@ RSpec.describe "/articles", type: :request do
   describe "DELETE /destroy" do
     it "destroys the requested article" do
       article = Article.create! valid_attributes
+      sign_in_as(create(:user))
       expect {
         delete article_url(article)
       }.to change(Article, :count).by(-1)
@@ -124,6 +171,7 @@ RSpec.describe "/articles", type: :request do
 
     it "redirects to the articles list" do
       article = Article.create! valid_attributes
+      sign_in_as(create(:user))
       delete article_url(article)
       expect(response).to redirect_to(articles_url)
     end

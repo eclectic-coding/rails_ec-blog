@@ -18,4 +18,30 @@
 
 class Article < ApplicationRecord
   belongs_to :user
+
+  validates :title, presence: true
+
+  scope :published, -> { where(is_published: true) }
+  scope :draft, -> { where(is_published: false) }
+  scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC")) }
+
+  def self.visible_to(user)
+    if user&.admin?
+      all.recent
+    else
+      published.recent
+    end
+  end
+
+  before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
+
+  private
+
+  def autoset_published_at
+    if is_published?
+      self.published_at = Time.current if published_at.blank?
+    else
+      self.published_at = nil
+    end
+  end
 end

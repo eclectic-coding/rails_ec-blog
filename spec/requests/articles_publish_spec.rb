@@ -48,4 +48,3 @@ RSpec.describe "Article publishing", type: :request do
     expect(response).to redirect_to(root_path)
   end
 end
-
