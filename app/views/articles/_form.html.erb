@@ -1,0 +1,54 @@
+<%= form_with(model: article) do |form| %>
+  <% if article.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
+
+      <ul>
+      <% article.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :title, class: 'form-label' %>
+      <%= form.text_field :title, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :content, class: 'form-label' %>
+      <%= form.textarea :content, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :published_at, class: 'form-label' %>
+      <%= form.datetime_field :published_at, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :is_published, class: 'form-label' %>
+      <%= form.checkbox :is_published, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <%= form.label :user_id, class: 'form-label' %>
+      <%= form.text_field :user_id, class: 'form-control' %>
+    </div>
+
+  <div class="mb-3">
+    <% if article.persisted? %>
+      <div class="float-end">
+        <%= link_to 'Destroy', article, method: :delete, class: "text-danger", data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
+
+    <%= form.submit class: 'btn btn-primary' %>
+
+    <% if article.persisted? %>
+      <%= link_to "Cancel", article, class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", articles_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>
