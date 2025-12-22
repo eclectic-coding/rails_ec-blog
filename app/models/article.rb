@@ -5,7 +5,7 @@
 #  id           :integer          not null, primary key
 #  title        :string
 #  content      :text
-#  published_at :datetime
+#  published_at :date
 #  is_published :boolean          default(FALSE)
 #  user_id      :integer          not null
 #  created_at   :datetime         not null
@@ -39,7 +39,8 @@ class Article < ApplicationRecord
 
   def autoset_published_at
     if is_published?
-      self.published_at = Time.current if published_at.blank?
+      # For a date column we should set a Date (no time component)
+      self.published_at = Date.current if published_at.blank?
     else
       self.published_at = nil
     end
