@@ -1,11 +1,11 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ edit update destroy set_owner ]
+  before_action :set_article, only: %i[ edit update destroy ]
   before_action :set_visible_article, only: %i[ show ]
 
   allow_unauthenticated_access only: %i[index show new create edit update destroy]
 
-  # Protect create/edit/update/destroy and the owner-change endpoint for admins only
-  before_action :admin_only!, only: %i[new create edit update destroy set_owner]
+  # Protect create/edit/update/destroy for admins only (unchanged)
+  before_action :admin_only!, only: %i[new create edit update destroy]
 
   # GET /articles or /articles.json
   def index
@@ -28,10 +28,15 @@ class ArticlesController < ApplicationController
 
   # POST /articles or /articles.json
   def create
+    resume_session
+
     @article = Article.new(article_params)
-    # If the current user is not an admin, force ownership to the current_user to prevent tampering.
     if respond_to?(:current_user) && current_user.present?
-      @article.user = current_user unless current_user.admin?
+      @article.user_id = current_user.id
+    elsif params.dig(:article, :user_id).present?
+      @article.user_id = params[:article][:user_id].to_i
+    else
+      @article.user_id = User.first&.id
     end
 
     respond_to do |format|
@@ -39,20 +44,11 @@ class ArticlesController < ApplicationController
         format.html { redirect_to @article, notice: "Article was successfully created." }
         format.json { render :show, status: :created, location: @article }
       else
-        Rails.logger.debug "Article save failed: #{ @article.errors.full_messages.join(', ') } | params: #{article_params.inspect} | current_user: #{current_user&.id} (admin: #{current_user&.admin?})"
+        # Log minimal error for server-side troubleshooting
+        Rails.logger.debug "Article save failed: #{ @article.errors.full_messages.join(', ') }"
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @article.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # PATCH /articles/1/set_owner
-  # Admin-only endpoint to change the ownership of an article
-  def set_owner
-    if @article.update(owner_params)
-      redirect_to @article, notice: "Article owner updated."
-    else
-      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -99,16 +95,10 @@ class ArticlesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def article_params
-    # Ensure we attempt to restore the session before checking admin privileges
     resume_session
 
-    # permit user_id here for the request; create/update will enforce ownership for non-admins
-    permitted = [:title, :content, :published_at, :is_published, :user_id]
+    permitted = [:title, :content, :published_at, :is_published]
 
     params.require(:article).permit(permitted)
-  end
-
-  def owner_params
-    params.require(:article).permit(:user_id)
   end
 end
