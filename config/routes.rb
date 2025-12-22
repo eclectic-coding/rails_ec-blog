@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :articles
+  resources :articles do
+    member do
+      patch :set_owner
+    end
+  end
   resource :session
   resources :passwords, param: :token
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?

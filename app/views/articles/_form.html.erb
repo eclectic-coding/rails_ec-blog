@@ -26,15 +26,22 @@
       <%= form.datetime_field :published_at, class: 'form-control' %>
     </div>
 
-  <div class="mb-3">
-    <%= form.label :is_published, class: 'form-label' %>
-      <%= form.checkbox :is_published, class: 'form-control' %>
-    </div>
+  <div class="mb-3 form-check">
+    <%= form.check_box :is_published, class: 'form-check-input' %>
+    <%= form.label :is_published, class: 'form-check-label ms-2' %>
+  </div>
 
-  <div class="mb-3">
-    <%= form.label :user_id, class: 'form-label' %>
-      <%= form.text_field :user_id, class: 'form-control' %>
+  <%# Ownership: admins must use the admin-only owner endpoint to change ownership.
+      For non-admins, submit the current_user id as a hidden field so the server can assign it. %>
+  <% if respond_to?(:current_user) && current_user&.admin? %>
+    <div class="mb-3">
+      <label class="form-label">Owner</label>
+      <div class="form-control-plaintext"><%= article.user&.email_address || "Unassigned" %></div>
+      <small class="form-text text-muted">To change owner, use the admin owner-change action.</small>
     </div>
+  <% else %>
+    <%= form.hidden_field :user_id, value: current_user&.id %>
+  <% end %>
 
   <div class="mb-3">
     <% if article.persisted? %>
