@@ -2,8 +2,10 @@
   <%= link_to articles_path, class: 'btn btn-default' do %>
     All Articles
   <% end %>
+  <% if admin? %>
   <%= link_to edit_article_path(@article), class: 'btn btn-primary' do %>
     Edit
+  <% end %>
   <% end %>
   <h1>Show article</h1>
 </div>

@@ -1,14 +1,13 @@
-
-
-
 <div class="row">
   <div class="col-sm-6">
     <h1>Articles</h1>
   </div>
 
   <div class="col-sm-6 text-end">
+  <% if admin? %>
   <%= link_to new_article_path, class: 'btn btn-primary' do %>
     Add New Article
+  <% end %>
   <% end %>
   </div>
 </div>
@@ -17,33 +16,41 @@
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-    
+
 
             <th>Title</th>
             <th>Content</th>
             <th>Published at</th>
             <th>Is published</th>
             <th>User</th>
-            
+
           <th></th>
-        
+
       </tr>
     </thead>
 
     <tbody>
       <% @articles.each do |article| %>
         <%= content_tag :tr, id: dom_id(article), class: dom_class(article) do %>
-          
+
 
                       <td><%= article.title %></td>
                       <td><%= article.content %></td>
                       <td><%= article.published_at %></td>
                       <td><%= article.is_published %></td>
                       <td><%= article.user %></td>
-          
-          
-            <td><%= link_to 'Show', article %></td>
-          
+
+
+            <td>
+              <%= link_to 'Show', article %>
+              <% if admin? %>
+                |
+                <%= link_to 'Edit', edit_article_path(article) %>
+                |
+                <%= link_to 'Destroy', article, method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </td>
+
         <% end %>
       <% end %>
     </tbody>

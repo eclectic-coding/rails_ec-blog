@@ -1,6 +1,13 @@
 class ArticlesController < ApplicationController
   before_action :set_article, only: %i[ show edit update destroy ]
 
+  # allow unauthenticated users to view index and show; also skip authentication for admin actions
+  # so admin_only! can block unauthenticated users without redirecting them to the sign-in page.
+  allow_unauthenticated_access only: %i[index show new create edit update destroy]
+
+  # restrict creation, editing, and deletion to admin users
+  before_action :admin_only!, only: %i[new create edit update destroy]
+
   # GET /articles or /articles.json
   def index
     @articles = Article.all
@@ -60,11 +67,11 @@ class ArticlesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_article
-      @article = Article.find(params.expect(:id))
+      @article = Article.find(params.require(:id))
     end
 
     # Only allow a list of trusted parameters through.
     def article_params
-      params.expect(article: [ :title, :content, :published_at, :is_published, :user_id ])
+      params.require(:article).permit(:title, :content, :published_at, :is_published, :user_id)
     end
 end
