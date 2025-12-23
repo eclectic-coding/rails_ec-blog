@@ -10,8 +10,8 @@
           <% if admin? %>
             <li class="nav-item"><%= link_to "Admin", admin_dashboard_show_path, class: "nav-link" %></li>
           <% end %>
-          <li class="nav-item">
-            <%= button_to "Sign Out", session_path, method: :delete, form: { class: 'd-inline' }, class: 'nav-link btn btn-link p-0' %>
+          <li class="nav-item d-flex align-items-center">
+              <%= button_to "Sign Out", session_path, method: :delete, class: 'nav-link btn btn-link p-0', form: { class: 'd-inline' } %>
           </li>
         </ul>
       <% end %>
