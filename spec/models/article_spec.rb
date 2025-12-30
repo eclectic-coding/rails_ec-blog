@@ -2,7 +2,6 @@ require "rails_helper"
 require "active_support/testing/time_helpers"
 
 RSpec.describe Article, type: :model do
-
   describe "normalize_published_at" do
     include ActiveSupport::Testing::TimeHelpers
 
@@ -127,7 +126,6 @@ RSpec.describe Article, type: :model do
 
       expect(article.published_at).to be_nil
     end
-
   end
 
   describe "image_type_and_size" do
