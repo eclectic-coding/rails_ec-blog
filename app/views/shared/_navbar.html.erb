@@ -1,18 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
-    <%= link_to "Testapp", root_path, class: "navbar-brand" %>
+    <%= link_to app_title, root_path, class: "navbar-brand" %>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <% if authenticated? %>
-        <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><%= link_to "Articles", articles_path, class: "nav-link" %></li>
+        <% if authenticated? %>
           <% if admin? %>
             <li class="nav-item"><%= link_to "Admin", admin_dashboard_show_path, class: "nav-link" %></li>
           <% end %>
-          <li class="nav-item"><%= link_to "Sign Out", session_path, method: :delete, class: "nav-link" %></li>
-        </ul>
-      <% end %>
+          <li class="nav-item d-flex align-items-center">
+            <%= button_to "Sign Out", session_path, method: :delete, class: 'nav-link btn btn-link p-0', form: { class: 'd-inline' } %>
+          </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </nav>

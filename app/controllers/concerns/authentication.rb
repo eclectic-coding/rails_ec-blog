@@ -17,7 +17,10 @@ module Authentication
 
   def admin_only!
     unless admin?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "You are not authorized to access this page." }
+        format.json { head :forbidden }
+      end
     end
   end
 
@@ -26,6 +29,8 @@ module Authentication
   end
 
   def admin?
+    # Ensure we try to restore the session from the signed cookie before checking admin
+    resume_session
     Current.user&.admin?
   end
 

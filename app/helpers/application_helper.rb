@@ -13,4 +13,13 @@ module ApplicationHelper
       flash_type.to_s
     end
   end
+
+  # Returns a friendly application title, e.g. "RailsBlog" -> "Rails Blog"
+  def app_title
+    Rails.application.class.module_parent_name.to_s
+      .gsub(/([a-z\d])([A-Z])/, '\1 \2')
+      .humanize
+      .titleize
+      .presence || "Application"
+  end
 end
