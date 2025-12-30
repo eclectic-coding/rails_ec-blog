@@ -100,7 +100,7 @@ class ArticlesController < ApplicationController
   def article_params
     resume_session
 
-    permitted = [:title, :content, :published_at, :is_published]
+    permitted = [:title, :content, :published_at, :is_published, :image]
 
     params.require(:article).permit(permitted)
   end

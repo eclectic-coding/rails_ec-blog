@@ -20,7 +20,13 @@
 class Article < ApplicationRecord
   belongs_to :user
 
+  # Attach a single image via Active Storage
+  has_one_attached :image
+
   validates :title, presence: true
+
+  # Validate image type and size
+  validate :image_type_and_size
 
   scope :published, -> { where(is_published: true) }
   scope :draft, -> { where(is_published: false) }
@@ -71,6 +77,20 @@ class Article < ApplicationRecord
       self.published_at = Time.current if published_at.blank?
     else
       self.published_at = nil
+    end
+  end
+
+  # Simple Active Storage validations: size and content type
+  def image_type_and_size
+    return unless image.attached?
+
+    allowed = %w[image/jpeg image/png image/webp image/gif]
+    unless image.content_type.in?(allowed)
+      errors.add(:image, "must be a JPEG, PNG, WEBP or GIF")
+    end
+
+    if image.blob.byte_size > 5.megabytes
+      errors.add(:image, "size must be less than 5MB")
     end
   end
 end

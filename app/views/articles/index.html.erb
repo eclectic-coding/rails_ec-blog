@@ -19,6 +19,7 @@
 
 
             <th>Title</th>
+            <th>Image</th>
             <th>Content</th>
             <th>Published at</th>
             <th>Is published</th>
@@ -35,6 +36,11 @@
 
 
                       <td><%= article.title %></td>
+                      <td>
+                        <% if article.image.attached? %>
+                          <%= link_to image_tag(url_for(article.image.variant(resize_to_fill: [150, 100])), class: 'img-thumbnail'), article_path(article) %>
+                        <% end %>
+                      </td>
                       <td><%= article.content %></td>
                       <td>
                         <% if article.published_at.present? %>

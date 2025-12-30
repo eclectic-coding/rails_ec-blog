@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Article publishing", type: :request do
-  let(:admin) { create(:user) }
+  let(:admin) { create(:user, :admin) }
 
   it "sets published_at when an admin creates a published article and guest can view it" do
     sign_in_as(admin)
