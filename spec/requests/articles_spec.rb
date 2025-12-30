@@ -71,6 +71,12 @@ RSpec.describe "/articles", type: :request do
       get new_article_url
       expect(response).to redirect_to(root_path)
     end
+
+    it "renders a successful response for authenticated admin users" do
+      sign_in_as(create(:user, :admin))
+      get new_article_url
+      expect(response).to be_successful
+    end
   end
 
   describe "GET /edit" do
@@ -98,6 +104,77 @@ RSpec.describe "/articles", type: :request do
         sign_in_as(user)
         post articles_url, params: { article: valid_attributes }
         expect(response).to redirect_to(article_url(Article.last))
+      end
+
+      it "uses provided article[user_id] when current_user is not present" do
+        # Ensure no session is active
+        sign_out
+
+        target_user = create(:user)
+
+        # Bypass admin-only before_action so we can exercise the branch
+        allow_any_instance_of(ArticlesController).to receive(:admin_only!).and_return(nil)
+
+        expect {
+          post articles_url, params: { article: valid_attributes.merge(user_id: target_user.id) }
+        }.to change(Article, :count).by(1)
+
+        expect(Article.last.user_id).to eq(target_user.id)
+      end
+
+      it "assigns the first user when no current_user and no user_id param" do
+        # Ensure no session is active
+        sign_out
+
+        first_user = create(:user)
+
+        allow_any_instance_of(ArticlesController).to receive(:admin_only!).and_return(nil)
+
+        expect {
+          post articles_url, params: { article: valid_attributes }
+        }.to change(Article, :count).by(1)
+
+        expect(Article.last.user_id).to eq(User.first.id)
+        expect(Article.last.user_id).to eq(first_user.id)
+      end
+
+      it "assigns current_user as the article's user when signed in" do
+        user = create(:user, :admin)
+        sign_in_as(user)
+
+        expect {
+          post articles_url, params: { article: valid_attributes }
+        }.to change(Article, :count).by(1)
+
+        expect(Article.last.user_id).to eq(user.id)
+      end
+
+      it "uses controller current_user when respond_to?(:current_user) is true" do
+        user = create(:user)
+
+        # Ensure no session is active so fallback doesn't accidentally pick up User.first
+        sign_out
+
+        # Bypass admin authorization
+        allow_any_instance_of(ArticlesController).to receive(:admin_only!).and_return(nil)
+
+        # Make the controller report it responds to :current_user and return our user
+        allow_any_instance_of(ArticlesController).to receive(:respond_to?).and_wrap_original do |m, *args|
+          # return true for respond_to?(:current_user) (symbol or string), otherwise fall back to original
+          if args.first.to_s == 'current_user'
+            true
+          else
+            m.call(*args)
+          end
+        end
+
+        allow_any_instance_of(ArticlesController).to receive(:current_user).and_return(user)
+
+        expect {
+          post articles_url, params: { article: valid_attributes }
+        }.to change(Article, :count).by(1)
+
+        expect(Article.last.user_id).to eq(user.id)
       end
     end
 
