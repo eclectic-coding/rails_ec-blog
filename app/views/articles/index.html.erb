@@ -37,11 +37,8 @@
                       <td><%= article.title %></td>
                       <td><%= article.content %></td>
                       <td>
-                        <% if article.published_date.present? %>
-                          <%= article.published_date.to_s %>
-                          <% if article.published_time.present? %>
-                            &nbsp;at&nbsp;<%= article.published_time.strftime('%H:%M') %>
-                          <% end %>
+                        <% if article.published_at.present? %>
+                          <%= l(article.published_at.to_date) %>
                         <% else %>
                           —
                         <% end %>
