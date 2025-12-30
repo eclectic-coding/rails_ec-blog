@@ -2,19 +2,19 @@
 #
 # Table name: articles
 #
-#  id             :integer          not null, primary key
-#  title          :string
-#  content        :text
-#  published_date :date
-#  is_published   :boolean          default(FALSE)
-#  user_id        :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  published_time :time
+#  id           :integer          not null, primary key
+#  title        :string
+#  content      :text
+#  is_published :boolean          default(FALSE)
+#  user_id      :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  published_at :datetime
 #
 # Indexes
 #
-#  index_articles_on_user_id  (user_id)
+#  index_articles_on_published_at  (published_at)
+#  index_articles_on_user_id       (user_id)
 #
 
 class Article < ApplicationRecord
@@ -24,7 +24,7 @@ class Article < ApplicationRecord
 
   scope :published, -> { where(is_published: true) }
   scope :draft, -> { where(is_published: false) }
-  scope :recent, -> { order(Arel.sql("COALESCE(published_date, created_at::date) DESC, COALESCE(published_time, created_at::time) DESC, created_at DESC")) }
+  scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC, created_at DESC")) }
 
   def to_markdown = content
 
@@ -36,59 +36,41 @@ class Article < ApplicationRecord
     end
   end
 
-  def published_at
-    return nil if published_date.nil?
-    published_date
-  end
-
-  def published_at=(value)
-    if value.nil?
-      self.published_date = nil
-      self.published_time = nil
-      return
-    end
-
-    case value
-    when String
-      # Prefer parsing Date strings for compatibility; if it contains time, parse and extract date/time
-      parsed_time = Time.zone.parse(value) rescue nil
-      if parsed_time
-        self.published_date = parsed_time.to_date
-        # set published_time only if the string contained a time component (heuristic)
-        if value.match(/\d:\d/)
-          self.published_time = parsed_time.to_time
-        end
-      else
-        self.published_date = Date.parse(value) rescue nil
-      end
-    when Date
-      self.published_date = value
-    when Time, DateTime, ActiveSupport::TimeWithZone
-      tz_time = value.in_time_zone
-      self.published_date = tz_time.to_date
-      self.published_time = tz_time.to_time
-    else
-      if value.respond_to?(:to_date)
-        self.published_date = value.to_date
-      end
-      if value.respond_to?(:to_time)
-        self.published_time = value.to_time
-      end
-    end
-  end
-
-  # When publishing/unpublishing we set/clear the date and time.
-  before_save :autoset_published_date_and_time, if: -> { will_save_change_to_is_published? }
+  # Normalize date-only inputs to beginning_of_day and autoset published_at on publish/unpublish
+  before_validation :normalize_published_at
+  before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
   private
 
-  def autoset_published_date_and_time
+  def normalize_published_at
+    return if published_at.blank?
+
+    # If a Date was assigned (or a date-like string was parsed to a Date), convert to the same date
+    # but use the current time-of-day so articles with the same date sort by time.
+    if published_at.is_a?(Date) && !published_at.is_a?(Time)
+      now = Time.current
+      self.published_at = Time.zone.local(published_at.year, published_at.month, published_at.day,
+                                          now.hour, now.min, now.sec)
+    elsif published_at.is_a?(String)
+      parsed = Time.zone.parse(published_at) rescue nil
+      if parsed
+        # If the parsed time has zeroed time components, use current time-of-day on that date
+        if parsed.hour == 0 && parsed.min == 0 && parsed.sec == 0
+          now = Time.current
+          self.published_at = Time.zone.local(parsed.year, parsed.month, parsed.day,
+                                              now.hour, now.min, now.sec)
+        else
+          self.published_at = parsed.in_time_zone
+        end
+      end
+    end
+  end
+
+  def autoset_published_at
     if is_published?
-      self.published_date = Date.current if published_date.blank?
-      self.published_time = Time.current if published_time.blank?
+      self.published_at = Time.current if published_at.blank?
     else
-      self.published_date = nil
-      self.published_time = nil
+      self.published_at = nil
     end
   end
 end

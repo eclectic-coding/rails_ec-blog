@@ -2,19 +2,19 @@
 #
 # Table name: articles
 #
-#  id             :integer          not null, primary key
-#  title          :string
-#  content        :text
-#  published_date :date
-#  is_published   :boolean          default(FALSE)
-#  user_id        :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  published_time :time
+#  id           :integer          not null, primary key
+#  title        :string
+#  content      :text
+#  is_published :boolean          default(FALSE)
+#  user_id      :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  published_at :datetime
 #
 # Indexes
 #
-#  index_articles_on_user_id  (user_id)
+#  index_articles_on_published_at  (published_at)
+#  index_articles_on_user_id       (user_id)
 #
 
 require 'rails_helper'
@@ -30,11 +30,11 @@ RSpec.describe Article, type: :model do
       article.update!(is_published: true)
 
       expect(article.published_at).not_to be_nil
-      expect(article.published_at).to be_a(Date)
+      expect(article.published_at).to be_a(ActiveSupport::TimeWithZone)
     end
 
     it 'does not overwrite an existing published_at when publishing' do
-      existing_date = 2.days.ago.to_date
+      existing_date = 2.days.ago
       article = create(:article, user: user, is_published: true, published_at: existing_date)
 
       article.update!(is_published: true)
@@ -43,7 +43,7 @@ RSpec.describe Article, type: :model do
     end
 
     it 'clears published_at when unpublishing' do
-      article = create(:article, user: user, is_published: true, published_at: Date.current)
+      article = create(:article, user: user, is_published: true, published_at: Time.zone.now)
       expect(article.published_at).not_to be_nil
 
       article.update!(is_published: false)
