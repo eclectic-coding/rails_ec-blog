@@ -39,7 +39,8 @@ RSpec.describe Article, type: :model do
 
       article.update!(is_published: true)
 
-      expect(article.published_at).to eq(existing_date)
+      # DBs may truncate fractional nanoseconds; compare within 1 second tolerance
+      expect(article.published_at).to be_within(1.second).of(existing_date)
     end
 
     it 'clears published_at when unpublishing' do
