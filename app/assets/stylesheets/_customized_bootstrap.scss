@@ -6,3 +6,8 @@
 $link-decoration: none;
 $form-label-margin-bottom: 0;
 
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap');
+
+// Override Bootstrap font variables before importing Bootstrap
+$font-family-sans-serif: "Baloo 2", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+$font-family-base: $font-family-sans-serif;

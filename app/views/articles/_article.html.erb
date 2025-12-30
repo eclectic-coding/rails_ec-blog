@@ -1,34 +1,16 @@
-<div id="<%= dom_id article %>">
-  <div>
-    <strong>Title:</strong>
-    <%= article.title %>
+<div class="card" id="<%= dom_id article %>">
+  <div class="card-body p-1">
+    <h5 class="card-title"><%= article.title %></h5>
+    <p class="card-text"><%= article.content %></p>
+    <p class="card-text">
+      <small class="text-muted">
+        Published at:
+        <% if article.published_at.present? %>
+          <%= l(article.published_at.to_date) %>
+        <% else %>
+          —
+        <% end %>
+      </small>
+    </p>
   </div>
-
-  <div>
-    <strong>Content:</strong>
-    <%= article.content %>
-  </div>
-
-  <div>
-    <strong>Published at:</strong>
-    <% if article.published_date.present? %>
-      <%= article.published_date.to_s %>
-      <% if article.published_time.present? %>
-        &nbsp;at&nbsp;<%= article.published_time.strftime('%H:%M') %>
-      <% end %>
-    <% else %>
-      —
-    <% end %>
-  </div>
-
-  <div>
-    <strong>Is published:</strong>
-    <%= article.is_published %>
-  </div>
-
-  <div>
-    <strong>User:</strong>
-    <%= article.user_id %>
-  </div>
-
 </div>

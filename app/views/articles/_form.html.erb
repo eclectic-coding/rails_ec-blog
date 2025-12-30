@@ -4,32 +4,39 @@
       <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
 
       <ul>
-      <% article.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% article.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="mb-3">
     <%= form.label :title, class: 'form-label' %>
-      <%= form.text_field :title, class: 'form-control' %>
-    </div>
+    <%= form.text_field :title, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <%= form.label :content, class: 'form-label' %>
-      <%= form.textarea :content, class: 'form-control' %>
-    </div>
-
-  <div class="mb-3">
-    <%= form.label :published_at, "Published date", class: 'form-label' %>
-      <%= form.date_field :published_at, class: 'form-control' %>
-    </div>
-
-  <div class="mb-3 form-check">
-    <%= form.check_box :is_published, class: 'form-check-input' %>
-    <%= form.label :is_published, class: 'form-check-label ms-2' %>
+    <%= form.textarea :content, class: 'form-control' %>
   </div>
+
+  <div class="row">
+    <div class="col-3 d-flex align-items-center ms-2">
+      <div class="mb-3 form-check">
+        <%= form.check_box :is_published, class: 'form-check-input' %>
+        <%= form.label :is_published, class: 'form-check-label ms-2' %>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="mb-3">
+        <%= form.label :published_at, "Published date", class: 'form-label' %>
+        <%= form.date_field :published_at, class: 'form-control' %>
+      </div>
+    </div>
+  </div>
+
 
   <div class="mb-3">
     <% if article.persisted? %>
