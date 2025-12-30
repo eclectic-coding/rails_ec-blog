@@ -14,7 +14,7 @@
   <dt>Title:</dt>
   <dd><%= @article.title %></dd>
   <dt>Content:</dt>
-  <dd><%= @article.content %></dd>
+  <dd><%= Commonmarker.to_html(@article.content).html_safe %></dd>
   <dt>Published at:</dt>
   <dd>
     <% if @article.published_date.present? %>

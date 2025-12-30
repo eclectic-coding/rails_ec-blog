@@ -5,16 +5,17 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <% if authenticated? %>
-        <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><%= link_to "Articles", articles_path, class: "nav-link" %></li>
+        <% if authenticated? %>
           <% if admin? %>
             <li class="nav-item"><%= link_to "Admin", admin_dashboard_show_path, class: "nav-link" %></li>
           <% end %>
           <li class="nav-item d-flex align-items-center">
-              <%= button_to "Sign Out", session_path, method: :delete, class: 'nav-link btn btn-link p-0', form: { class: 'd-inline' } %>
+            <%= button_to "Sign Out", session_path, method: :delete, class: 'nav-link btn btn-link p-0', form: { class: 'd-inline' } %>
           </li>
-        </ul>
-      <% end %>
+        <% end %>
+      </ul>
     </div>
   </div>
 </nav>

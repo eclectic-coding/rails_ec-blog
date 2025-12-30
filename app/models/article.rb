@@ -26,6 +26,8 @@ class Article < ApplicationRecord
   scope :draft, -> { where(is_published: false) }
   scope :recent, -> { order(Arel.sql("COALESCE(published_date, created_at::date) DESC, COALESCE(published_time, created_at::time) DESC, created_at DESC")) }
 
+  def to_markdown = content
+
   def self.visible_to(user)
     if user&.admin?
       all.recent

@@ -4,7 +4,6 @@ class ArticlesController < ApplicationController
 
   allow_unauthenticated_access only: %i[index show new create edit update destroy]
 
-  # Protect create/edit/update/destroy for admins only (unchanged)
   before_action :admin_only!, only: %i[new create edit update destroy]
 
   # GET /articles or /articles.json
@@ -15,6 +14,10 @@ class ArticlesController < ApplicationController
 
   # GET /articles/1 or /articles/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.md { render markdown: @article }
+    end
   end
 
   # GET /articles/new
