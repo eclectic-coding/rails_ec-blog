@@ -69,6 +69,11 @@ class Article < ApplicationRecord
           self.published_at = parsed.in_time_zone
         end
       end
+    elsif published_at.respond_to?(:hour) && published_at.hour == 0 && published_at.min == 0 && published_at.sec == 0
+      # Handle values that were typecast to Time/TimeWithZone at midnight (e.g., assigning a Date to a datetime column).
+      now = Time.current
+      self.published_at = Time.zone.local(published_at.year, published_at.month, published_at.day,
+                                          now.hour, now.min, now.sec)
     end
   end
 
