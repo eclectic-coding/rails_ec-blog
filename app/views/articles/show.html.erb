@@ -14,7 +14,10 @@
   <dt>Title:</dt>
   <dd><%= @article.title %></dd>
   <dt>Content:</dt>
-  <dd><%= Commonmarker.to_html(@article.content).html_safe %></dd>
+  <dd><%= sanitize(Commonmarker.to_html(@article.content),
+                   tags: %w[p br strong em a ul ol li code pre],
+                   attributes: %w[href title]) %>
+  </dd>
   <dt>Published at:</dt>
   <dd>
     <% if @article.published_date.present? %>
