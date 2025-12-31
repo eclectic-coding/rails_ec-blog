@@ -9,17 +9,11 @@
   padding-left: 8px;
 }
 
-// Prefer Bootstrap 5 utilities for layout (d-flex, gap-*, flex-grow-1, flex-shrink-0)
-// Keep only minimal custom rules so we don't duplicate Bootstrap defaults.
-
-// Allow the file input to shrink properly inside a flex container
 .file-input-with-preview .file-input {
   min-width: 0; // allow the input to shrink in flexbox when needed
 }
 
-// Minimal thumbnail styling: rely on Bootstrap 5 where possible
 .article-thumb {
-  /* Keep the thumbnail close to typical Bootstrap input height; adjust if your theme differs */
   height: 38px;
   width: auto;
   min-width: 38px;

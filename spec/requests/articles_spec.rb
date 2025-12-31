@@ -225,6 +225,49 @@ RSpec.describe "/articles", type: :request do
         article.reload
         expect(response).to redirect_to(article_url(article))
       end
+
+      it "removes the existing image when remove_image is present and no new image uploaded" do
+        article = create(:article, **valid_attributes.merge(user: create(:user)))
+        sign_in_as(create(:user, :admin))
+
+        expect(article.image.attached?).to be true
+
+        patch article_url(article), params: { article: { remove_image: '1', title: article.title } }
+
+        article.reload
+        expect(article.image.attached?).to be false
+        expect(response).to redirect_to(article_url(article))
+      end
+
+      it "keeps/replaces the image when remove_image is present but a new image is uploaded in the same request" do
+        article = create(:article, **valid_attributes.merge(user: create(:user)))
+        sign_in_as(create(:user, :admin))
+
+        new_upload = Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg'), 'image/jpeg')
+
+        patch article_url(article), params: { article: { remove_image: '1', image: new_upload, title: article.title } }
+
+        article.reload
+        # New image should be attached (replacement) and not removed
+        expect(article.image.attached?).to be true
+        expect(response).to redirect_to(article_url(article))
+      end
+
+      it "returns a notice when remove_image is present but no image was attached to remove" do
+        article = create(:article, **valid_attributes.merge(user: create(:user)))
+        sign_in_as(create(:user, :admin))
+
+        # remove the attachment so the article has no image
+        article.image.purge
+
+        patch article_url(article), params: { article: { remove_image: '1', title: article.title } }
+
+        article.reload
+        expect(article.image.attached?).to be false
+        # Controller adds a notice saying no image was attached to remove
+        expect(flash[:notice]).to include("No image was attached to remove")
+        expect(response).to redirect_to(article_url(article))
+      end
     end
 
     context "with invalid parameters" do
