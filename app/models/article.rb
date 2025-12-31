@@ -20,17 +20,19 @@
 class Article < ApplicationRecord
   belongs_to :user
 
-  # Attach a single image via Active Storage
   has_one_attached :image
 
   validates :title, presence: true
 
-  # Validate image type and size
+  validate :image_presence
   validate :image_type_and_size
 
   scope :published, -> { where(is_published: true) }
   scope :draft, -> { where(is_published: false) }
   scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC, created_at DESC")) }
+
+  before_validation :normalize_published_at
+  before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
   def to_markdown = content
 
@@ -41,10 +43,6 @@ class Article < ApplicationRecord
       published.recent
     end
   end
-
-  # Normalize date-only inputs to beginning_of_day and autoset published_at on publish/unpublish
-  before_validation :normalize_published_at
-  before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
   private
 
@@ -97,5 +95,10 @@ class Article < ApplicationRecord
     if image.blob.byte_size > 5.megabytes
       errors.add(:image, "size must be less than 5MB")
     end
+  end
+
+  # Ensure an image is attached
+  def image_presence
+    errors.add(:image, "must be attached") unless image.attached?
   end
 end

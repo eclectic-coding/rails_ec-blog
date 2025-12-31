@@ -1,25 +1,28 @@
-<div class="card" id="<%= dom_id article %>">
-  <div class="card-body p-1">
-    <h5 class="card-title"><%= article.title %></h5>
+<div class="card bg-white border-white mb-3" id="<%= dom_id article %>">
+  <div class="row g-0 align-items-stretch p-2">
 
-    <% if article.image.attached? %>
+    <div class="col-md-4 d-none d-md-block p-0 d-flex">
+      <% if article.image.attached? %>
+        <%= link_to article_path(article), class: 'h-100 w-100 d-block' do %>
+          <%= image_tag url_for(article.image.variant(resize_to_limit: [600, 400])), class: 'img-fluid rounded article-image', alt: article.title %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="col-12 col-md-8 ps-2">
       <div class="mb-2">
-        <%= link_to article_path(article) do %>
-          <%= image_tag url_for(article.image.variant(resize_to_limit: [600, 400])), class: 'img-fluid rounded' %>
-        <% end %>
+        <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
+        <span class="badge rounded-pill text-bg-secondary">Secondary</span>
       </div>
-    <% end %>
-
-    <p class="card-text"><%= article.content %></p>
-    <p class="card-text">
-      <small class="text-muted">
-        Published at:
-        <% if article.published_at.present? %>
-          <%= l(article.published_at.to_date) %>
-        <% else %>
-          —
-        <% end %>
-      </small>
-    </p>
+      <h2 class="card-title"><%= article.title %></h2>
+      <p class="card-text"><%= article.content %></p>
+      <p class="card-text">
+        <small class="text-muted">
+          <% if article.published_at.present? %>
+            <%= l(article.published_at&.in_time_zone, format: :published) %>
+          <% end %>
+        </small>
+      </p>
+    </div>
   </div>
 </div>

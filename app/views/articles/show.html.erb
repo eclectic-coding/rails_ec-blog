@@ -1,7 +1,4 @@
 <div class="page-header">
-  <%= link_to articles_path, class: 'btn btn-default' do %>
-    All Articles
-  <% end %>
   <% if admin? %>
   <%= link_to edit_article_path(@article), class: 'btn btn-primary' do %>
     Edit
@@ -21,13 +18,11 @@
   <dt>Published at:</dt>
   <dd>
     <% if @article.published_at.present? %>
-      <%= l(@article.published_at.to_date) %>
+      <%= l(@article.published_at&.to_date) %>
     <% else %>
       —
     <% end %>
   </dd>
   <dt>Is published:</dt>
   <dd><%= @article.is_published %></dd>
-  <dt>User:</dt>
-  <dd><%= @article.user %></dd>
 </dl>

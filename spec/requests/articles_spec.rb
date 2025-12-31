@@ -7,7 +7,9 @@ RSpec.describe "/articles", type: :request do
       title: "MyString",
       content: "MyText",
       published_at: Time.current.to_s,
-      is_published: true
+      is_published: true,
+      # include a small uploaded image so controller create/update requests pass the model validation
+      image: Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test_image.jpg"), "image/jpeg")
     }
   }
 

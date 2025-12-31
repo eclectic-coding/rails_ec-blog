@@ -6,7 +6,7 @@ RSpec.describe "Article publishing", type: :request do
   it "sets published_at when an admin creates a published article and guest can view it" do
     sign_in_as(admin)
 
-    post articles_url, params: { article: { title: "Publish Test", content: "Content", is_published: true } }
+    post articles_url, params: { article: { title: "Publish Test", content: "Content", is_published: true, image: Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test_image.jpg"), "image/jpeg") } }
 
     expect(response).to redirect_to(article_url(Article.last))
 
