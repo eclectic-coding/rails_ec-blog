@@ -22,6 +22,9 @@ class Article < ApplicationRecord
 
   has_one_attached :image
 
+  # Virtual attribute used by the form to indicate the user wants to remove the current attachment
+  attr_accessor :remove_image
+
   validates :title, presence: true
 
   validate :image_presence
@@ -99,6 +102,9 @@ class Article < ApplicationRecord
 
   # Ensure an image is attached
   def image_presence
+    # If the form requested removal, allow no attachment
+    return if remove_image.present?
+
     errors.add(:image, "must be attached") unless image.attached?
   end
 end

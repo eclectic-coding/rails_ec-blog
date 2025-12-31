@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ edit update destroy ]
+  before_action :set_article, only: %i[ edit update destroy remove_image ]
   before_action :set_visible_article, only: %i[ show ]
 
   allow_unauthenticated_access only: %i[index show new create edit update destroy]
@@ -59,7 +59,19 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
-        format.html { redirect_to @article, notice: "Article was successfully updated.", status: :see_other }
+        # Build notice messages and handle image removal if requested and no new upload provided
+        notices = ["Article was successfully updated."]
+        if params.dig(:article, :remove_image).present? && params.dig(:article, :image).blank?
+          if @article.image.attached?
+            # Purge synchronously so the user sees the removal completed in the flash
+            @article.image.purge
+            notices << "Image removed."
+          else
+            notices << "No image was attached to remove."
+          end
+        end
+
+        format.html { redirect_to @article, notice: notices.join(' '), status: :see_other }
         format.json { render :show, status: :ok, location: @article }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -75,6 +87,26 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to articles_path, notice: "Article was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
+    end
+  end
+
+  # DELETE /articles/:id/remove_image (Turbo-friendly endpoint)
+  def remove_image
+    if @article.image.attached?
+      @article.image.purge
+      flash.now[:notice] = "Image removed."
+    else
+      flash.now[:alert] = "No image was attached."
+    end
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace("article-image-area-#{@article.id}", partial: "articles/image_preview", locals: { article: @article }),
+          turbo_stream.replace("notices", partial: "shared/notices")
+        ]
+      end
+      format.html { redirect_to edit_article_path(@article), notice: (flash.now[:notice] || flash.now[:alert]) }
     end
   end
 
@@ -100,7 +132,7 @@ class ArticlesController < ApplicationController
   def article_params
     resume_session
 
-    permitted = [:title, :content, :published_at, :is_published, :image]
+    permitted = [:title, :content, :published_at, :is_published, :image, :remove_image]
 
     params.require(:article).permit(permitted)
   end

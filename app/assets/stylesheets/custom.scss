@@ -9,3 +9,87 @@
   padding-left: 8px;
 }
 
+// Prefer Bootstrap 5 utilities for layout (d-flex, gap-*, flex-grow-1, flex-shrink-0)
+// Keep only minimal custom rules so we don't duplicate Bootstrap defaults.
+
+// Allow the file input to shrink properly inside a flex container
+.file-input-with-preview .file-input {
+  min-width: 0; // allow the input to shrink in flexbox when needed
+}
+
+// Minimal thumbnail styling: rely on Bootstrap 5 where possible
+.article-thumb {
+  /* Keep the thumbnail close to typical Bootstrap input height; adjust if your theme differs */
+  height: 38px;
+  width: auto;
+  min-width: 38px;
+  max-width: 160px;
+  object-fit: cover;
+  display: block;
+
+  /* remove border/box-shadow if some Bootstrap utility or reset added them */
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+// Popup preview styles: hidden by default, visible on hover of the parent
+.preview-container {
+  position: relative;
+}
+
+.article-popup {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 8px);
+  display: none;
+  z-index: 1050; // above most elements
+  max-width: 320px;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  background: #fff;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+.preview-container:hover .article-popup {
+  display: block;
+}
+
+// Position the inline remove button over the thumbnail
+.remove-image-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1100;
+  padding: 0.15rem 0.35rem;
+  line-height: 1;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flip the popup above the thumbnail when `.above` is added
+.article-popup.above {
+  top: auto;
+  bottom: 100%;
+  transform: translate(-50%, -8px);
+}
+
+// Keep popup hidden on mobile entirely
+@media (max-width: 575.98px) {
+  .preview-container .article-popup {
+    display: none !important;
+  }
+
+  .preview-container .remove-image-btn {
+    display: none !important;
+  }
+}

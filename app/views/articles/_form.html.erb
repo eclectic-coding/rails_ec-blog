@@ -16,23 +16,6 @@
     <%= form.text_field :title, class: 'form-control' %>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :content, class: 'form-label' %>
-    <%= form.textarea :content, class: 'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :image, class: 'form-label' %>
-    <%# Make the file input required for new articles or when no image is attached yet %>
-    <%= form.file_field :image, direct_upload: true, class: 'form-control', accept: 'image/*', required: !article.image.attached? %>
-
-    <% if article.image.attached? %>
-      <div class="mt-2">
-        <%= image_tag url_for(article.image.variant(resize_to_limit: [800, 600])), class: 'img-fluid rounded' %>
-      </div>
-    <% end %>
-  </div>
-
   <div class="row">
     <div class="col-3 d-flex align-items-center ms-2">
       <div class="mb-3 form-check">
@@ -49,6 +32,46 @@
     </div>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :image, class: 'form-label' %>
+    <!-- Use Bootstrap 5 utilities for layout; hide thumbnail on xs (mobile) -->
+    <div class="file-input-with-preview d-flex align-items-center gap-2" data-controller="file-preview">
+      <div class="file-input flex-grow-1">
+        <%= form.file_field :image, direct_upload: true, class: 'form-control', accept: 'image/*', required: !article.image.attached?, data: { action: 'change->file-preview#preview' } %>
+      </div>
+
+      <!-- preview-container: hidden on xs, shown as flex from sm+; use flex-shrink-0 so it doesn't collapse -->
+      <div class="preview-container flex-shrink-0 d-none d-sm-flex align-items-center"
+           data-action="mouseenter->file-preview#showHover mouseleave->file-preview#hideHover focusin->file-preview#showHover focusout->file-preview#hideHover click->file-preview#openModal keydown->file-preview#onKeydown"
+           data-file-preview-caption-value="<%= j(article.title.to_s) %>"
+           tabindex="0" role="button" aria-label="Open image preview">
+        <%= render 'articles/image_preview', article: article %>
+      </div>
+
+      <%# Note: the inline remove button is rendered inside the preview container above %>
+
+      <!-- Modal used for click / keyboard activation (better mobile & keyboard support) -->
+      <div class="modal fade" id="articleImageModal" tabindex="-1" aria-labelledby="articleImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="articleImageModalLabel">Image preview</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              <img src="" alt="Large preview" class="img-fluid" data-file-preview-target="modalImage">
+              <div class="mt-2" data-file-preview-target="modalCaption"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+       </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :content, class: 'form-label' %>
+    <%= form.textarea :content, class: 'form-control' %>
+  </div>
 
   <div class="mb-3">
     <% if article.persisted? %>

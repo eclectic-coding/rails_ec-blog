@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
-  resources :articles
+  resources :articles do
+    member do
+      delete :remove_image
+    end
+  end
   resource :session
   resources :passwords, param: :token
 

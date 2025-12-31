@@ -15,7 +15,9 @@
   <body class="d-flex flex-column h-100 bg-light">
     <main class="">
       <%= render "shared/navbar" %>
-      <%= render "shared/notices" %>
+      <div id="notices">
+        <%= render "shared/notices" %>
+      </div>
 
       <div class="container mt-5 mx-auto">
         <%= yield %>
