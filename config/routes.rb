@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :articles do
     member do
-      delete :remove_image
+      delete :remove_image, to: 'articles/remove_image#destroy'
     end
   end
   resource :session

@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ edit update destroy remove_image ]
+  before_action :set_article, only: %i[ edit update destroy ]
   before_action :set_visible_article, only: %i[ show ]
 
   allow_unauthenticated_access only: %i[index show new create edit update destroy]
@@ -90,25 +90,6 @@ class ArticlesController < ApplicationController
     end
   end
 
-  # DELETE /articles/:id/remove_image (Turbo-friendly endpoint)
-  def remove_image
-    if @article.image.attached?
-      @article.image.purge
-      flash.now[:notice] = "Image removed."
-    else
-      flash.now[:alert] = "No image was attached."
-    end
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("article-image-area-#{@article.id}", partial: "articles/image_preview", locals: { article: @article }),
-          turbo_stream.replace("notices", partial: "shared/notices")
-        ]
-      end
-      format.html { redirect_to edit_article_path(@article), notice: (flash.now[:notice] || flash.now[:alert]) }
-    end
-  end
 
   private
 
