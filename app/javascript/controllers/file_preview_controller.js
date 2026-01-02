@@ -3,16 +3,39 @@
 import { Controller } from "@hotwired/stimulus"
 
 class FilePreviewController extends Controller {
-  static targets = ["image", "modalImage", "modalCaption"]
+  static targets = ["image", "modalImage", "modalCaption", "filename"]
   static values = { caption: String }
+
+  // small helper to set filename on either an input or a plain element
+  setFilename(text) {
+    if (!this.hasFilenameTarget) return
+    const el = this.filenameTarget
+    try {
+      if ('value' in el) {
+        el.value = text
+      } else {
+        el.textContent = text
+      }
+    } catch (e) {
+      // fallback
+      try { el.textContent = text } catch (err) {}
+    }
+  }
 
   // Called when the file input changes
   preview(event) {
     const input = event.target
     const file = input.files && input.files[0]
-    if (!file) return
+    if (!file) {
+      // no file selected -> reset filename display
+      this.setFilename('No file chosen')
+      return
+    }
 
     if (!file.type.startsWith('image/')) return
+
+    // update filename immediately for better feedback
+    this.setFilename(file.name)
 
     const reader = new FileReader()
     reader.onload = () => {
@@ -21,12 +44,26 @@ class FilePreviewController extends Controller {
     reader.readAsDataURL(file)
   }
 
+  // Open the hidden native file input when the custom button is clicked
+  openFilePicker(event) {
+    event && event.preventDefault()
+    const native = this.element.querySelector('.file-input-native')
+    if (native) {
+      native.click()
+      // For accessibility, move focus to the native input after opening
+      try { native.focus() } catch (e) {}
+    }
+  }
+
   showPreview(src, filename = '') {
     if (this.hasImageTarget) {
       const img = this.imageTarget
       img.src = src
       img.classList.remove('d-none')
     }
+
+    // set filename display if target present
+    this.setFilename(filename || 'No file chosen')
 
     // set caption (prefer configured captionValue, fallback to filename)
     const captionText = this.captionValue && this.captionValue.length ? this.captionValue : (filename || '')
@@ -88,7 +125,7 @@ class FilePreviewController extends Controller {
       modalEl.removeAttribute('aria-hidden')
 
       // when user closes (via close button) restore remove button; listen for click on backdrop close or close button
-      const closeHandler = (e) => {
+      const closeHandler = () => {
         if (removeBtn) removeBtn.style.visibility = ''
         modalEl.classList.remove('show')
         modalEl.style.display = 'none'
