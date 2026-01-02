@@ -65,7 +65,7 @@
 
   <div class="mb-3">
     <%= form.label :content, class: 'form-label' %>
-    <%= form.textarea :content, class: 'form-control' %>
+    <%= form.textarea :content, class: 'form-control', data: { controller: :autogrow, action: "input->autogrow#resize" } %>
   </div>
 
   <div class="mb-3">
