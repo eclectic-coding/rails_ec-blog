@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
-// Methods in this controller are referenced declaratively via `data-action` in the ERB view
 import { Controller } from "@hotwired/stimulus"
 
 class FilePreviewController extends Controller {
   static targets = ["image", "modalImage", "modalCaption", "filename"]
   static values = { caption: String }
 
-  // small helper to set filename on either an input or a plain element
   setFilename(text) {
     if (!this.hasFilenameTarget) return
     const el = this.filenameTarget
@@ -22,7 +20,6 @@ class FilePreviewController extends Controller {
     }
   }
 
-  // Called when the file input changes
   preview(event) {
     const input = event.target
     const file = input.files && input.files[0]
@@ -134,6 +131,54 @@ class FilePreviewController extends Controller {
       }
       // attach once; closing via backdrop or close button should bubble to modal for our simple fallback
       modalEl.addEventListener('click', closeHandler)
+    }
+  }
+
+  // Remove the attached image via DELETE to the provided URL (data-remove-url).
+  // Expects server to respond with a turbo-stream; will call Turbo.renderStreamMessage if available.
+  async removeImage(event) {
+    event && event.preventDefault()
+    const btn = event.currentTarget || event.target
+    const url = btn && btn.dataset && btn.dataset.removeUrl
+    const confirmMsg = btn && btn.dataset && btn.dataset.confirm
+    if (!url) return
+
+    if (confirmMsg) {
+      const ok = window.confirm(confirmMsg)
+      if (!ok) return
+    }
+
+    // get CSRF token
+    const tokenMeta = document.querySelector('meta[name="csrf-token"]')
+    const token = tokenMeta ? tokenMeta.getAttribute('content') : null
+
+    try {
+      const resp = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': token || '',
+          'Accept': 'text/vnd.turbo-stream.html, text/html, application/xhtml+xml'
+        },
+        credentials: 'same-origin'
+      })
+
+      if (resp.ok) {
+        const text = await resp.text()
+        // If Turbo is available, render the turbo-stream response.
+        if (window.Turbo && typeof window.Turbo.renderStreamMessage === 'function') {
+          window.Turbo.renderStreamMessage(text)
+        } else {
+          // fallback: reload the page to reflect changes
+          window.location.reload()
+        }
+      } else {
+        console.error('Failed to remove image', resp.status, resp.statusText)
+        // optionally show an alert
+        window.alert('Failed to remove image. Please try again.')
+      }
+    } catch (e) {
+      console.error('Error removing image', e)
+      window.alert('Error removing image')
     }
   }
 

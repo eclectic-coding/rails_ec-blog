@@ -51,9 +51,6 @@
   padding: 6px;
 }
 
-// Removed the CSS hover rule so showing the popup no longer affects layout.
-// The popup is now shown/positioned by the Stimulus `file_preview` controller
-
 // Position the inline remove button over the thumbnail
 .remove-image-btn {
   position: absolute;
