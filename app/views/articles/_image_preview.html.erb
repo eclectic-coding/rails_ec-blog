@@ -1,12 +1,8 @@
 <div id="article-image-area-<%= article.id %>" class="article-image-area">
   <% if article.image.attached? %>
     <%= image_tag url_for(article.image.variant(resize_to_limit: [160, 120])), class: 'article-thumb', data: { file_preview_target: 'image' }, alt: (article.title.presence || 'Article image') %>
-    <%= image_tag url_for(article.image.variant(resize_to_limit: [1600, 1200])), class: 'article-popup', data: { file_preview_target: 'popup' }, alt: (article.title.presence || 'Article image large') %>
-    <div class="article-popup-caption visually-hidden" data-file-preview-target="caption"><%= article.title.presence || '' %></div>
     <%= link_to '✕', remove_image_article_path(article), method: :delete, class: 'remove-image-btn btn btn-sm btn-danger', data: { turbo_confirm: 'Are you sure you want to remove the image?' }, aria: { label: 'Remove image' } %>
   <% else %>
     <%= image_tag '', class: 'article-thumb d-none', data: { file_preview_target: 'image' }, alt: 'preview' %>
-    <%= image_tag '', class: 'article-popup', data: { file_preview_target: 'popup' }, alt: 'Preview large' %>
-    <div class="article-popup-caption visually-hidden" data-file-preview-target="caption"></div>
   <% end %>
 </div>

@@ -51,16 +51,15 @@
   padding: 6px;
 }
 
-.preview-container:hover .article-popup {
-  display: block;
-}
+// Removed the CSS hover rule so showing the popup no longer affects layout.
+// The popup is now shown/positioned by the Stimulus `file_preview` controller
 
 // Position the inline remove button over the thumbnail
 .remove-image-btn {
   position: absolute;
   top: 4px;
   right: 4px;
-  z-index: 1100;
+  z-index: 1000; // lowered to sit under modal/backdrop
   padding: 0.15rem 0.35rem;
   line-height: 1;
   border-radius: 0.25rem;
@@ -75,6 +74,42 @@
   top: auto;
   bottom: 100%;
   transform: translate(-50%, -8px);
+}
+
+// Ensure the article image modal and its backdrop appear above inline controls like the remove button
+.modal-backdrop {
+  z-index: 1500 !important;
+}
+#articleImageModal.modal {
+  position: fixed !important;
+  z-index: 1600 !important;
+}
+
+// Minimal, chrome-free article image modal
+#articleImageModal .modal-content {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+#articleImageModal .modal-body {
+  padding: 0;
+  position: relative; // for overlay close button
+}
+#articleImageModal .modal-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+}
+#articleImageModal .modal-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1700; // above modal content but under backdrop
+  background-color: rgba(255,255,255,0.85);
+  border-radius: 0.25rem;
+  /* keep Bootstrap's built-in close icon by not overriding background-image */
 }
 
 // Keep popup hidden on mobile entirely

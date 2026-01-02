@@ -3,7 +3,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 class FilePreviewController extends Controller {
-  static targets = ["image", "popup", "caption", "modalImage", "modalCaption"]
+  static targets = ["image", "modalImage", "modalCaption"]
   static values = { caption: String }
 
   // Called when the file input changes
@@ -28,17 +28,8 @@ class FilePreviewController extends Controller {
       img.classList.remove('d-none')
     }
 
-    if (this.hasPopupTarget) {
-      const popup = this.popupTarget
-      popup.src = src
-    }
-
     // set caption (prefer configured captionValue, fallback to filename)
     const captionText = this.captionValue && this.captionValue.length ? this.captionValue : (filename || '')
-    if (this.hasCaptionTarget) {
-      this.captionTarget.textContent = captionText
-      this.captionTarget.classList.remove('visually-hidden')
-    }
 
     // also populate modal targets if present
     if (this.hasModalImageTarget) {
@@ -49,59 +40,16 @@ class FilePreviewController extends Controller {
     }
   }
 
-  showHover() {
-    if (!this.hasPopupTarget) return
-
-    const popup = this.popupTarget
-    // ensure popup has an src; if not, try to use image src
-    if (!popup.src && this.hasImageTarget) {
-      popup.src = this.imageTarget.src || ''
-    }
-
-    // determine whether to flip above if there's not enough space below
-    try {
-      const thumbRect = (this.hasImageTarget) ? this.imageTarget.getBoundingClientRect() : this.element.getBoundingClientRect()
-      const spaceBelow = window.innerHeight - thumbRect.bottom
-      const estimatedPopupHeight = Math.min(480, window.innerHeight * 0.6) // conservative estimate
-
-      if (spaceBelow < estimatedPopupHeight + 20) {
-        popup.classList.add('above')
-      } else {
-        popup.classList.remove('above')
-      }
-    } catch (e) {
-      // ignore measurement errors
-      popup.classList.remove('above')
-    }
-
-    popup.style.display = 'block'
-    if (this.hasCaptionTarget) {
-      this.captionTarget.classList.remove('visually-hidden')
-    }
-
-    this.element.setAttribute('aria-expanded', 'true')
-  }
-
-  hideHover() {
-    if (!this.hasPopupTarget) return
-    const popup = this.popupTarget
-    popup.style.display = 'none'
-    popup.classList.remove('above')
-    if (this.hasCaptionTarget) {
-      this.captionTarget.classList.add('visually-hidden')
-    }
-    this.element.setAttribute('aria-expanded', 'false')
-  }
-
   openModal(event) {
-    // If the click was triggered by the remove button, it has data-turbo-method etc. Let Turbo handle it.
+    // If the click was triggered by the remove button, let Turbo handle it
     if (event && event.target && event.target.closest && event.target.closest('.remove-image-btn')) {
       return
     }
     event && event.preventDefault()
-    // populate modal image and caption from popup or image
-    const src = (this.hasPopupTarget && this.popupTarget.src) ? this.popupTarget.src : (this.hasImageTarget ? this.imageTarget.src : '')
-    const captionText = this.captionValue && this.captionValue.length ? this.captionValue : (this.hasCaptionTarget ? this.captionTarget.textContent : '')
+
+    // populate modal image and caption from thumbnail image target
+    const src = (this.hasImageTarget && this.imageTarget.src) ? this.imageTarget.src : ''
+    const captionText = this.captionValue && this.captionValue.length ? this.captionValue : ''
 
     if (this.hasModalImageTarget) {
       this.modalImageTarget.src = src
@@ -112,14 +60,43 @@ class FilePreviewController extends Controller {
 
     // Show bootstrap modal if available
     const modalEl = document.getElementById('articleImageModal')
+    const removeBtn = this.element.querySelector('.remove-image-btn')
+
     if (modalEl && window.bootstrap && window.bootstrap.Modal) {
       const modal = new window.bootstrap.Modal(modalEl)
+
+      // Hide remove button while modal is open
+      const onShown = () => {
+        if (removeBtn) removeBtn.style.visibility = 'hidden'
+      }
+      const onHidden = () => {
+        if (removeBtn) removeBtn.style.visibility = ''
+        // cleanup listeners
+        modalEl.removeEventListener('shown.bs.modal', onShown)
+        modalEl.removeEventListener('hidden.bs.modal', onHidden)
+      }
+
+      modalEl.addEventListener('shown.bs.modal', onShown)
+      modalEl.addEventListener('hidden.bs.modal', onHidden)
+
       modal.show()
     } else if (modalEl) {
-      // fallback: make modal visible by toggling classes
+      // fallback: make modal visible by toggling classes and also hide remove button
+      if (removeBtn) removeBtn.style.visibility = 'hidden'
       modalEl.classList.add('show')
       modalEl.style.display = 'block'
       modalEl.removeAttribute('aria-hidden')
+
+      // when user closes (via close button) restore remove button; listen for click on backdrop close or close button
+      const closeHandler = (e) => {
+        if (removeBtn) removeBtn.style.visibility = ''
+        modalEl.classList.remove('show')
+        modalEl.style.display = 'none'
+        modalEl.setAttribute('aria-hidden', 'true')
+        modalEl.removeEventListener('click', closeHandler)
+      }
+      // attach once; closing via backdrop or close button should bubble to modal for our simple fallback
+      modalEl.addEventListener('click', closeHandler)
     }
   }
 

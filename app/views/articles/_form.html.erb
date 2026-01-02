@@ -40,20 +40,17 @@
       </div>
 
       <div class="preview-container flex-shrink-0 d-none d-sm-flex align-items-center"
-           data-action="mouseenter->file-preview#showHover mouseleave->file-preview#hideHover focusin->file-preview#showHover focusout->file-preview#hideHover click->file-preview#openModal keydown->file-preview#onKeydown"
+           data-action="click->file-preview#openModal keydown->file-preview#onKeydown"
            data-file-preview-caption-value="<%= j(article.title.to_s) %>"
            tabindex="0" role="button" aria-label="Open image preview">
         <%= render 'articles/image_preview', article: article %>
       </div>
 
       <div class="modal fade" id="articleImageModal" tabindex="-1" aria-labelledby="articleImageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="articleImageModalLabel">Image preview</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
             <div class="modal-body text-center">
+              <button type="button" class="btn-close modal-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
               <img src="" alt="Large preview" class="img-fluid" data-file-preview-target="modalImage">
               <div class="mt-2" data-file-preview-target="modalCaption"></div>
             </div>
