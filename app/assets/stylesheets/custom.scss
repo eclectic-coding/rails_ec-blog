@@ -119,3 +119,11 @@
     display: none !important;
   }
 }
+
+.card-draft {
+  background-color: #fff7e6; /* pale yellow for drafts */
+  border-color: #ffc107;     /* warning color */
+  border-width: 2px;
+  border-style: solid;
+  box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.04); /* subtle highlight */
+}

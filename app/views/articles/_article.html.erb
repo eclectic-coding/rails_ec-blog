@@ -1,4 +1,4 @@
-<div class="card bg-white border-white mb-3" id="<%= dom_id article %>">
+<div class="card mb-3 <%= article.published_at.present? ?  'bg-white border-white' : 'card-draft'%>" id="<%= dom_id article %>">
   <div class="row g-0 align-items-stretch p-2">
 
     <div class="col-md-4 d-none d-md-block p-0 d-flex">
@@ -20,6 +20,8 @@
         <small class="text-muted">
           <% if article.published_at.present? %>
             <%= l(article.published_at&.in_time_zone, format: :published) %>
+          <% else %>
+            <span class="badge rounded-pill text-bg-warning me-2">Draft</span>
           <% end %>
         </small>
       </p>
