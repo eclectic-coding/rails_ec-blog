@@ -59,7 +59,19 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
-        format.html { redirect_to @article, notice: "Article was successfully updated.", status: :see_other }
+        # Build notice messages and handle image removal if requested and no new upload provided
+        notices = ["Article was successfully updated."]
+        if params.dig(:article, :remove_image).present? && params.dig(:article, :image).blank?
+          if @article.image.attached?
+            # Purge synchronously so the user sees the removal completed in the flash
+            @article.image.purge
+            notices << "Image removed."
+          else
+            notices << "No image was attached to remove."
+          end
+        end
+
+        format.html { redirect_to @article, notice: notices.join(' '), status: :see_other }
         format.json { render :show, status: :ok, location: @article }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -77,6 +89,7 @@ class ArticlesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
 
   private
 
@@ -100,7 +113,7 @@ class ArticlesController < ApplicationController
   def article_params
     resume_session
 
-    permitted = [:title, :content, :published_at, :is_published]
+    permitted = [:title, :content, :published_at, :is_published, :image, :remove_image]
 
     params.require(:article).permit(permitted)
   end

@@ -27,3 +27,23 @@
 #   # Report violations without enforcing the policy.
 #   # config.content_security_policy_report_only = true
 # end
+
+# Allow blob/data URIs for Active Storage blobs and direct uploads
+Rails.application.configure do
+  config.content_security_policy do |policy|
+    policy.default_src :self, :https
+    policy.font_src    :self, :https, :data
+    policy.img_src     :self, :https, :data, :blob
+    policy.object_src  :none
+    policy.script_src  :self, :https
+    policy.style_src   :self, :https
+  end
+
+  # Generate session nonces for permitted importmap, inline scripts, and inline styles.
+  # Uses the session id so the nonce is stable for the request
+  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
+  # Apply nonces to script-src and style-src so Rails will inject nonces into helpers
+  config.content_security_policy_nonce_directives = %w(script-src style-src)
+  # Automatically add nonce attributes to Rails-provided tag helpers
+  config.content_security_policy_nonce_auto = true
+end

@@ -7,3 +7,6 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "@popperjs/core", to: "popper.js"
 pin "bootstrap", to: "bootstrap.min.js", preload: true
+pin "@rails/activestorage", to: "activestorage.esm.js"
+
+# syntax_highlight is no longer pinned; the Stimulus controller imports the asset path directly.

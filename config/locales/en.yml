@@ -29,3 +29,10 @@
 
 en:
   hello: "Hello world"
+  # Custom date/time formats used across the app
+  date:
+    formats:
+      published: "%a %b %d %Y"
+  time:
+    formats:
+      published: "%a %b %d %Y"

@@ -1,140 +1,129 @@
-body {
-  font-size: 16px;
-
-  .application {
-    font-size: 20px;
-  }
-}
-
-.nav-pills {
-  & .nav-item {
-    margin: 0.13rem 0;
-    width: 100%;
-  }
-
-  & .nav-link {
-    @media (max-width: 981px) {
-      padding: 0.5rem 0.5rem;
-    }
-    padding-right: 0;
-
-    &:hover {
-      color: white;
-      background: rgba(white, 0.05);
-      width: 100%;
-    }
-
-    &.sidebar__active {
-      color: inherit;
-      background: rgba(white, 0.1);
-      padding-right: 0;
-    }
-  }
-}
-
-.icon {
-  font-size: 20px;
-}
-
-.sort {
-  position: absolute;
-  top: 1rem;
-  right: 0.5rem;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-}
-
-.sort-desc {
-  border-top: 8px solid #000000;
-}
-
-.sort-asc {
-  border-bottom: 8px solid #000000;
-}
-
-.pagy-bootstrap-nav .pagination {
-  margin-bottom: 0;
-}
-
-.trix-button-group--file-tools {
-  display: none !important;
-  margin-left: 0 !important;
-}
-
-.trix-button-group--history-tools,
-.trix-button-group--block-tools {
-  margin-left: 0 !important;
-}
-
-.trix-button-group-spacer {
-  display: none !important;
-}
-
-.trix-button--icon-link,
-.trix-button--icon-code,
-.trix-button--icon-attach {
-  display: none;
-}
-
-.event-title {
-  a {
-    color: inherit;
-    text-decoration: none;
-
-    a:hover {
-      text-decoration: underline !important;
-    }
-  }
-}
-
-address {
-  font-size: 14px;
-
-  .event-venue {
-    font-weight: 700;
-  }
-}
-
-.title-area {
-  margin-top: 0.5rem;
-  padding-bottom: 0.25rem;
-  width: 18.75rem;
-  border-bottom: 3px solid red;
-  text-transform: uppercase;
-}
-
-.iframe-container {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  padding-top: 56.25%;
-}
-
-.responsive-iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
+.article-image {
+  max-width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
-.info-card {
-  width: 50vw !important;
+.article-feed-header {
+  border-left: #d4d1e0 3px solid;
+  padding-left: 8px;
+}
 
-  @media (max-width: 600px) {
-    width: 100vw !important;
+.file-input-with-preview .file-input {
+  min-width: 0; // allow the input to shrink in flexbox when needed
+}
+
+.article-thumb {
+  height: 38px;
+  width: auto;
+  min-width: 38px;
+  max-width: 160px;
+  object-fit: cover;
+  display: block;
+
+  /* remove border/box-shadow if some Bootstrap utility or reset added them */
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+// Popup preview styles: hidden by default, visible on hover of the parent
+.preview-container {
+  position: relative;
+}
+
+.article-popup {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 8px);
+  display: none;
+  z-index: 1050; // above most elements
+  max-width: 320px;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: none !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  background: #fff;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+// Position the inline remove button over the thumbnail
+.remove-image-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1000; // lowered to sit under modal/backdrop
+  padding: 0.15rem 0.35rem;
+  line-height: 1;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Flip the popup above the thumbnail when `.above` is added
+.article-popup.above {
+  top: auto;
+  bottom: 100%;
+  transform: translate(-50%, -8px);
+}
+
+// Ensure the article image modal and its backdrop appear above inline controls like the remove button
+.modal-backdrop {
+  z-index: 1500 !important;
+}
+#articleImageModal.modal {
+  position: fixed !important;
+  z-index: 1600 !important;
+}
+
+// Minimal, chrome-free article image modal
+#articleImageModal .modal-content {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+#articleImageModal .modal-body {
+  padding: 0;
+  position: relative; // for overlay close button
+}
+#articleImageModal .modal-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+}
+#articleImageModal .modal-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1700; // above modal content but under backdrop
+  background-color: rgba(255,255,255,0.85);
+  border-radius: 0.25rem;
+  /* keep Bootstrap's built-in close icon by not overriding background-image */
+}
+
+// Keep popup hidden on mobile entirely
+@media (max-width: 575.98px) {
+  .preview-container .article-popup {
+    display: none !important;
+  }
+
+  .preview-container .remove-image-btn {
+    display: none !important;
   }
 }
 
-.read-more {
-  font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase;
-  border-radius: 0;
-  border-bottom: 3px solid red;
+.card-draft {
+  background-color: #fff7e6; /* pale yellow for drafts */
+  border-color: #ffc107;     /* warning color */
+  border-width: 2px;
+  border-style: solid;
+  box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.04); /* subtle highlight */
 }
-

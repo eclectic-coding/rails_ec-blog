@@ -3,29 +3,28 @@
   <head>
     <title><%= content_for?(:title) ? content_for(:title) : app_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Rails81">
+    <meta name="mobile-web-app-capable" content="yes">
     <%= csp_meta_tag %>
+    <%= csrf_meta_tags %>
 
     <%= yield :head %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-  </head>
+   </head>
 
-  <body class="d-flex flex-column h-100 bg-body">
+  <body class="d-flex flex-column h-100 bg-light">
     <main class="">
       <%= render "shared/navbar" %>
-      <%= render "shared/notices" %>
+      <div id="notices">
+        <%= render "shared/notices" %>
+      </div>
 
       <div class="container mt-5 mx-auto">
         <%= yield %>
       </div>
-
-      <%= content_tag :div, '', class: "container d-flex" do %>
-        <div class="card w-75 shadow-sm p-3">
-          <%= debug(params) if Rails.env.local? %>
-        </div>
-      <% end if Rails.env.local? %>
     </main>
 
     <%= render "shared/footer" %>

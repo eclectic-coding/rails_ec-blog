@@ -43,6 +43,7 @@ RSpec.configure do |config|
   # config.include Warden::Test::Helpers # helpers for system tests
   config.include Turbo::FramesHelper, type: :system
   config.include Turbo::StreamsHelper, type: :system
+  config.include ActiveSupport::Testing::TimeHelpers
 
   config.infer_spec_type_from_file_location!
 

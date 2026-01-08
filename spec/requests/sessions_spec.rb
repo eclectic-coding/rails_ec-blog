@@ -43,4 +43,13 @@ RSpec.describe "Sessions", type: :request do
       expect(Session.where(id: s.id)).to be_empty
     end
   end
+
+  describe "GET /session" do
+    it "redirects to root_path with status 303 (see_other)" do
+      get session_path
+
+      expect(response).to redirect_to(root_path)
+      expect(response.status).to eq(303)
+    end
+  end
 end

@@ -34,4 +34,27 @@ RSpec.describe ApplicationHelper, type: :helper do
       end
     end
   end
+
+  describe "#bootstrap_class_for" do
+    {
+      success: "alert-success",
+      error:   "alert-danger",
+      alert:   "alert-warning",
+      notice:  "alert-info"
+    }.each do |key, expected|
+      it "maps #{key.inspect} to #{expected} (and handles string input)" do
+        expect(helper.bootstrap_class_for(key)).to eq(expected)
+        expect(helper.bootstrap_class_for(key.to_s)).to eq(expected)
+      end
+    end
+
+    it "returns the string form for unknown flash types" do
+      expect(helper.bootstrap_class_for(:foo)).to eq("foo")
+      expect(helper.bootstrap_class_for('bar')).to eq("bar")
+    end
+
+    it "raises NoMethodError for nil input (matching current helper implementation)" do
+      expect { helper.bootstrap_class_for(nil) }.to raise_error(NoMethodError)
+    end
+  end
 end

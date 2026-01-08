@@ -1,34 +1,72 @@
-<%= form_with(model: article) do |form| %>
+<%= form_with(model: article, local: true, html: { multipart: true }) do |form| %>
   <% if article.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
 
       <ul>
-      <% article.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% article.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="mb-3">
     <%= form.label :title, class: 'form-label' %>
-      <%= form.text_field :title, class: 'form-control' %>
+    <%= form.text_field :title, class: 'form-control' %>
+  </div>
+
+  <div class="row">
+    <div class="col-3 d-flex align-items-center ms-2">
+      <div class="mb-3 form-check">
+        <%= form.check_box :is_published, class: 'form-check-input' %>
+        <%= form.label :is_published, class: 'form-check-label ms-2' %>
+      </div>
     </div>
+
+    <div class="col-4">
+      <div class="mb-3">
+        <%= form.label :published_at, "Published date", class: 'form-label' %>
+        <%= form.date_field :published_at, class: 'form-control' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :image, class: 'form-label' %>
+    <div class="file-input-with-preview d-flex align-items-center gap-2" data-controller="file-preview">
+      <div class="file-input flex-grow-1">
+        <%= form.file_field :image, direct_upload: true, class: 'd-none file-input-native', accept: 'image/*', required: !article.image.attached?, data: { action: 'change->file-preview#preview' } %>
+        <div class="input-group">
+          <button type="button" class="btn btn-outline-secondary" data-action="click->file-preview#openFilePicker">Choose file</button>
+          <input type="text" readonly class="form-control" data-file-preview-target="filename" aria-label="Selected file name" value="<%= article.image.attached? ? article.image.filename.to_s : 'No file chosen' %>">
+        </div>
+      </div>
+
+      <div class="preview-container flex-shrink-0 d-none d-sm-flex align-items-center"
+           data-action="click->file-preview#openModal keydown->file-preview#onKeydown"
+           data-file-preview-caption-value="<%= j(article.title.to_s) %>"
+           tabindex="0" role="button" aria-label="Open image preview">
+        <%= render 'articles/image_preview', article: article %>
+      </div>
+
+      <div class="modal fade" id="articleImageModal" tabindex="-1" aria-labelledby="articleImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              <button type="button" class="btn-close modal-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+              <img src="" alt="Large preview" class="img-fluid" data-file-preview-target="modalImage">
+              <div class="mt-2" data-file-preview-target="modalCaption"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+       </div>
+  </div>
 
   <div class="mb-3">
     <%= form.label :content, class: 'form-label' %>
-      <%= form.textarea :content, class: 'form-control' %>
-    </div>
-
-  <div class="mb-3">
-    <%= form.label :published_at, "Published date", class: 'form-label' %>
-      <%= form.date_field :published_at, class: 'form-control' %>
-    </div>
-
-  <div class="mb-3 form-check">
-    <%= form.check_box :is_published, class: 'form-check-input' %>
-    <%= form.label :is_published, class: 'form-check-label ms-2' %>
+    <%= form.textarea :content, class: 'form-control', data: { controller: :autogrow, action: "input->autogrow#resize" } %>
   </div>
 
   <div class="mb-3">

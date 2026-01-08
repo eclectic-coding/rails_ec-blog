@@ -1,33 +1,22 @@
-<div class="page-header">
-  <%= link_to articles_path, class: 'btn btn-default' do %>
-    All Articles
-  <% end %>
-  <% if admin? %>
-  <%= link_to edit_article_path(@article), class: 'btn btn-primary' do %>
-    Edit
-  <% end %>
-  <% end %>
-  <h1>Show article</h1>
-</div>
+<div class="row" data-controller="highlight" data-highlight-module-url="<%= asset_path 'syntax_highlight.js' %>">
+  <div class="col-12 col-md-8 mx-auto">
+    <div class="card <%= @article.published_at.present? ?  'bg-white border-white' : 'card-draft'%>">
+      <div class="py-3 px-4">
+        <div class="d-flex align-items-center">
+          <h1 class="flex-grow-1 text-center h2 mb-3 m-0"><%= @article.title %></h1>
+          <%= content_tag :div, class: "" do %>
+            <%= link_to 'Edit', edit_article_path(@article), class: 'btn btn-primary' %>
+          <% end  if admin?%>
+        </div>
 
-<dl class="dl-horizontal">
-  <dt>Title:</dt>
-  <dd><%= @article.title %></dd>
-  <dt>Content:</dt>
-  <dd><%= sanitize(Commonmarker.to_html(@article.content),
-                   tags: %w[p br strong em a ul ol li code pre],
-                   attributes: %w[href title]) %>
-  </dd>
-  <dt>Published at:</dt>
-  <dd>
-    <% if @article.published_at.present? %>
-      <%= l(@article.published_at.to_date) %>
-    <% else %>
-      —
-    <% end %>
-  </dd>
-  <dt>Is published:</dt>
-  <dd><%= @article.is_published %></dd>
-  <dt>User:</dt>
-  <dd><%= @article.user %></dd>
-</dl>
+        <div class="mb-3">
+          <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
+          <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
+        </div>
+        <div>
+          <%== @article.formatted_content %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

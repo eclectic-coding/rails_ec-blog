@@ -1,2 +1,4 @@
-@use "customized_bootstrap";
+@import "_customized_bootstrap.scss";
+
 @import "bootstrap";
+@import "custom";
