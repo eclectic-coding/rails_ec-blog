@@ -30,4 +30,3 @@ module Articles
     end
   end
 end
-

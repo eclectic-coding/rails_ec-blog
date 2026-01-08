@@ -16,6 +16,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '4.0.0'
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
@@ -34,6 +35,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '4.0.0'
           bundler-cache: true
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
@@ -50,6 +52,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '4.0.0'
           bundler-cache: true
 
       - name: Prepare RuboCop cache
@@ -88,6 +91,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '4.0.0'
           bundler-cache: true
       # Add Node + JS deps + build so asset pipeline is available in CI tests
       - name: Install Node.js 22 (NodeSource)
@@ -152,11 +156,11 @@ jobs:
 #          - 5432:5432
 #        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
 
-      # redis:
-      #   image: valkey/valkey:8
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+#      redis:
+#        image: valkey/valkey:8
+#        ports:
+#          - 6379:6379
+#        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
 #    steps:
 #      - name: Install packages
