@@ -37,7 +37,9 @@ class Article < ApplicationRecord
   before_validation :normalize_published_at
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
-  def to_markdown = content
+  def formatted_content
+    Commonmarker.to_html(content, plugins: {syntax_highlighter: nil})
+  end
 
   def self.visible_to(user)
     if user&.admin?

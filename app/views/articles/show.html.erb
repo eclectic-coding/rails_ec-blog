@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" data-controller="highlight" data-highlight-module-url="<%= asset_path 'syntax_highlight.js' %>">
   <div class="col-12 col-md-8 mx-auto">
     <div class="card <%= @article.published_at.present? ?  'bg-white border-white' : 'card-draft'%>">
       <div class="py-3 px-4">
@@ -14,9 +14,7 @@
           <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
         </div>
         <div>
-          <%= sanitize(Commonmarker.to_html(@article.content),
-                       tags: %w[p br strong em a ul ol li code pre],
-                       attributes: %w[href title]) %>
+          <%== @article.formatted_content %>
         </div>
       </div>
     </div>
