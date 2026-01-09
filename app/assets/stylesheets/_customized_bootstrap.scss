@@ -1,13 +1,39 @@
 /**
 * 1 - Set SCSS variables below
 */
-//$primary: hsl(250,78%,63%);
-//$secondary: hsl(216, 15%, 52%);
 $link-decoration: none;
 $form-label-margin-bottom: 0;
+
+$primary: hsl(250,78%,63%);
+$secondary: hsl(216, 15%, 52%); // example: brand teal
+$success: #2ebf61;
+$info: #0891b2;
+$warning: #f1b955;
+$danger: #dc2626;
+$light: hsl(0, 0%, 97%);
+$dark: #0f172a;
 
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap');
 
 // Override Bootstrap font variables before importing Bootstrap
 $font-family-sans-serif: "Baloo 2", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 $font-family-base: $font-family-sans-serif;
+
+// Define the theme colors map that Bootstrap uses for utilities and components
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark
+);
+
+// Optional: make the default link color your primary
+$link-color: $primary;
+
+// Optional: adjust button focus/hover variables if you want specific shades
+// $btn-primary-hover-bg: darken($primary, 7%);
+// $btn-primary-border: $primary;
