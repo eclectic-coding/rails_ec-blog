@@ -23,4 +23,3 @@ RSpec.describe "Remove image UI", type: :request do
     expect(body).to include(remove_image_article_path(article))
   end
 end
-

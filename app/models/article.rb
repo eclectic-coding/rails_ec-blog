@@ -38,7 +38,7 @@ class Article < ApplicationRecord
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
   def formatted_content
-    Commonmarker.to_html(content, plugins: {syntax_highlighter: nil})
+    Commonmarker.to_html(content, plugins: { syntax_highlighter: nil })
   end
 
   def self.visible_to(user)
