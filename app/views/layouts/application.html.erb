@@ -18,7 +18,8 @@
   <body class="d-flex flex-column h-100 bg-light">
     <main class="">
       <%= render "shared/navbar" %>
-      <div id="notices">
+      <!-- Make the toast container fixed so toasts can be positioned below the navbar -->
+      <div class="toast-container position-fixed top-0 end-0 p-3" data-controller="flash">
         <%= render "shared/notices" %>
       </div>
 
