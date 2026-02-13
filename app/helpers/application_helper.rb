@@ -14,6 +14,10 @@ module ApplicationHelper
     end
   end
 
+  def bootstrap_toast_class_for(flash_type)
+    bootstrap_class_for(flash_type).sub('alert-', 'text-bg-')
+  end
+
   # Returns a friendly application title, e.g. "RailsBlog" -> "Rails Blog"
   def app_title
     Rails.application.class.module_parent_name.to_s
