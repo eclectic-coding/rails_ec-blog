@@ -44,7 +44,12 @@ module ApplicationHelper
     # Remove markdown headers, links, bold, italic formatting
     text_without_code = text_without_code.gsub(/#+\s*/, '')  # Headers
     text_without_code = text_without_code.gsub(/\[([^\]]+)\]\([^)]+\)/, '\1')  # Links
-    text_without_code = text_without_code.gsub(/[*_]{1,2}([^*_]+)[*_]{1,2}/, '\1')  # Bold/Italic
+    # Bold (**...** and __...__)
+    text_without_code = text_without_code.gsub(/\*\*(.+?)\*\*/, '\1')
+    text_without_code = text_without_code.gsub(/__(.+?)__/, '\1')
+    # Italic (*...* and _..._)
+    text_without_code = text_without_code.gsub(/\*(.+?)\*/, '\1')
+    text_without_code = text_without_code.gsub(/_(.+?)_/, '\1')
 
     # Clean up extra whitespace
     text_without_code = text_without_code.gsub(/\n+/, ' ').strip.squeeze(' ')
