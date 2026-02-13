@@ -6,6 +6,7 @@ gem "bootstrap", "~> 5.3.3"
 gem "dartsass-rails"
 gem "openssl", "~> 3.3", ">= 3.3.2"
 gem "commonmarker"
+gem "pagy"
 
 group :development, :test do
   gem "erb_lint"

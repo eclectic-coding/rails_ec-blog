@@ -1,16 +1,5 @@
 <% flash.each do |msg_type, message| %>
-  <% klass = bootstrap_class_for(msg_type) %>
-  <%
-    # Map alert classes to Bootstrap toast classes
-    toast_class = case klass
-      when "alert-success" then "text-bg-success"
-      when "alert-danger" then "text-bg-danger"
-      when "alert-warning" then "text-bg-warning"
-      when "alert-info" then "text-bg-info"
-      else "text-bg-secondary"
-    end
-  %>
-  <div class="toast align-items-center border-0 <%= toast_class %>"
+  <div class="toast align-items-center border-0 <%= bootstrap_toast_class_for(msg_type) %>"
        role="alert" aria-live="assertive" aria-atomic="true"
        data-bs-autohide="true" data-bs-delay="5000">
     <div class="d-flex">

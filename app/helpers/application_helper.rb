@@ -14,6 +14,10 @@ module ApplicationHelper
     end
   end
 
+  def bootstrap_toast_class_for(flash_type)
+    bootstrap_class_for(flash_type).sub('alert-', 'text-bg-')
+  end
+
   # Returns a friendly application title, e.g. "RailsBlog" -> "Rails Blog"
   def app_title
     Rails.application.class.module_parent_name.to_s
@@ -21,5 +25,40 @@ module ApplicationHelper
       .humanize
       .titleize
       .presence || "Application"
+  end
+
+  # Generates a preview of article content, removing code blocks and truncating to specified length
+  def article_preview(content, length: 200)
+    return "" if content.blank?
+
+    # Remove code blocks (fenced with ``` or indented)
+    # Remove fenced code blocks (```...```)
+    text_without_code = content.gsub(/```[\s\S]*?```/, '')
+
+    # Remove indented code blocks (4 spaces or tab at start of line)
+    text_without_code = text_without_code.gsub(/^([ ]{4}|\t).*$/, '')
+
+    # Remove inline code (`...`)
+    text_without_code = text_without_code.gsub(/`[^`]*`/, '')
+
+    # Remove markdown headers, links, bold, italic formatting
+    text_without_code = text_without_code.gsub(/#+\s*/, '')  # Headers
+    text_without_code = text_without_code.gsub(/\[([^\]]+)\]\([^)]+\)/, '\1')  # Links
+    # Bold (**...** and __...__)
+    text_without_code = text_without_code.gsub(/\*\*(.+?)\*\*/, '\1')
+    text_without_code = text_without_code.gsub(/__(.+?)__/, '\1')
+    # Italic (*...* and _..._)
+    text_without_code = text_without_code.gsub(/\*(.+?)\*/, '\1')
+    text_without_code = text_without_code.gsub(/_(.+?)_/, '\1')
+
+    # Clean up extra whitespace
+    text_without_code = text_without_code.gsub(/\n+/, ' ').strip.squeeze(' ')
+
+    # Truncate to desired length
+    if text_without_code.length > length
+      text_without_code.truncate(length, separator: ' ', omission: '...')
+    else
+      text_without_code
+    end
   end
 end

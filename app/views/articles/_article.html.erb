@@ -15,7 +15,7 @@
         <span class="badge rounded-pill text-bg-secondary">Secondary</span>
       </div>
       <h2 class="card-title"><%= article.title %></h2>
-      <p class="card-text"><%= article.content %></p>
+      <p class="card-text"><%= article_preview(article.content, length: 200) %></p>
       <p class="card-text">
         <small class="text-muted">
           <% if article.published_at.present? %>
