@@ -145,3 +145,9 @@ code.hljs {
   border-radius: inherit !important;
   /* Let the theme control colors but keep our layout */
 }
+
+/* Flash toast container positioning */
+.flash-toast-container {
+  z-index: 1090;
+  margin-top: 70px;
+}

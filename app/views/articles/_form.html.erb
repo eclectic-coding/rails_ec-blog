@@ -1,9 +1,8 @@
 <%= form_with(model: article, local: true, html: { multipart: true }) do |form| %>
   <% if article.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger" role="alert" id="error_explanation">
+      <h4 class="alert-heading"><%= pluralize(article.errors.count, "error") %> prohibited saving changes:</h4>
+      <ul class="mb-0">
         <% article.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
