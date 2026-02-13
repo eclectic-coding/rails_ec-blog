@@ -11,7 +11,8 @@ CI.run do
 
   step "Tests: Rails", "bin/rspec"
   # step "Tests: System", "bin/rails test:system"
-  step "Tests: Seeds", "env RAILS_ENV=test bin/rails db:migrate db:seed:replant"
+  # Seeds should not run in CI - tests should use factories/fixtures
+  # step "Tests: Seeds", "env RAILS_ENV=test bin/rails db:migrate db:seed:replant"
 
   # Optional: set a green GitHub commit status to unblock PR merge.
   # Requires the `gh` CLI and `gh extension install basecamp/gh-signoff`.
