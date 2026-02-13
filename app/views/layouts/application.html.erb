@@ -18,8 +18,11 @@
   <body class="d-flex flex-column h-100 bg-light">
     <main class="">
       <%= render "shared/navbar" %>
-      <div id="notices">
-        <%= render "shared/notices" %>
+      <!-- Toast container fixed so toasts can be positioned below the navbar -->
+      <div class="toast-container position-fixed top-0 end-0 p-3 flash-toast-container" data-controller="flash">
+        <%= turbo_frame_tag "flash_messages" do %>
+          <%= render "shared/notices" %>
+        <% end %>
       </div>
 
       <div class="container mt-5 mx-auto">
