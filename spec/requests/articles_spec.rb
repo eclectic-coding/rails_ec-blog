@@ -2,12 +2,16 @@ require 'rails_helper'
 
 RSpec.describe "/articles", type: :request do
   let(:valid_attributes) {
+    # Create a tag for the article (required by validation)
+    tag = Tag.find_or_create_by!(name: 'test-tag')
+
     # Explicit attributes (avoid association keys in params)
     {
       title: "MyString",
       content: "MyText",
       published_at: Time.current.to_s,
       is_published: true,
+      tag_ids: [tag.id],
       # include a small uploaded image so controller create/update requests pass the model validation
       image: Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test_image.jpg"), "image/jpeg")
     }

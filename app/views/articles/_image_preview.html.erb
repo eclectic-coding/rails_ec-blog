@@ -1,5 +1,5 @@
 <div id="article-image-area-<%= article.id %>" class="article-image-area">
-  <% if article.image.attached? %>
+  <% if article.image.attached? && article.persisted? %>
     <%= image_tag url_for(article.image.variant(resize_to_limit: [160, 120])), class: 'article-thumb', data: { file_preview_target: 'image' }, alt: (article.title.presence || 'Article image') %>
     <button type="button" class="remove-image-btn btn btn-sm btn-danger" aria-label="Remove image"
             data-action="click->file-preview#removeImage"

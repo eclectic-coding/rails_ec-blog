@@ -2,11 +2,12 @@ require 'rails_helper'
 
 RSpec.describe "Article publishing", type: :request do
   let(:admin) { create(:user, :admin) }
+  let(:tag) { Tag.find_or_create_by!(name: 'test-tag') }
 
   it "sets published_at when an admin creates a published article and guest can view it" do
     sign_in_as(admin)
 
-    post articles_url, params: { article: { title: "Publish Test", content: "Content", is_published: true, image: Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test_image.jpg"), "image/jpeg") } }
+    post articles_url, params: { article: { title: "Publish Test", content: "Content", is_published: true, tag_ids: [tag.id], image: Rack::Test::UploadedFile.new(Rails.root.join("spec", "fixtures", "files", "test_image.jpg"), "image/jpeg") } }
 
     expect(response).to redirect_to(article_url(Article.last))
 
