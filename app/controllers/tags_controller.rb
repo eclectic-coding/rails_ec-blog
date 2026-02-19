@@ -6,9 +6,9 @@ class TagsController < ApplicationController
     @tags = Tag.includes(:articles).ordered
   end
 
-  # GET /tags/:id
+  # GET /tags/:name
   def show
-    @tag = Tag.find(params[:id])
+    @tag = Tag.find_by_param(params[:id]) || raise(ActiveRecord::RecordNotFound)
     @pagy, @articles = pagy(@tag.articles.visible_to(current_user))
 
     respond_to do |format|

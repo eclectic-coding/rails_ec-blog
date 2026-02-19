@@ -8,7 +8,8 @@
 - Click any tag to see articles with that tag
 
 ### 2. Filter by Tag
-- Navigate to: **http://localhost:3000/tags/:id**
+- Navigate to: **http://localhost:3000/tags/:name** (e.g., `/tags/ruby`)
+- URLs use tag names for better SEO and readability
 - See all published articles with the selected tag
 - Pagination supported for large tag lists
 
@@ -65,11 +66,13 @@ Article ←→ ArticleTag ←→ Tag
 
 ### Public (No Auth Required)
 - `GET /tags` - List all tags
-- `GET /tags/:id` - Show articles for tag
+- `GET /tags/:name` - Show articles for tag (e.g., `/tags/ruby`)
 
 ### Admin Only
 - Tags are managed through article create/edit forms
 - No direct tag CRUD endpoints (future enhancement)
+
+**Note:** URLs use tag names instead of IDs for better SEO and user-friendly links
 
 ## Seeds
 

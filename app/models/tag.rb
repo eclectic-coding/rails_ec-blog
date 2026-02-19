@@ -22,6 +22,16 @@ class Tag < ApplicationRecord
 
   scope :ordered, -> { order(:name) }
 
+  # Use tag name in URLs instead of ID, with hyphens for spaces
+  def to_param
+    name.gsub(' ', '-')
+  end
+
+  # Find tag by slug (hyphenated name) or regular name
+  def self.find_by_param(param)
+    find_by(name: param.gsub('-', ' '))
+  end
+
   private
 
   def normalize_name

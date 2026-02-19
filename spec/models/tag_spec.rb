@@ -84,4 +84,32 @@ RSpec.describe Tag, type: :model do
       expect(Tag.ordered.to_a).to eq([tag_c, tag_b, tag_a])
     end
   end
+
+  describe '#to_param' do
+    it 'returns the tag name for use in URLs' do
+      tag = create(:tag, name: 'ruby')
+      expect(tag.to_param).to eq('ruby')
+    end
+
+    it 'uses hyphens instead of spaces for multi-word tags' do
+      tag = create(:tag, name: 'web development')
+      expect(tag.to_param).to eq('web-development')
+    end
+  end
+
+  describe '.find_by_param' do
+    it 'finds tag by exact name' do
+      tag = create(:tag, name: 'ruby')
+      expect(Tag.find_by_param('ruby')).to eq(tag)
+    end
+
+    it 'finds tag by hyphenated slug' do
+      tag = create(:tag, name: 'web development')
+      expect(Tag.find_by_param('web-development')).to eq(tag)
+    end
+
+    it 'returns nil for non-existent tag' do
+      expect(Tag.find_by_param('nonexistent')).to be_nil
+    end
+  end
 end
