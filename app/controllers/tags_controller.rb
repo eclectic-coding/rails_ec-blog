@@ -1,10 +1,5 @@
 class TagsController < ApplicationController
-  allow_unauthenticated_access only: %i[index show]
-
-  # GET /tags
-  def index
-    @tags = Tag.includes(:articles).ordered
-  end
+  allow_unauthenticated_access only: %i[show]
 
   # GET /tags/:name
   def show

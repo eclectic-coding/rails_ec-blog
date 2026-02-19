@@ -1,22 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Tags', type: :request do
-  describe 'GET /tags' do
-    it 'returns a successful response' do
-      get tags_path
-      expect(response).to be_successful
-    end
-
-    it 'displays all tags ordered by name' do
-      tag_b = create(:tag, name: 'rails')
-      tag_a = create(:tag, name: 'javascript')
-      tag_c = create(:tag, name: 'ruby')
-
-      get tags_path
-
-      expect(response.body).to include('javascript', 'rails', 'ruby')
-    end
-  end
 
   describe 'GET /tags/:name' do
     let(:tag) { create(:tag, name: 'ruby') }

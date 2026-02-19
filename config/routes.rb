@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       delete :remove_image, to: 'articles/remove_image#destroy'
     end
   end
-  resources :tags, only: [:index, :show]
+  resources :tags, only: [:show]
   resource :session
   resources :passwords, param: :token
 
