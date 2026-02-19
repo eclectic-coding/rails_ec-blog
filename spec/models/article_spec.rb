@@ -1,7 +1,73 @@
+# == Schema Information
+#
+# Table name: articles
+#
+#  id           :integer          not null, primary key
+#  title        :string
+#  content      :text
+#  is_published :boolean          default(FALSE)
+#  user_id      :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  published_at :datetime
+#
+# Indexes
+#
+#  index_articles_on_published_at  (published_at)
+#  index_articles_on_user_id       (user_id)
+#
+
 require "rails_helper"
 require "active_support/testing/time_helpers"
 
 RSpec.describe Article, type: :model do
+  describe 'associations' do
+    it 'belongs to user' do
+      article = create(:article)
+      expect(article.user).to be_present
+      expect(article.user).to be_a(User)
+    end
+
+    it 'has many article_tags' do
+      article = create(:article)
+      tag = create(:tag)
+      article.tags << tag
+
+      expect(article.article_tags.count).to eq(2) # 1 from factory + 1 added
+    end
+
+    it 'has many tags through article_tags' do
+      article = create(:article)
+      tag = create(:tag, name: 'ruby')
+      article.tags << tag
+
+      expect(article.tags.pluck(:name)).to include('ruby')
+    end
+
+    it 'destroys article_tags when destroyed' do
+      article = create(:article)
+
+      expect { article.destroy }.to change { ArticleTag.count }.by(-1)
+    end
+  end
+
+  describe 'validations' do
+    let(:user) { create(:user) }
+    let(:tag) { create(:tag) }
+
+    it 'requires at least one tag' do
+      article = build(:article, user: user)
+      article.tags = [] # Clear tags added by factory
+      expect(article).not_to be_valid
+      expect(article.errors[:tags]).to include('must have at least one tag')
+    end
+
+    it 'is valid with at least one tag' do
+      article = build(:article, user: user, tags: [tag])
+      expect(article).to be_valid
+    end
+  end
+
   describe "normalize_published_at" do
     include ActiveSupport::Testing::TimeHelpers
 
