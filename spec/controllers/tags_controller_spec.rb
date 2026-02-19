@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Tags', type: :request do
-
   describe 'GET /tags/:name' do
     let(:tag) { create(:tag, name: 'ruby') }
     let(:user) { create(:user) }
@@ -49,4 +48,3 @@ RSpec.describe 'Tags', type: :request do
     end
   end
 end
-
