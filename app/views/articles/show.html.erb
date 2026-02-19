@@ -11,7 +11,7 @@
 
         <div class="mb-3">
           <% @article.tags.each do |tag| %>
-            <%= link_to tag.name.titleize, tag_path(tag), class: 'badge rounded-pill text-bg-secondary me-2 text-decoration-none' %>
+            <%= link_to tag.display_name, tag_path(tag), class: 'badge rounded-pill text-bg-secondary me-2 text-decoration-none' %>
           <% end %>
         </div>
         <div>

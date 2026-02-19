@@ -71,11 +71,11 @@
   <div class="mb-3">
     <%= form.label :tag_ids, "Tags (select at least one)", class: 'form-label' %>
     <div class="d-flex flex-wrap gap-2">
-      <%= form.collection_check_boxes :tag_ids, Tag.ordered, :id, :name do |b| %>
+      <%= form.collection_check_boxes :tag_ids, Tag.ordered, :id, :display_name do |b| %>
         <div class="form-check form-check-inline">
           <%= b.check_box class: 'form-check-input' %>
           <%= b.label class: 'form-check-label badge rounded-pill text-bg-secondary' do %>
-            <%= b.text.titleize %>
+            <%= b.text %>
           <% end %>
         </div>
       <% end %>

@@ -22,6 +22,20 @@ class Tag < ApplicationRecord
 
   scope :ordered, -> { order(:name) }
 
+  # Known abbreviations that should be displayed in all caps
+  ABBREVIATIONS = %w[
+    css html js api ui ux sql php aws cdn seo rest json xml http https
+    svg pdf gif png jpg jpeg webp yaml yml npm cli git ssh ftp smtp
+    tdd bdd rspec mvc mvvm
+  ].freeze
+
+  # Display name with proper capitalization for abbreviations
+  def display_name
+    name.split(/[\s-]/).map do |word|
+      ABBREVIATIONS.include?(word.downcase) ? word.upcase : word.capitalize
+    end.join(' ')
+  end
+
   # Use tag name in URLs instead of ID, with hyphens for spaces
   def to_param
     name.gsub(' ', '-')

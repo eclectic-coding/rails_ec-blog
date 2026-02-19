@@ -97,6 +97,33 @@ RSpec.describe Tag, type: :model do
     end
   end
 
+  describe '#display_name' do
+    it 'capitalizes regular words' do
+      tag = create(:tag, name: 'ruby')
+      expect(tag.display_name).to eq('Ruby')
+    end
+
+    it 'displays abbreviations in all caps' do
+      tag = create(:tag, name: 'css')
+      expect(tag.display_name).to eq('CSS')
+    end
+
+    it 'handles mixed regular words and abbreviations' do
+      tag = create(:tag, name: 'css framework')
+      expect(tag.display_name).to eq('CSS Framework')
+    end
+
+    it 'handles multiple words' do
+      tag = create(:tag, name: 'web development')
+      expect(tag.display_name).to eq('Web Development')
+    end
+
+    it 'handles hyphenated words' do
+      tag = create(:tag, name: 'rest-api')
+      expect(tag.display_name).to eq('REST API')
+    end
+  end
+
   describe '.find_by_param' do
     it 'finds tag by exact name' do
       tag = create(:tag, name: 'ruby')
