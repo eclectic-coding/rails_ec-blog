@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-sm-6 mx-auto mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <%= link_to tags_path, class: 'btn btn-sm btn-outline-secondary' do %>
+        ← All Tags
+      <% end %>
+      <h1 class="article-feed-header flex-grow-1 text-center">
+        <span class="badge rounded-pill text-bg-primary fs-4 py-2 px-3"><%= @tag.name %></span>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mx-auto" data-controller="infinite-scroll">
+
+    <div id="articles" data-infinite-scroll-target="entries">
+      <% @articles.each do |post| %>
+        <%= render partial: "articles/article", locals: { article: post } %>
+      <% end %>
+    </div>
+
+    <% if @pagy.next %>
+      <div id="pagination"
+           data-infinite-scroll-target="pagination"
+           data-infinite-scroll-url-value="<%= tag_path(@tag, page: @pagy.next) %>"
+           class="d-flex justify-content-center my-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading more articles...</span>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @articles.empty? %>
+      <div class="alert alert-info text-center" role="alert">
+        No articles found with this tag.
+      </div>
+    <% end %>
+  </div>
+</div>
+

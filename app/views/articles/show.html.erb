@@ -10,8 +10,9 @@
         </div>
 
         <div class="mb-3">
-          <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
-          <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
+          <% @article.tags.each do |tag| %>
+            <%= link_to tag.name, tag_path(tag), class: 'badge rounded-pill text-bg-secondary me-2 text-decoration-none' %>
+          <% end %>
         </div>
         <div>
           <%= sanitize(@article.formatted_content,
