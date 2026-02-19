@@ -44,7 +44,7 @@ RSpec.describe 'Tags', type: :request do
       it 'finds tag by hyphenated slug' do
         get '/tags/web-development'
         expect(response).to be_successful
-        expect(response.body).to include('web development')
+        expect(response.body).to include('Web Development')
       end
     end
   end
