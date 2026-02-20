@@ -36,13 +36,13 @@ FileUtils.chdir APP_ROOT do
   if File.exist?(File.join(APP_ROOT, "package.json"))
     system! "npm install -g yarn" unless command_available?("yarn")
     system("bin/yarn") || warn("bin/yarn failed — ensure Yarn is installed or package.json is valid")
-
-    puts "\n== Compiling CSS & JS =="
-    system! "bin/yarn run build"
-    system! "bin/yarn run build:css"
   else
     puts "\n== Skipping JS steps: no package.json found =="
   end
+
+  # Precompile CSS using dartsass-rails
+  puts "\n== Precompiling CSS =="
+  system! "bin/rails dartsass:build"
 
   # puts "\n== Copying sample files =="
   # unless File.exist?("config/database.yml")

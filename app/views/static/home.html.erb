@@ -1,2 +1,18 @@
-<h1>Static#home</h1>
-<p>Find me in app/views/static/home.html.erb</p>
+<div class="row">
+  <div class="col-sm-6 d-flex justify-content-between align-items-center mx-auto mb-3">
+    <h1 class="article-feed-header">Latest Posts</h1>
+    <%= link_to "View All Articles", articles_path, class: 'btn btn-outline-primary' %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <% if @latest_articles.any? %>
+      <% @latest_articles.each do |post| %>
+        <%= render partial: "articles/article", locals: { article: post } %>
+      <% end %>
+    <% else %>
+      <p class="text-center text-muted">No published articles yet.</p>
+    <% end %>
+  </div>
+</div>
