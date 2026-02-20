@@ -10,6 +10,14 @@
 
 require 'open-uri'
 
+# Create tags
+puts "Creating tags..."
+tags_data = ['ruby', 'rails', 'javascript', 'css', 'programming', 'web development', 'tutorial', 'best practices']
+tags = tags_data.map do |tag_name|
+  Tag.find_or_create_by!(name: tag_name)
+end
+puts "Created #{tags.count} tags"
+
 # Sample markdown contents with different typography and code blocks
 article_contents = [
   {
@@ -507,7 +515,15 @@ article_contents.each_with_index do |article_data, index|
   existing_article = Article.find_by(title: article_data[:title])
 
   if existing_article
-    puts "✓ Article already exists: #{existing_article.title}"
+    # Assign tags to existing articles if they don't have any
+    if existing_article.tags.empty?
+      num_tags = rand(1..3)
+      existing_article.tags = tags.sample(num_tags)
+      existing_article.save
+      puts "✓ Article already exists, added tags: #{existing_article.title}"
+    else
+      puts "✓ Article already exists: #{existing_article.title}"
+    end
     next
   end
 
@@ -529,8 +545,12 @@ article_contents.each_with_index do |article_data, index|
       content_type: 'image/jpeg'
     )
 
+    # Assign random tags (1-3 tags per article)
+    num_tags = rand(1..3)
+    article.tags = tags.sample(num_tags)
+
     if article.save
-      puts "✓ Created article: #{article.title} with image"
+      puts "✓ Created article: #{article.title} with image and #{article.tags.count} tags"
     else
       puts "✗ Error saving #{article.title}: #{article.errors.full_messages.join(', ')}"
     end
@@ -541,4 +561,3 @@ end
 
 puts "\nSeed data creation complete!"
 puts "Created #{Article.count} articles total."
-

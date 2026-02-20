@@ -20,19 +20,23 @@
 class Article < ApplicationRecord
   belongs_to :user
 
+  has_many :article_tags, dependent: :destroy
+  has_many :tags, through: :article_tags
+
   has_one_attached :image
 
   # Virtual attribute used by the form to indicate the user wants to remove the current attachment
   attr_accessor :remove_image
 
   validates :title, presence: true
+  validates :tags, presence: { message: "must have at least one tag" }
 
   validate :image_presence
   validate :image_type_and_size
 
   scope :published, -> { where(is_published: true) }
   scope :draft, -> { where(is_published: false) }
-  scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC, created_at DESC")) }
+  scope :recent, -> { order(Arel.sql("COALESCE(articles.published_at, articles.created_at) DESC, articles.created_at DESC")) }
 
   before_validation :normalize_published_at
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }

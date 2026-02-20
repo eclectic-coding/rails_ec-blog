@@ -11,8 +11,9 @@
 
     <div class="col-12 col-md-8 ps-2">
       <div class="mb-2">
-        <span class="badge rounded-pill text-bg-secondary me-2">Secondary</span>
-        <span class="badge rounded-pill text-bg-secondary">Secondary</span>
+        <% article.tags.each do |tag| %>
+          <%= link_to tag.display_name, tag_path(tag), class: 'badge rounded-pill text-bg-secondary me-2 text-decoration-none' %>
+        <% end %>
       </div>
       <h2 class="card-title"><%= article.title %></h2>
       <p class="card-text"><%= article_preview(article.content, length: 200) %></p>

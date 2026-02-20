@@ -69,6 +69,25 @@
   </div>
 
   <div class="mb-3">
+    <%= form.label :tag_ids, "Tags (select at least one)", class: 'form-label' %>
+    <div class="d-flex flex-wrap gap-2">
+      <%= form.collection_check_boxes :tag_ids, Tag.ordered, :id, :display_name do |b| %>
+        <div class="form-check form-check-inline">
+          <%= b.check_box class: 'form-check-input' %>
+          <%= b.label class: 'form-check-label badge rounded-pill text-bg-secondary' do %>
+            <%= b.text %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <% if Tag.count == 0 %>
+      <div class="form-text text-muted">
+        No tags available yet. You'll need to create tags first.
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
     <% if article.persisted? %>
       <div class="float-end">
         <%= link_to 'Destroy', article, class: "text-danger", data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
