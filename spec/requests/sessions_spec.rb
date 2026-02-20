@@ -10,7 +10,7 @@ RSpec.describe "Sessions", type: :request do
           post session_path, params: { email_address: user.email_address, password: user.password }
         }.to change { user.sessions.count }.by(1)
 
-        expect(response).to redirect_to(admin_dashboard_show_path)
+        expect(response).to redirect_to(root_path)
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe "Sessions", type: :request do
     it "terminates the session and redirects to the sign-in page" do
       # Create a real session via the controller so the test client receives the signed cookie
       post session_path, params: { email_address: user.email_address, password: user.password }
-      expect(response).to redirect_to(admin_dashboard_show_path)
+      expect(response).to redirect_to(root_path)
 
       s = user.sessions.reload.last
       expect(s).to be_present
