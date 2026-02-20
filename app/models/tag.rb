@@ -18,7 +18,7 @@ class Tag < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 
-  before_save :normalize_name
+  before_validation :normalize_name
 
   scope :ordered, -> { order(:name) }
 
@@ -31,7 +31,7 @@ class Tag < ApplicationRecord
 
   # Display name with proper capitalization for abbreviations
   def display_name
-    name.split(/[\s-]/).map do |word|
+    name.split(' ').map do |word|
       ABBREVIATIONS.include?(word.downcase) ? word.upcase : word.capitalize
     end.join(' ')
   end
@@ -49,6 +49,6 @@ class Tag < ApplicationRecord
   private
 
   def normalize_name
-    self.name = name.downcase.strip if name.present?
+    self.name = name.downcase.strip.gsub('-', ' ').squeeze(' ') if name.present?
   end
 end
