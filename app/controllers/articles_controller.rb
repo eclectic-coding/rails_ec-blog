@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
   # GET /articles or /articles.json
   def index
     resume_session
-    @pagy, @articles = pagy(Article.visible_to(current_user))
+    @pagy, @articles = pagy(Article.includes(:tags).visible_to(current_user))
 
 
     respond_to do |format|
