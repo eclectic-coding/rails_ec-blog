@@ -73,6 +73,11 @@ RSpec.describe Tag, type: :model do
       tag = Tag.create(name: 'JavaScript')
       expect(tag.name).to eq('javascript')
     end
+
+    it 'converts hyphens to spaces' do
+      tag = Tag.create(name: 'rest-api')
+      expect(tag.name).to eq('rest api')
+    end
   end
 
   describe '.ordered' do
@@ -118,8 +123,8 @@ RSpec.describe Tag, type: :model do
       expect(tag.display_name).to eq('Web Development')
     end
 
-    it 'handles hyphenated words' do
-      tag = create(:tag, name: 'rest-api')
+    it 'handles multi-word abbreviations' do
+      tag = create(:tag, name: 'rest api')
       expect(tag.display_name).to eq('REST API')
     end
   end
