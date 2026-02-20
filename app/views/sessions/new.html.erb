@@ -1,12 +1,12 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-6">
-      <%= tag.div(flash[:alert], class: "alert alert-danger alert-dismissible fade show", role: "alert") do %>
+      <%= tag.div(class: "alert alert-danger alert-dismissible fade show", role: "alert") do %>
         <%= flash[:alert] %>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       <% end if flash[:alert] %>
 
-      <%= tag.div(flash[:notice], class: "alert alert-success alert-dismissible fade show", role: "alert") do %>
+      <%= tag.div(class: "alert alert-success alert-dismissible fade show", role: "alert") do %>
         <%= flash[:notice] %>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       <% end if flash[:notice] %>
