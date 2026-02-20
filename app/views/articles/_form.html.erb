@@ -16,7 +16,7 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :tag_ids, "Tags (select at least one)", class: 'form-label' %>
+    <%= form.label :tag_ids, "Tags (select or create new)", class: 'form-label' %>
     <%= form.collection_select :tag_ids, Tag.ordered, :id, :display_name,
         {},
         {
@@ -25,11 +25,9 @@
           data: { controller: 'tom-select' }
         }
     %>
-    <% if Tag.count == 0 %>
-      <div class="form-text text-muted">
-        No tags available yet. You'll need to create tags first.
-      </div>
-    <% end %>
+    <div class="form-text">
+      Type to search existing tags or create a new one by typing and pressing Enter.
+    </div>
   </div>
 
   <div class="row">

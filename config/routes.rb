@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       delete :remove_image, to: 'articles/remove_image#destroy'
     end
   end
-  resources :tags, only: [:show]
+  resources :tags, only: [:show, :create]
   resource :session
   resources :passwords, param: :token
 
@@ -14,6 +14,4 @@ Rails.application.routes.draw do
   get "static/home"
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-
 end

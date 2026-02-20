@@ -10,14 +10,55 @@ export default class extends Controller {
       return
     }
 
-    // Basic multi-select configuration for dropdown with multiple selections
+    // Get CSRF token for AJAX requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+
+    // Multi-select configuration with inline tag creation
     this.tomSelect = new TomSelect(this.element, {
       plugins: ['remove_button'],
       maxItems: null,              // Allow unlimited selections
-      create: false,               // Don't allow creating new tags
-      placeholder: 'Select tags...',
+      createOnBlur: true,          // Create tag when user clicks away
+      placeholder: 'Select or type to create tags...',
       closeAfterSelect: false,     // Keep dropdown open after selecting
-      hideSelected: true           // Hide selected items from dropdown list
+      hideSelected: true,          // Hide selected items from dropdown list
+
+      // Customize the create option text
+      render: {
+        option_create: function(data, escape) {
+          return '<div class="create">Add <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+        },
+        no_results: function(data, escape) {
+          return '<div class="no-results">No tags found. Type to create a new one.</div>';
+        }
+      },
+
+      // Handle creating new tags via AJAX
+      create: function(input, callback) {
+        // Make AJAX request to create the tag
+        fetch('/tags', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken,
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ tag: { name: input } })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.errors) {
+            console.error('Error creating tag:', data.errors)
+            callback(false) // Cancel creation
+          } else {
+            // Return the new tag data
+            callback({ value: data.id, text: data.name })
+          }
+        })
+        .catch(error => {
+          console.error('Error creating tag:', error)
+          callback(false) // Cancel creation
+        })
+      }
     })
   }
 

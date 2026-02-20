@@ -230,6 +230,25 @@ code.hljs {
   font-style: italic;
 }
 
+.ts-dropdown .create {
+  padding: 0.5rem 0.75rem;
+  background-color: hsl(250, 78%, 97%);
+  border-top: 1px solid #dee2e6;
+  color: hsl(250, 78%, 40%);
+  cursor: pointer;
+  font-style: italic;
+}
+
+.ts-dropdown .create:hover {
+  background-color: hsl(250, 78%, 95%);
+  color: hsl(250, 78%, 30%);
+}
+
+.ts-dropdown .create strong {
+  font-weight: 600;
+  color: hsl(250, 78%, 63%);
+}
+
 .ts-wrapper.multi .ts-control input {
   flex: 1;
   min-width: 120px;
