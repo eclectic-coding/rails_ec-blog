@@ -142,4 +142,3 @@ RSpec.describe "/tags", type: :request do
     end
   end
 end
-
