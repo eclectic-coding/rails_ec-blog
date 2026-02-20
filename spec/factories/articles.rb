@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: articles
+#
+#  id           :integer          not null, primary key
+#  title        :string
+#  content      :text
+#  is_published :boolean          default(FALSE)
+#  user_id      :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  published_at :datetime
+#
+# Indexes
+#
+#  index_articles_on_published_at  (published_at)
+#  index_articles_on_user_id       (user_id)
+#
+
 # Factory for Article
 FactoryBot.define do
   factory :article do
@@ -10,6 +29,11 @@ FactoryBot.define do
       unless article.image.attached?
         # Use a small in-memory blob to avoid relying on fixture files
         article.image.attach(io: StringIO.new("x" * 1024), filename: "sample.png", content_type: "image/png")
+      end
+
+      # Ensure at least one tag is present for validation
+      if article.tags.empty?
+        article.tags << FactoryBot.build(:tag)
       end
     end
 

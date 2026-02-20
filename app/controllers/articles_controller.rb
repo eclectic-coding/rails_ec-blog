@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
   # GET /articles or /articles.json
   def index
     resume_session
-    @pagy, @articles = pagy(Article.visible_to(current_user))
+    @pagy, @articles = pagy(Article.includes(:tags).visible_to(current_user))
 
 
     respond_to do |format|
@@ -119,7 +119,7 @@ class ArticlesController < ApplicationController
   def article_params
     resume_session
 
-    permitted = [:title, :content, :published_at, :is_published, :image, :remove_image]
+    permitted = [:title, :content, :published_at, :is_published, :image, :remove_image, tag_ids: []]
 
     params.require(:article).permit(permitted)
   end
