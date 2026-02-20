@@ -49,8 +49,9 @@ Rails.application.configure do
   # Use memory store for caching (or configure Redis/Memcached if needed)
   config.cache_store = :memory_store
 
-  # Use the default async adapter for Active Job (or configure Sidekiq/Resque if needed)
-  config.active_job.queue_adapter = :async
+  # Use a durable adapter for Active Job in production by default.
+  # Override via ACTIVE_JOB_QUEUE_ADAPTER environment variable (e.g. "sidekiq", "solid_queue").
+  config.active_job.queue_adapter = ENV.fetch("ACTIVE_JOB_QUEUE_ADAPTER", "solid_queue").to_sym
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
