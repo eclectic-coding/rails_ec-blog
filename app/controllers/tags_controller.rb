@@ -9,7 +9,7 @@ class TagsController < ApplicationController
       if @tag.save
         format.json { render json: { id: @tag.id, name: @tag.display_name }, status: :created }
       else
-        format.json { render json: { errors: @tag.errors.full_messages }, status: :unprocessable_entity }
+        format.json { render json: { errors: @tag.errors.full_messages }, status: :unprocessable_content }
       end
     end
   end
