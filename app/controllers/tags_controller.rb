@@ -4,7 +4,7 @@ class TagsController < ApplicationController
   # GET /tags/:name
   def show
     @tag = Tag.find_by_param(params[:id]) || raise(ActiveRecord::RecordNotFound)
-    @pagy, @articles = pagy(@tag.articles.visible_to(current_user))
+    @pagy, @articles = pagy(@tag.articles.includes(:tags).visible_to(current_user))
 
     respond_to do |format|
       format.html
