@@ -9,7 +9,7 @@ class ReplacePublishedDateAndTimeWithPublishedAt < ActiveRecord::Migration[8.1]
     Article.reset_column_information
     Article.find_each do |article|
       if article.published_date.present?
-        time = article.published_time || Time.parse('00:00:00')
+        time = article.published_time || Time.zone.parse('00:00:00')
         datetime = article.published_date.to_datetime + time.seconds_since_midnight.seconds
         article.update_column(:published_at, datetime)
       end
