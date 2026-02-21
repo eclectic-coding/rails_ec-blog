@@ -2,14 +2,16 @@
 #
 # Table name: articles
 #
-#  id           :integer          not null, primary key
-#  title        :string
-#  content      :text
-#  is_published :boolean          default(FALSE)
-#  user_id      :integer          not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  published_at :datetime
+#  id             :integer          not null, primary key
+#  title          :string
+#  content        :text
+#  is_published   :boolean          default(FALSE)
+#  user_id        :integer          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  published_date :date
+#  published_time :time
+#  published_at   :datetime
 #
 # Indexes
 #
