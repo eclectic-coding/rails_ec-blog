@@ -6,11 +6,14 @@ class ReplacePublishedDateAndTimeWithPublishedAt < ActiveRecord::Migration[8.1]
     end
 
     # Backfill published_at from published_date + published_time (use midnight when time is NULL)
-    execute <<-SQL.squish
-      UPDATE articles
-      SET published_at = (published_date::timestamp + COALESCE(published_time, '00:00:00'::time))
-      WHERE published_date IS NOT NULL;
-    SQL
+    Article.reset_column_information
+    Article.find_each do |article|
+      if article.published_date.present?
+        time = article.published_time || Time.parse('00:00:00')
+        datetime = article.published_date.to_datetime + time.seconds_since_midnight.seconds
+        article.update_column(:published_at, datetime)
+      end
+    end
 
     # Remove the old columns if they exist
     if column_exists?(:articles, :published_time)
@@ -33,11 +36,15 @@ class ReplacePublishedDateAndTimeWithPublishedAt < ActiveRecord::Migration[8.1]
     end
 
     # Populate them from published_at
-    execute <<-SQL.squish
-      UPDATE articles
-      SET published_date = published_at::date, published_time = published_at::time
-      WHERE published_at IS NOT NULL;
-    SQL
+    Article.reset_column_information
+    Article.find_each do |article|
+      if article.published_at.present?
+        article.update_columns(
+          published_date: article.published_at.to_date,
+          published_time: article.published_at
+        )
+      end
+    end
 
     # Remove the published_at column
     if column_exists?(:articles, :published_at)
