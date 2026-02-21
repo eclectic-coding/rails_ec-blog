@@ -11,7 +11,7 @@
 # Guard clause: only run seeds in development environment
 unless Rails.env.development?
   puts "Skipping seed data - only runs in development environment"
-  exit
+  raise "Skipping seed data - only runs in development environment"
 end
 
 require 'open-uri'
