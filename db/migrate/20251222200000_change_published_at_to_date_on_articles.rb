@@ -20,7 +20,10 @@ class ChangePublishedAtToDateOnArticles < ActiveRecord::Migration[8.1]
   end
 
   def down
-    # Reverse the process
+    # NOTE: This rollback involves irreversible data loss. The `up` migration
+    # converted datetime values to dates, discarding the original time component.
+    # Rolling back restores a datetime column, but all times will be set to
+    # midnight (00:00:00) since the original time information is no longer available.
     add_column :articles, :published_at_temp, :datetime
 
     Article.reset_column_information
