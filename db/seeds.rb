@@ -8,6 +8,12 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# Guard clause: only run seeds in development environment
+unless Rails.env.development?
+  puts "Skipping seed data - only runs in development environment"
+  exit
+end
+
 require 'open-uri'
 
 # Create tags
