@@ -10,3 +10,5 @@ pin "bootstrap", to: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/boots
 pin "@rails/activestorage", to: "activestorage.esm.js"
 
 # syntax_highlight is no longer pinned; the Stimulus controller imports the asset path directly.
+pin "trix"
+pin "@rails/actiontext", to: "actiontext.esm.js"
