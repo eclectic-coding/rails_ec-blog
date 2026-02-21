@@ -11,9 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.1].define(version: 2026_02_19_131532) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
-
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -43,10 +40,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_131532) do
   end
 
   create_table "article_tags", force: :cascade do |t|
-    t.bigint "article_id", null: false
+    t.integer "article_id", null: false
     t.datetime "created_at", null: false
-    t.bigint "tag_id", null: false
+    t.integer "tag_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["article_id", "tag_id"], name: "index_article_tags_on_article_id_and_tag_id", unique: true
     t.index ["article_id"], name: "index_article_tags_on_article_id"
     t.index ["tag_id"], name: "index_article_tags_on_tag_id"
   end
@@ -58,7 +56,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_131532) do
     t.datetime "published_at"
     t.string "title"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.index ["published_at"], name: "index_articles_on_published_at"
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
@@ -68,7 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_19_131532) do
     t.string "ip_address"
     t.datetime "updated_at", null: false
     t.string "user_agent"
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
