@@ -7,8 +7,5 @@ import * as ActiveStorage from "@rails/activestorage"
 import "bootstrap"
 
 ActiveStorage.start()
-
-
-
-import "trix"
+import "lexxy"
 import "@rails/actiontext"
