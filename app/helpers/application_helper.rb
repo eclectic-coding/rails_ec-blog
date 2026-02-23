@@ -27,38 +27,25 @@ module ApplicationHelper
       .presence || "Application"
   end
 
-  # Generates a preview of article content, removing code blocks and truncating to specified length
+  # Generates a preview of article content from ActionText rich text
   def article_preview(content, length: 200)
     return "" if content.blank?
 
-    # Remove code blocks (fenced with ``` or indented)
-    # Remove fenced code blocks (```...```)
-    text_without_code = content.gsub(/```[\s\S]*?```/, '')
-
-    # Remove indented code blocks (4 spaces or tab at start of line)
-    text_without_code = text_without_code.gsub(/^([ ]{4}|\t).*$/, '')
-
-    # Remove inline code (`...`)
-    text_without_code = text_without_code.gsub(/`[^`]*`/, '')
-
-    # Remove markdown headers, links, bold, italic formatting
-    text_without_code = text_without_code.gsub(/#+\s*/, '')  # Headers
-    text_without_code = text_without_code.gsub(/\[([^\]]+)\]\([^)]+\)/, '\1')  # Links
-    # Bold (**...** and __...__)
-    text_without_code = text_without_code.gsub(/\*\*(.+?)\*\*/, '\1')
-    text_without_code = text_without_code.gsub(/__(.+?)__/, '\1')
-    # Italic (*...* and _..._)
-    text_without_code = text_without_code.gsub(/\*(.+?)\*/, '\1')
-    text_without_code = text_without_code.gsub(/_(.+?)_/, '\1')
+    # If content is an ActionText::RichText object, get its plain text
+    text = if content.respond_to?(:to_plain_text)
+             content.to_plain_text
+    else
+             content.to_s
+    end
 
     # Clean up extra whitespace
-    text_without_code = text_without_code.gsub(/\n+/, ' ').strip.squeeze(' ')
+    text = text.gsub(/\n+/, ' ').strip.squeeze(' ')
 
     # Truncate to desired length
-    if text_without_code.length > length
-      text_without_code.truncate(length, separator: ' ', omission: '...')
+    if text.length > length
+      text.truncate(length, separator: ' ', omission: '...')
     else
-      text_without_code
+      text
     end
   end
 end
