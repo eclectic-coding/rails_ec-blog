@@ -542,6 +542,7 @@ DEPENDENCIES
   jbuilder
   kamal
   letter_opener_web
+  lexxy (~> 0.7.0.beta)
   name_of_person
   openssl (~> 3.3, >= 3.3.2)
   pagy
