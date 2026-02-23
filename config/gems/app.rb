@@ -7,6 +7,7 @@ gem "dartsass-rails"
 gem "openssl", "~> 3.3", ">= 3.3.2"
 gem "commonmarker"
 gem "pagy"
+gem "lexxy", "~> 0.7.0.beta"
 
 group :development, :test do
   gem "erb_lint"
