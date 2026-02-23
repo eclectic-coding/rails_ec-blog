@@ -38,12 +38,27 @@ module ApplicationHelper
              content.to_s
     end
 
-    # Clean up extra whitespace
-    text = text.gsub(/\n+/, ' ').strip.squeeze(' ')
+    # Strip fenced code blocks (``` ... ```) including their content
+    text = text.gsub(/```[\s\S]*?```/, "")
+
+    # Strip inline code (`...`)
+    text = text.gsub(/`[^`]*`/, "")
+
+    # Strip markdown headers (# Heading) — handle both line-start and mid-string after join
+    text = text.gsub(/(?:^|\s)#+\s+/, " ").lstrip
+
+    # Strip markdown links — keep the display text, drop the URL
+    text = text.gsub(/\[([^\]]*)\]\([^)]*\)/, '\1')
+
+    # Strip bold (**text**) and italic (*text*) markers
+    text = text.gsub(/\*{1,2}([^*]*)\*{1,2}/, '\1')
+
+    # Clean up extra whitespace and newlines
+    text = text.gsub(/\n+/, " ").strip.squeeze(" ")
 
     # Truncate to desired length
     if text.length > length
-      text.truncate(length, separator: ' ', omission: '...')
+      text.truncate(length, separator: " ", omission: "...")
     else
       text
     end
