@@ -36,14 +36,15 @@ Rails.application.configure do
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
     policy.script_src  :self, :https
-    policy.style_src   :self, :https
+    # Allow unsafe-inline for styles to support TomSelect and Lexical editor inline styles
+    policy.style_src   :self, :https, :unsafe_inline
   end
 
   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
   # Uses the session id so the nonce is stable for the request
   config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-  # Apply nonces to script-src and style-src so Rails will inject nonces into helpers
-  config.content_security_policy_nonce_directives = %w(script-src style-src)
+  # Apply nonces to script-src (style-src uses unsafe-inline instead)
+  config.content_security_policy_nonce_directives = %w(script-src)
   # Automatically add nonce attributes to Rails-provided tag helpers
   config.content_security_policy_nonce_auto = true
 end
