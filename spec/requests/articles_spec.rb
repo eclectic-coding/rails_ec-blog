@@ -219,7 +219,7 @@ RSpec.describe "/articles", type: :request do
         patch article_url(article), params: { article: new_attributes }
         article.reload
         expect(article.title).to eq(new_attributes[:title])
-        expect(article.content).to eq(new_attributes[:content])
+        expect(article.content.to_plain_text).to eq(new_attributes[:content])
       end
 
       it "redirects to the article" do

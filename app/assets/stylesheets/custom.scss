@@ -128,23 +128,6 @@
   box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.04); /* subtle highlight */
 }
 
-/* Base pre styling with high specificity to override highlight.js themes */
-pre,
-pre[class*="language-"],
-pre[class^="language-"],
-pre.hljs {
-  margin: 1rem !important;
-  border-radius: 10px !important;
-  overflow: auto !important;
-}
-
-/* Ensure code blocks inside pre also respect the styling */
-pre code,
-pre code.hljs,
-code.hljs {
-  border-radius: inherit !important;
-  /* Let the theme control colors but keep our layout */
-}
 
 /* Flash toast container positioning */
 .flash-toast-container {

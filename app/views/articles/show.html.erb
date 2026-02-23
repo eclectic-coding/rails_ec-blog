@@ -1,4 +1,4 @@
-<div class="row" data-controller="highlight" data-highlight-module-url="<%= asset_path 'syntax_highlight.js' %>">
+<div class="row">
   <div class="col-12 col-md-8 mx-auto">
     <div class="card <%= @article.published_at.present? ?  'bg-white border-white' : 'card-draft'%>">
       <div class="py-3 px-4">
@@ -14,11 +14,8 @@
             <%= link_to tag.display_name, tag_path(tag), class: 'badge rounded-pill text-bg-secondary me-2 text-decoration-none' %>
           <% end %>
         </div>
-        <div>
-          <%= sanitize(@article.formatted_content,
-            tags: %w(p br strong em a code pre h1 h2 h3 h4 h5 h6 ul ol li img blockquote),
-            attributes: %w(href title src alt class rel)
-          ) %>
+        <div class="lexxy-content" data-controller="code-highlight">
+          <%= @article.content %>
         </div>
       </div>
     </div>

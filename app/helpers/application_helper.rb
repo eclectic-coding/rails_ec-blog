@@ -27,38 +27,40 @@ module ApplicationHelper
       .presence || "Application"
   end
 
-  # Generates a preview of article content, removing code blocks and truncating to specified length
+  # Generates a preview of article content from ActionText rich text
   def article_preview(content, length: 200)
     return "" if content.blank?
 
-    # Remove code blocks (fenced with ``` or indented)
-    # Remove fenced code blocks (```...```)
-    text_without_code = content.gsub(/```[\s\S]*?```/, '')
+    # If content is an ActionText::RichText object, get its plain text
+    text = if content.respond_to?(:to_plain_text)
+             content.to_plain_text
+    else
+             content.to_s
+    end
 
-    # Remove indented code blocks (4 spaces or tab at start of line)
-    text_without_code = text_without_code.gsub(/^([ ]{4}|\t).*$/, '')
+    # Strip fenced code blocks (``` ... ```) including their content
+    text = text.gsub(/```[\s\S]*?```/, "")
 
-    # Remove inline code (`...`)
-    text_without_code = text_without_code.gsub(/`[^`]*`/, '')
+    # Strip inline code (`...`)
+    text = text.gsub(/`[^`]*`/, "")
 
-    # Remove markdown headers, links, bold, italic formatting
-    text_without_code = text_without_code.gsub(/#+\s*/, '')  # Headers
-    text_without_code = text_without_code.gsub(/\[([^\]]+)\]\([^)]+\)/, '\1')  # Links
-    # Bold (**...** and __...__)
-    text_without_code = text_without_code.gsub(/\*\*(.+?)\*\*/, '\1')
-    text_without_code = text_without_code.gsub(/__(.+?)__/, '\1')
-    # Italic (*...* and _..._)
-    text_without_code = text_without_code.gsub(/\*(.+?)\*/, '\1')
-    text_without_code = text_without_code.gsub(/_(.+?)_/, '\1')
+    # Strip markdown headers (# Heading) — handle both line-start and mid-string after join
+    text = text.gsub(/(?:^|\s)#+\s+/, " ").lstrip
 
-    # Clean up extra whitespace
-    text_without_code = text_without_code.gsub(/\n+/, ' ').strip.squeeze(' ')
+    # Strip markdown links — keep the display text, drop the URL
+    text = text.gsub(/\[([^\]]*)\]\([^)]*\)/, '\1')
+
+    # Strip bold (**text**) and italic (*text*) markers
+    text = text.gsub(/\*{1,2}([^*]*)\*{1,2}/, '\1')
+
+    # Clean up extra whitespace and newlines
+    text = text.gsub(/\n+/, " ").strip.squeeze(" ")
 
     # Truncate to desired length
-    if text_without_code.length > length
-      text_without_code.truncate(length, separator: ' ', omission: '...')
+    if text.length > length
+      text.truncate(length, separator: " ", omission: "...")
     else
-      text_without_code
+      text
     end
   end
 end
