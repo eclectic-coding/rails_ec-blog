@@ -2,16 +2,14 @@
 #
 # Table name: articles
 #
-#  id             :integer          not null, primary key
-#  title          :string
-#  content        :text
-#  is_published   :boolean          default(FALSE)
-#  user_id        :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  published_date :date
-#  published_time :time
-#  published_at   :datetime
+#  id           :integer          not null, primary key
+#  title        :string
+#  is_published :boolean          default(FALSE)
+#  user_id      :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  published_at :datetime
+#  content      :text
 #
 # Indexes
 #
@@ -24,6 +22,8 @@ class Article < ApplicationRecord
 
   has_many :article_tags, dependent: :destroy
   has_many :tags, through: :article_tags
+
+  has_rich_text :content
 
   has_one_attached :image
 
@@ -43,9 +43,6 @@ class Article < ApplicationRecord
   before_validation :normalize_published_at
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
-  def formatted_content
-    Commonmarker.to_html(content, plugins: { syntax_highlighter: nil })
-  end
 
   def self.visible_to(user)
     if user&.admin?
