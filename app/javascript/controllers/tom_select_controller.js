@@ -3,13 +3,26 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="tom-select"
 export default class extends Controller {
   connect() {
-    // Tom-select CDN version exposes TomSelect globally
-    // Wait for the library to be available
-    if (typeof TomSelect === 'undefined') {
-      console.error('TomSelect is not loaded')
+    // Skip if already initialized (prevents double initialization)
+    if (this.element.tomselect) {
+      console.log('TomSelect already initialized on this element')
       return
     }
 
+    // Wait for TomSelect to be available (loaded from CDN)
+    this.waitForTomSelect()
+  }
+
+  waitForTomSelect() {
+    if (typeof TomSelect !== 'undefined') {
+      this.initialize()
+    } else {
+      // TomSelect not loaded yet, wait and try again
+      setTimeout(() => this.waitForTomSelect(), 50)
+    }
+  }
+
+  initialize() {
     // Get CSRF token for AJAX requests
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 
@@ -63,8 +76,15 @@ export default class extends Controller {
   }
 
   disconnect() {
+    // Destroy the TomSelect instance if it exists
     if (this.tomSelect) {
       this.tomSelect.destroy()
+      this.tomSelect = null
+    }
+
+    // Also check if element has tomselect property and destroy it
+    if (this.element.tomselect) {
+      this.element.tomselect.destroy()
     }
   }
 }
