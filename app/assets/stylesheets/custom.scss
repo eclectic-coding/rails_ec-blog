@@ -128,23 +128,6 @@
   box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.04); /* subtle highlight */
 }
 
-/* Base pre styling with high specificity to override highlight.js themes */
-pre,
-pre[class*="language-"],
-pre[class^="language-"],
-pre.hljs {
-  margin: 1rem !important;
-  border-radius: 10px !important;
-  overflow: auto !important;
-}
-
-/* Ensure code blocks inside pre also respect the styling */
-pre code,
-pre code.hljs,
-code.hljs {
-  border-radius: inherit !important;
-  /* Let the theme control colors but keep our layout */
-}
 
 /* Flash toast container positioning */
 .flash-toast-container {
@@ -254,80 +237,3 @@ code.hljs {
   min-width: 120px;
 }
 
-/* ActionText content styling */
-.trix-content,
-.lexxy-content,
-action-text-attachment {
-  line-height: 1.6;
-}
-
-.trix-content p,
-.lexxy-content p {
-  margin-bottom: 1rem;
-}
-
-.trix-content h1,
-.lexxy-content h1 {
-  font-size: 2rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.trix-content h2,
-.lexxy-content h2 {
-  font-size: 1.5rem;
-  margin-top: 1.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.trix-content h3,
-.lexxy-content h3 {
-  font-size: 1.25rem;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.trix-content ul,
-.lexxy-content ul,
-.trix-content ol,
-.lexxy-content ol {
-  margin-bottom: 1rem;
-  padding-left: 2rem;
-}
-
-.trix-content code,
-.lexxy-content code {
-  background-color: #f8f9fa;
-  padding: 0.2em 0.4em;
-  border-radius: 3px;
-  font-family: 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
-}
-
-.trix-content pre,
-.lexxy-content pre {
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 0.375rem;
-  overflow-x: auto;
-  margin-bottom: 1rem;
-}
-
-.trix-content blockquote,
-.lexxy-content blockquote {
-  border-left: 4px solid #dee2e6;
-  padding-left: 1rem;
-  margin-left: 0;
-  margin-bottom: 1rem;
-  color: #6c757d;
-}
-
-.trix-content a,
-.lexxy-content a {
-  color: hsl(250, 78%, 63%);
-  text-decoration: underline;
-}
-
-.trix-content a:hover,
-.lexxy-content a:hover {
-  color: hsl(250, 78%, 50%);
-}
