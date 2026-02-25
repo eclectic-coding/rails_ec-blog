@@ -73,11 +73,12 @@
   transform: translate(-50%, -8px);
 }
 
-// Ensure the article image modal and its backdrop appear above inline controls like the remove button
+// Ensure modals and their backdrop appear above inline controls like the remove button
 .modal-backdrop {
   z-index: 1500 !important;
 }
-#articleImageModal.modal {
+#articleImageModal.modal,
+#imagePickerModal.modal {
   position: fixed !important;
   z-index: 1600 !important;
 }
@@ -121,6 +122,48 @@
 }
 
 @import 'article_card';
+
+// ── Image Picker Modal ─────────────────────────────────────────────────────
+#imagePickerModal .modal-body {
+  min-height: 300px;
+}
+
+.image-library-tile {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:hover,
+  &:focus {
+    border-color: hsl(250, 78%, 63%);
+    box-shadow: 0 0 0 0.15rem hsla(250, 78%, 63%, 0.3);
+    outline: none;
+  }
+
+  &.selected {
+    border-color: hsl(250, 78%, 63%);
+  }
+}
+
+.image-library-thumb {
+  height: 100px;
+  object-fit: cover;
+  display: block;
+  width: 100%;
+}
+
+.image-library-filename {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 2px 4px;
+}
 
 .card-draft {
   background-color: #fff7e6; /* pale yellow for drafts */
