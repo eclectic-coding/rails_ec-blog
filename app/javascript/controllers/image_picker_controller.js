@@ -147,6 +147,11 @@ export default class extends Controller {
       })
 
       if (resp.ok) {
+        const contentType = resp.headers.get("Content-Type") || ""
+        if (!contentType.startsWith("text/vnd.turbo-stream.html")) {
+          window.location.href = resp.redirected ? resp.url : window.location.href
+          return
+        }
         const text = await resp.text()
         if (window.Turbo?.renderStreamMessage) {
           window.Turbo.renderStreamMessage(text)
