@@ -6,11 +6,13 @@ RSpec.describe "GET /articles/image_library", type: :request do
   let(:fixture_path) { Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg') }
 
   def attach_image(article)
-    article.image.attach(
-      io: File.open(fixture_path),
-      filename: 'test_image.jpg',
-      content_type: 'image/jpeg'
-    )
+    File.open(fixture_path) do |file|
+      article.image.attach(
+        io: file,
+        filename: 'test_image.jpg',
+        content_type: 'image/jpeg'
+      )
+    end
     article.save!
     article
   end
