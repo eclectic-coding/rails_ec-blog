@@ -18,7 +18,7 @@ RSpec.describe "Remove image UI", type: :request do
 
     body = response.body
     # ensure there is a remove control rendered as a button with Stimulus data attributes
-    expect(body).to include("data-action=\"click->file-preview#removeImage\"")
+    expect(body).to include("data-action=\"click->image-picker#removeImage\"")
     expect(body).to include("data-remove-url=\"")
     expect(body).to include(remove_image_article_path(article))
   end

@@ -1,0 +1,32 @@
+<turbo-frame id="image-library-frame">
+  <% if @blobs.any? %>
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-2 p-3">
+      <% @blobs.each do |blob| %>
+        <div class="col">
+          <div class="image-library-tile rounded overflow-hidden position-relative"
+               role="button"
+               tabindex="0"
+               title="<%= blob.filename %>"
+               data-action="click->image-picker#selectExisting keydown->image-picker#tileKeydown"
+               data-blob-signed-id="<%= blob.signed_id %>"
+               data-blob-filename="<%= blob.filename %>">
+            <%= image_tag url_for(blob.variant(resize_to_limit: [200, 150])),
+                class: "w-100 image-library-thumb",
+                alt: blob.filename,
+                loading: "lazy" %>
+            <div class="image-library-filename text-truncate small px-1 py-1">
+              <%= blob.filename %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center text-muted p-5">
+      <p class="mb-1 fs-5">📷</p>
+      <p class="mb-0 fw-semibold">No images uploaded yet.</p>
+      <p class="small">Switch to the <strong>Upload New</strong> tab to add your first image.</p>
+    </div>
+  <% end %>
+</turbo-frame>
+
