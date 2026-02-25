@@ -28,7 +28,7 @@ module ApplicationHelper
   end
 
   # Generates a preview of article content from ActionText rich text
-  def article_preview(content, length: 200)
+  def article_preview(content, length: 50)
     return "" if content.blank?
 
     # If content is an ActionText::RichText object, get its plain text
