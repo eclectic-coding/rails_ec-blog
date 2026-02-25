@@ -8,7 +8,7 @@ module Articles
         .joins(:attachments)
         .where(active_storage_attachments: { record_type: "Article", name: "image" })
         .distinct
-        .order(created_at: :desc)
+        .order(created_at: :desc, id: :desc)
     end
   end
 end
