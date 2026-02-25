@@ -48,34 +48,47 @@
 
   <div class="mb-3">
     <%= form.label :image, class: 'form-label' %>
-    <div class="file-input-with-preview d-flex align-items-center gap-2" data-controller="file-preview">
-      <div class="file-input flex-grow-1">
-        <%= form.file_field :image, direct_upload: true, class: 'd-none file-input-native', accept: 'image/*', required: !article.image.attached?, data: { action: 'change->file-preview#preview' } %>
-        <div class="input-group">
-          <button type="button" class="btn btn-outline-secondary" data-action="click->file-preview#openFilePicker">Choose file</button>
-          <input type="text" readonly class="form-control" data-file-preview-target="filename" aria-label="Selected file name" value="<%= article.image.attached? ? article.image.filename.to_s : 'No file chosen' %>">
-        </div>
-      </div>
 
-      <div class="preview-container flex-shrink-0 d-none d-sm-flex align-items-center"
-           data-action="click->file-preview#openModal keydown->file-preview#onKeydown"
-           data-file-preview-caption-value="<%= j(article.title.to_s) %>"
-           tabindex="0" role="button" aria-label="Open image preview">
-        <%= render 'articles/image_preview', article: article %>
-      </div>
+    <div data-controller="image-picker"
+         data-image-picker-direct-upload-url-value="<%= rails_direct_uploads_url %>">
 
-      <div class="modal fade" id="articleImageModal" tabindex="-1" aria-labelledby="articleImageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-          <div class="modal-content">
-            <div class="modal-body text-center">
-              <button type="button" class="btn-close modal-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
-              <img src="" alt="Large preview" class="img-fluid" data-file-preview-target="modalImage">
-              <div class="mt-2" data-file-preview-target="modalCaption"></div>
-            </div>
+      <%# Hidden field receives the signed blob ID; disabled until a new selection is made -%>
+      <%= form.hidden_field :image,
+            id: 'article_image_signed_id',
+            disabled: true,
+            data: { 'image-picker-target': 'signedId' } %>
+
+      <div class="d-flex align-items-start gap-2">
+        <%# Choose / Change button + filename — grows to fill available space -%>
+        <div class="flex-grow-1">
+          <div class="input-group">
+            <button type="button" class="btn btn-outline-secondary"
+                    data-action="click->image-picker#openModal"
+                    data-image-picker-target="chooseButton">
+              <%= article.image.attached? ? 'Change Image' : 'Choose Image' %>
+            </button>
+            <input type="text" readonly class="form-control"
+                   data-image-picker-target="filename"
+                   aria-label="Selected image"
+                   value="<%= article.image.attached? ? article.image.filename.to_s : 'No image selected' %>">
           </div>
+          <div class="form-text">Choose from your image library or upload a new one.</div>
+        </div>
+
+        <%# Thumbnail preview at the right end of the row -%>
+        <div class="flex-shrink-0">
+          <% if article.persisted? %>
+            <%= render 'articles/image_preview', article: article %>
+          <% else %>
+            <img src="" alt="preview" class="article-thumb d-none"
+                 data-image-picker-target="preview">
+          <% end %>
         </div>
       </div>
-       </div>
+
+      <%# Image picker modal (Bootstrap 5 + Turbo Frame for library grid) -%>
+      <%= render 'articles/image_picker_modal' %>
+    </div>
   </div>
 
   <div class="mb-3">
