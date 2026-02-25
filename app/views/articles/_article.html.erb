@@ -1,31 +1,45 @@
-<div class="card mb-3 <%= article.published_at.present? ?  'bg-white border-white' : 'card-draft'%>" id="<%= dom_id article %>">
-  <div class="row g-0 align-items-stretch p-2">
+<article class="article-card <%= article.published_at.present? ? '' : 'article-card--draft' %>" id="<%= dom_id article %>">
+  <div class="article-card__content">
 
-    <div class="col-md-4 d-none d-md-block p-0 d-flex">
+    <%# Image banner — 3fr column, hidden on mobile %>
+    <div class="article-card__banner">
       <% if article.image.attached? %>
-        <%= link_to article_path(article), class: 'h-100 w-100 d-block' do %>
-          <%= image_tag url_for(article.image.variant(resize_to_limit: [600, 400])), class: 'img-fluid rounded article-image', alt: article.title %>
+        <%= link_to article_path(article), class: "anchor-card" do %>
+          <%= image_tag url_for(article.image.variant(resize_to_limit: [600, 400])),
+                class: "article-card__img",
+                alt: article.title,
+                loading: "lazy" %>
         <% end %>
       <% end %>
     </div>
 
-    <div class="col-12 col-md-8 ps-2">
-      <div class="mb-2">
+    <%# Content — 4fr column %>
+    <div class="article-card__body-wrapper">
+      <div class="article-card__tags-row">
         <% article.tags.each do |tag| %>
-          <%= link_to tag.display_name, tag_path(tag), class: 'bg-light rounded me-2 px-2 text-decoration-none' %>
+          <%= link_to tag.display_name, tag_path(tag), class: "article-card__tag" %>
         <% end %>
       </div>
-      <h2 class="card-title text-primary"><%= article.title %></h2>
-      <p class="card-text"><%= article_preview(article.content, length: 200) %></p>
-      <p class="card-text">
-        <small class="text-muted">
-          <% if article.published_at.present? %>
-            <%= l(article.published_at&.in_time_zone, format: :published) %>
-          <% else %>
-            <span class="badge rounded-pill text-bg-warning me-2">Draft</span>
-          <% end %>
-        </small>
+
+      <h2 class="article-card__title">
+        <%= link_to article.title, article_path(article), class: "anchor-card" %>
+      </h2>
+
+      <p class="article-card__body">
+        <%= article_preview(article.content, length: 200) %>
       </p>
+
+      <div class="article-card__meta">
+        <% if article.published_at.present? %>
+          <time datetime="<%= article.published_at.iso8601 %>">
+            <%= l(article.published_at&.in_time_zone, format: :published) %>
+          </time>
+        <% else %>
+          <span class="badge rounded-pill text-bg-warning">Draft</span>
+        <% end %>
+      </div>
     </div>
+
   </div>
-</div>
+</article>
+
