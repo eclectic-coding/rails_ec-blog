@@ -1,0 +1,85 @@
+<%# Image Picker Modal — used by _form.html.erb inside data-controller="image-picker" %>
+<div class="modal fade" id="imagePickerModal" tabindex="-1"
+     aria-labelledby="imagePickerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header py-2">
+        <h5 class="modal-title" id="imagePickerModalLabel">Choose Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-0">
+        <%# Nav tabs %>
+        <ul class="nav nav-tabs px-3 pt-2 border-bottom-0" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="picker-library-tab"
+                    data-bs-toggle="tab" data-bs-target="#picker-library-pane"
+                    type="button" role="tab"
+                    aria-controls="picker-library-pane" aria-selected="true">
+              Image Library
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="picker-upload-tab"
+                    data-bs-toggle="tab" data-bs-target="#picker-upload-pane"
+                    type="button" role="tab"
+                    aria-controls="picker-upload-pane" aria-selected="false">
+              Upload New
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content border-top">
+          <%# Library tab: lazy-loads via Turbo Frame when modal opens %>
+          <div class="tab-pane fade show active" id="picker-library-pane"
+               role="tabpanel" aria-labelledby="picker-library-tab">
+            <turbo-frame id="image-library-frame"
+                         data-library-src="<%= image_library_articles_path %>">
+              <div class="text-center p-4 text-muted">
+                <div class="spinner-border spinner-border-sm me-2" role="status">
+                  <span class="visually-hidden">Loading…</span>
+                </div>
+                Loading image library…
+              </div>
+            </turbo-frame>
+          </div>
+
+          <%# Upload New tab %>
+          <div class="tab-pane fade" id="picker-upload-pane"
+               role="tabpanel" aria-labelledby="picker-upload-tab">
+            <div class="p-3">
+              <label class="form-label fw-semibold" for="image-picker-file-input">
+                Select an image to upload
+              </label>
+              <input type="file" id="image-picker-file-input"
+                     accept="image/jpeg,image/png,image/webp,image/gif"
+                     class="form-control"
+                     data-image-picker-target="uploadInput"
+                     data-action="change->image-picker#uploadNew">
+
+              <%# Upload progress bar (hidden until upload starts) %>
+              <div class="mt-2 d-none" data-image-picker-target="uploadProgressContainer">
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated"
+                       role="progressbar"
+                       style="width: 0%"
+                       aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                       data-image-picker-target="uploadProgress">
+                  </div>
+                </div>
+                <small class="text-muted d-block mt-1">Uploading…</small>
+              </div>
+
+              <div class="form-text mt-2">
+                Accepted: JPEG, PNG, WEBP, GIF &bull; Max 5 MB
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><%# end modal-body %>
+
+    </div><%# end modal-content %>
+  </div><%# end modal-dialog %>
+</div><%# end modal %>
+
