@@ -1,0 +1,102 @@
+// ── Article card (mirrors eclecticcoding.com design) ──────────────────────────
+.article-card {
+  background: #fff;
+  border-radius: .6rem;
+  box-shadow: 0 .25rem .45rem -.15rem rgba(0, 0, 0, .15);
+  margin-bottom: 2rem;
+  padding: .5rem;
+
+  &__content {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: 3fr 4fr;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__banner {
+    border-radius: 5px;
+    display: block;
+    overflow: hidden;
+
+    @media (max-width: 600px) {
+      display: none;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__body-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: .5rem .5rem .5rem 0;
+  }
+
+  &__tags-row {
+    margin-bottom: .5rem;
+  }
+
+  &__tag {
+    display: inline-block;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    color: #2d3748;
+    font-size: .9rem;
+    margin: 0 .5rem .25rem 0;
+    padding: .2rem .65rem;
+    text-decoration: none;
+    transition: background-color .3s ease-out;
+
+    &:hover {
+      background-color: #728197;
+      color: #13181f;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    margin: .25rem 0 .5rem;
+
+    a {
+      color: hsl(250, 78%, 63%);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__body {
+    font-size: 1rem;
+    line-height: 1.75;
+    margin: .25rem 0 1rem;
+    flex: 1;
+  }
+
+  &__meta {
+    font-size: .9rem;
+    color: #767676;
+    margin-top: auto;
+  }
+
+  &--draft {
+    background-color: #fff7e6;
+    border: 2px solid #ffc107;
+    box-shadow: 0 0 0 .25rem rgba(255, 193, 7, .08);
+  }
+}
+
+.anchor-card {
+  color: currentColor;
+  text-decoration: none;
+}
+// ──────────────────────────────────────────────────────────────────────────────
+
