@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   resources :articles do
+    collection do
+      get :image_library, to: 'articles/image_library#index'
+    end
     member do
       delete :remove_image, to: 'articles/remove_image#destroy'
     end
