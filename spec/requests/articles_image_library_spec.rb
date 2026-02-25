@@ -106,4 +106,3 @@ RSpec.describe "GET /articles/image_library", type: :request do
     end
   end
 end
-
