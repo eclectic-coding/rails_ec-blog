@@ -1,4 +1,3 @@
-// ── Article card (mirrors eclecticcoding.com design) ──────────────────────────
 .article-card {
   background: #fff;
   border-radius: .6rem;
@@ -47,7 +46,7 @@
     display: inline-block;
     background-color: #f7f7f7;
     border-radius: 5px;
-    color: #2d3748;
+    color: $primary;
     font-size: .9rem;
     margin-right: .5rem;
     padding: .2rem .65rem;
@@ -56,7 +55,8 @@
 
     &:hover {
       background-color: #728197;
-      color: #13181f;
+      color: $primary;
+      text-decoration: underline;
     }
   }
 
@@ -98,5 +98,6 @@
   color: currentColor;
   text-decoration: none;
 }
+
 // ──────────────────────────────────────────────────────────────────────────────
 
