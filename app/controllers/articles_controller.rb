@@ -6,7 +6,6 @@ class ArticlesController < ApplicationController
 
   before_action :admin_only!, only: %i[new create edit update destroy]
 
-
   # GET /articles or /articles.json
   def index
     resume_session
