@@ -132,6 +132,9 @@ class Article < ApplicationRecord
       return
     end
   rescue => e
-    Rails.logger.warn "[Article] Content attachment check raised an error: #{e.message}"
+    Rails.logger.warn(
+      "[Article] Content attachment check raised an error: #{e.class}: #{e.message}\n" \
+      "#{Array(e.backtrace).first(5).join("\n")}"
+    )
   end
 end
