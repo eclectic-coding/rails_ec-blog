@@ -224,4 +224,72 @@ RSpec.describe Article, type: :model do
       expect(article).to be_valid
     end
   end
+
+  describe "no_missing_attachments_in_content" do
+    let(:user) { build_stubbed(:user) }
+
+    it "is valid when content has no attachments" do
+      article = build(:article, user: user, content: "Just plain text, no images.")
+
+      expect(article).to be_valid
+    end
+
+    it "is valid when content has no MissingAttachable nodes" do
+      article = build(:article, user: user, content: "Some text")
+
+      # body.attachments returns an empty list — no MissingAttachable nodes present
+      body_double = double("ActionText::Content", present?: true, attachments: [])
+      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
+
+      article.valid?
+
+      expect(article.errors[:content]).to be_empty
+    end
+
+    it "adds an error when content contains a MissingAttachable node (e.g. pasted markdown image)" do
+      article = build(:article, user: user, content: "Some text")
+
+      missing = ActionText::Attachables::MissingAttachable.new("unresolvable-sgid")
+      attachment_double = double("ActionText::Attachment", attachable: missing)
+      body_double = double("ActionText::Content", present?: true, attachments: [attachment_double])
+
+      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
+
+      article.valid?
+
+      expect(article.errors[:content]).to include(
+        a_string_matching(/embedded image that could not be processed/)
+      )
+    end
+
+    it "adds only one error even when multiple MissingAttachable nodes are present" do
+      article = build(:article, user: user, content: "text")
+
+      missing = ActionText::Attachables::MissingAttachable.new("unresolvable-sgid")
+      attachments = [
+        double("ActionText::Attachment", attachable: missing),
+        double("ActionText::Attachment", attachable: missing)
+      ]
+      body_double = double("ActionText::Content", present?: true, attachments: attachments)
+
+      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
+
+      article.valid?
+
+      expect(article.errors[:content].count).to eq(1)
+    end
+
+    it "does not raise when the attachment check itself errors — it logs and moves on" do
+      article = build(:article, user: user, content: "text")
+
+      body_double = double("ActionText::Content", present?: true)
+      allow(body_double).to receive(:attachments).and_raise(StandardError, "something unexpected")
+
+      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
+
+      expect(Rails.logger).to receive(:warn).with(/Content attachment check raised/)
+
+      expect { article.valid? }.not_to raise_error
+    end
+  end
 end

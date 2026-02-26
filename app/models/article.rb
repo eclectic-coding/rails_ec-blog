@@ -35,6 +35,7 @@ class Article < ApplicationRecord
 
   validate :image_presence
   validate :image_type_and_size
+  validate :no_missing_attachments_in_content
 
   scope :published, -> { where(is_published: true) }
   scope :draft, -> { where(is_published: false) }
@@ -111,5 +112,29 @@ class Article < ApplicationRecord
     return if remove_image.present?
 
     errors.add(:image, "must be attached") unless image.attached?
+  end
+
+  # Prevent saving content that contains unresolvable (embedded) image attachments.
+  # This happens when a user pastes markdown that includes inline images — the editor
+  # creates an <action-text-attachment> node whose sgid can't be resolved to an
+  # Active Storage blob, which would cause a 500 on the show page.
+  def no_missing_attachments_in_content
+    body = content.body
+    return unless body.present?
+
+    body.attachments.each do |attachment|
+      next unless attachment.attachable.is_a?(ActionText::Attachables::MissingAttachable)
+
+      errors.add(:content,
+        "contains an embedded image that could not be processed. " \
+        "Please remove inline images from your pasted content and use " \
+        "the image upload button instead.")
+      return
+    end
+  rescue => e
+    Rails.logger.warn(
+      "[Article] Content attachment check raised an error: #{e.class}: #{e.message}\n" \
+      "#{Array(e.backtrace).first(5).join("\n")}"
+    )
   end
 end
