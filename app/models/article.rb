@@ -119,9 +119,10 @@ class Article < ApplicationRecord
   # creates an <action-text-attachment> node whose sgid can't be resolved to an
   # Active Storage blob, which would cause a 500 on the show page.
   def no_missing_attachments_in_content
-    return unless content.body.present?
+    body = content.body
+    return unless body.present?
 
-    content.body.attachments.each do |attachment|
+    body.attachments.each do |attachment|
       next unless attachment.attachable.is_a?(ActionText::Attachables::MissingAttachable)
 
       errors.add(:content,
