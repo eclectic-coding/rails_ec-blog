@@ -97,10 +97,7 @@ class ArticlesController < ApplicationController
     end
   end
 
-
   private
-
-
   def set_article
     @article = Article.find(params.require(:id))
   end
