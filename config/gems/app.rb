@@ -20,4 +20,5 @@ group :development do
   # gem "bullet" # Uncomment if you want to use Bullet
   gem "letter_opener_web"
   gem "rails-erd"
+  gem "overcommit"
 end
