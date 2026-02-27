@@ -97,14 +97,15 @@ class ArticlesController < ApplicationController
   end
 
   private
+
   def set_article
-    @article = Article.find(params.require(:id))
+    @article = Article.friendly.find(params.require(:id))
   end
 
   def set_visible_article
     begin
       resume_session
-      @article = Article.visible_to(current_user).find(params.require(:id))
+      @article = Article.visible_to(current_user).friendly.find(params.require(:id))
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
         format.html { redirect_to root_path, alert: "Article not found." }

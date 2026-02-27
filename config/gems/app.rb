@@ -1,4 +1,3 @@
-gem "annotate"
 gem "inline_svg"
 gem "name_of_person"
 # gem "strong_migrations" # Uncomment if you want to use strong_migrations
@@ -7,6 +6,7 @@ gem "dartsass-rails"
 gem "openssl", "~> 3.3", ">= 3.3.2"
 gem "pagy"
 gem "lexxy", "~> 0.7.4.beta"
+gem "friendly_id"
 
 group :development, :test do
   gem "erb_lint"
@@ -18,5 +18,5 @@ group :development do
   gem "hotwire-spark"
   # gem "bullet" # Uncomment if you want to use Bullet
   gem "letter_opener_web"
-  gem "rails-erd"
+  gem "overcommit"
 end
