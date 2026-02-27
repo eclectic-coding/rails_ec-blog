@@ -97,6 +97,7 @@ class ArticlesController < ApplicationController
   end
 
   private
+
   def set_article
     @article = Article.friendly.find(params.require(:id))
   end
