@@ -9,11 +9,12 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  published_at :datetime
-#  content      :text
+#  slug         :string
 #
 # Indexes
 #
 #  index_articles_on_published_at  (published_at)
+#  index_articles_on_slug          (slug) UNIQUE
 #  index_articles_on_user_id       (user_id)
 #
 
