@@ -26,7 +26,7 @@ module Articles
     private
 
     def set_article
-      @article = Article.find(params.require(:id))
+      @article = Article.friendly.find(params.require(:id))
     end
   end
 end
