@@ -1,3 +1,4 @@
+gem "madmin"
 gem "inline_svg"
 gem "name_of_person"
 # gem "strong_migrations" # Uncomment if you want to use strong_migrations
