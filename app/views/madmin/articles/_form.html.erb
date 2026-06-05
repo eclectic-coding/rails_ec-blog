@@ -20,8 +20,8 @@
     <%= form.label :tag_ids, "Tags" %>
     <%= form.collection_select :tag_ids, Tag.ordered, :id, :display_name,
         {},
-        { multiple: true, class: "form-input", data: { controller: "select" } } %>
-    <p class="form-description">Type to search. Select multiple tags.</p>
+        { multiple: true, class: "form-input", data: { controller: "tom-select" } } %>
+    <p class="form-description">Type to search existing tags or create a new one by typing and pressing Enter.</p>
   </div>
 
   <div class="madmin-form-row">
