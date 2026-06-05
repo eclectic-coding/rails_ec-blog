@@ -53,11 +53,11 @@ Replace the `madmin` gem with a custom `Dashboard::` namespace that lives fully 
 - ~~`Dashboard::TagsController` — full CRUD~~
 - ~~Standard HTML form (unlike the frontend tags controller which is JSON-only)~~
 
-### Phase 5 — Sessions
+### ~~Phase 5 — Sessions~~
 
-- `Dashboard::SessionsController` — index + destroy
-- Shows IP address, user agent, created_at for each session
-- One-click revoke
+- ~~`Dashboard::SessionsController` — index + destroy~~
+- ~~Shows IP address, user agent, created_at for each session~~
+- ~~One-click revoke~~
 
 ### Phase 6 — Layout
 
@@ -90,6 +90,6 @@ Once all phases are complete and tests pass:
 | ~~2 — Articles~~ | ~~Medium~~ | ~~Form reuse makes this fast~~ |
 | ~~3 — Users~~ | ~~Low~~ | ~~Simple form~~ |
 | ~~4 — Tags~~ | ~~Low~~ | ~~Simplest CRUD~~ |
-| 5 — Sessions | Low | Read-only |
+| ~~5 — Sessions~~ | ~~Low~~ | ~~Read-only~~ |
 | 6 — Layout | Low–Medium | Bootstrap, no new concepts |
 | 7 — Remove madmin | Low | Delete files + bundle |

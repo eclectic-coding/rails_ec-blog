@@ -21,7 +21,7 @@
             class: "nav-link rounded #{controller_path == 'dashboard/users' ? 'active fw-semibold' : 'text-body'}" %>
     </li>
     <li class="nav-item">
-      <%= link_to "Sessions", "#",
+      <%= link_to "Sessions", dashboard_sessions_path,
             class: "nav-link rounded #{controller_path == 'dashboard/sessions' ? 'active fw-semibold' : 'text-body'}" %>
     </li>
   </ul>
