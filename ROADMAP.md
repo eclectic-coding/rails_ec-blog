@@ -48,10 +48,10 @@ Replace the `madmin` gem with a custom `Dashboard::` namespace that lives fully 
 - ~~Form fields: email address, admin toggle, password change~~
 - ~~No create/destroy (admin account is seeded)~~
 
-### Phase 4 — Tags
+### ~~Phase 4 — Tags~~
 
-- `Dashboard::TagsController` — full CRUD
-- Standard HTML form (unlike the frontend tags controller which is JSON-only)
+- ~~`Dashboard::TagsController` — full CRUD~~
+- ~~Standard HTML form (unlike the frontend tags controller which is JSON-only)~~
 
 ### Phase 5 — Sessions
 
@@ -89,7 +89,7 @@ Once all phases are complete and tests pass:
 | ~~1 — Skeleton + routes~~ | ~~Low~~ | ~~~30 min~~ |
 | ~~2 — Articles~~ | ~~Medium~~ | ~~Form reuse makes this fast~~ |
 | ~~3 — Users~~ | ~~Low~~ | ~~Simple form~~ |
-| 4 — Tags | Low | Simplest CRUD |
+| ~~4 — Tags~~ | ~~Low~~ | ~~Simplest CRUD~~ |
 | 5 — Sessions | Low | Read-only |
 | 6 — Layout | Low–Medium | Bootstrap, no new concepts |
 | 7 — Remove madmin | Low | Delete files + bundle |
