@@ -1,0 +1,15 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 70,
+      "fingerprint": "5e49907a5ae38b0deb72251886bfaf3644ee79f7c3bb5228dace82667d295557",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/dashboard/users_controller.rb",
+      "line": 30,
+      "confidence": "High",
+      "note": "Admin-only dashboard; permitting :admin is intentional — only admins can reach this controller"
+    }
+  ]
+}

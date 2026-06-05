@@ -1,7 +1,7 @@
 # EclecticCoding Blog
 
 [![CI](https://github.com/eclectic-coding/rails_ec-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/eclectic-coding/rails_ec-blog/actions/workflows/ci.yml)
-[![Ruby](https://img.shields.io/badge/ruby-3.4.6-CC342D?logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
+[![Ruby](https://img.shields.io/badge/ruby-4.0.5-CC342D?logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
 [![Rails](https://img.shields.io/badge/rails-8.1-CC0000?logo=rubyonrails&logoColor=white)](https://rubyonrails.org/)
 [![Bootstrap](https://img.shields.io/badge/bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 [![codecov](https://codecov.io/gh/eclectic-coding/rails_ec-blog/graph/badge.svg)](https://codecov.io/gh/eclectic-coding/rails_ec-blog)
@@ -10,7 +10,7 @@ A personal blog built with Rails 8.1, Hotwire, and Bootstrap 5. Articles support
 
 ## Tech Stack
 
-- **Ruby 3.4.6 / Rails 8.1** — SQLite in development/test
+- **Ruby 4.0.5 / Rails 8.1** — SQLite in development/test
 - **Hotwire** (Turbo + Stimulus) for reactive UI
 - **Bootstrap 5.3** + Dart Sass via `dartsass-rails`
 - **Propshaft** asset pipeline with importmap (no Webpack/esbuild)
