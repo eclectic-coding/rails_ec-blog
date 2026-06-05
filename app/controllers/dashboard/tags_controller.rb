@@ -22,7 +22,7 @@ module Dashboard
       if @tag.save
         redirect_to dashboard_tag_path(@tag), notice: "Tag was successfully created."
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -30,7 +30,7 @@ module Dashboard
       if @tag.update(tag_params)
         redirect_to dashboard_tag_path(@tag), notice: "Tag was successfully updated."
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 
