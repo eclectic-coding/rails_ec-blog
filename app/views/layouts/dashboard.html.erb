@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>" class="h-100">
+  <head>
+    <title><%= content_for?(:title) ? "#{content_for(:title)} — Admin" : "Admin" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csp_meta_tag %>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="d-flex flex-column h-100">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <%= link_to "Admin", dashboard_root_path, class: "navbar-brand fw-semibold" %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#dashboardNav" aria-controls="dashboardNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="dashboardNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item"><%= link_to "Articles", dashboard_articles_path, class: "nav-link" %></li>
+            <li class="nav-item"><%= link_to "Tags",     dashboard_tags_path,     class: "nav-link" %></li>
+            <li class="nav-item"><%= link_to "Users",    dashboard_users_path,    class: "nav-link" %></li>
+            <li class="nav-item"><%= link_to "Sessions", dashboard_sessions_path, class: "nav-link" %></li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <%= link_to "← Public site", root_path, class: "nav-link text-light" %>
+            </li>
+            <li class="nav-item">
+              <%= button_to "Sign Out", session_path, method: :delete,
+                    class: "nav-link btn btn-link text-light p-0 ms-3",
+                    form: { class: "d-inline" } %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3" data-controller="flash">
+      <%= turbo_frame_tag "flash_messages" do %>
+        <%= render "shared/notices" %>
+      <% end %>
+    </div>
+
+    <main class="flex-grow-1 bg-light">
+      <div class="container-fluid py-4 px-4">
+        <%= yield %>
+      </div>
+    </main>
+  </body>
+</html>
