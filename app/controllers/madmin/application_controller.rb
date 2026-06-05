@@ -7,7 +7,7 @@ module Madmin
     private
 
     def require_admin!
-      redirect_to root_path, alert: "Not authorized." unless admin?
+      redirect_to main_app.root_path, alert: "Not authorized." unless admin?
     end
   end
 end
