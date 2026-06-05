@@ -1,5 +1,12 @@
 if ENV["RAILS_ENV"] ||= "test"
   require "simplecov"
+  require "simplecov-json"
+
+  SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::JSONFormatter
+  ])
+
   SimpleCov.start "rails" do
     add_filter "/lib/"
     add_filter "/app/channels/"

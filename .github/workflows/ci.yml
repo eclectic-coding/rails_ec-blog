@@ -126,3 +126,10 @@ jobs:
           # Using db:test:prepare instead of db:setup to avoid running seeds
           bin/rails db:test:prepare
           bin/rspec
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/coverage.json
+          fail_ci_if_error: false
