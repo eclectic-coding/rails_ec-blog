@@ -8,6 +8,7 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><%= link_to "Articles", articles_path, class: "nav-link" %></li>
         <% if authenticated? %>
+          <li class="nav-item"><%= link_to "Admin", madmin_root_path, class: "nav-link" %></li>
           <li class="nav-item d-flex align-items-center">
             <%= button_to "Sign Out", session_path, method: :delete, class: 'nav-link btn btn-link p-0', form: { class: 'd-inline' } %>
           </li>

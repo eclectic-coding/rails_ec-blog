@@ -135,3 +135,6 @@ config/certs/*
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+CLAUDE.md
+/.claude
