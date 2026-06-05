@@ -9,19 +9,19 @@
       <% end %>
     </li>
     <li class="nav-item">
-      <%= link_to "Articles", dashboard_articles_path,
+      <%= link_to "Articles", "#",
             class: "nav-link rounded #{controller_path == 'dashboard/articles' ? 'active fw-semibold' : 'text-body'}" %>
     </li>
     <li class="nav-item">
-      <%= link_to "Tags", dashboard_tags_path,
+      <%= link_to "Tags", "#",
             class: "nav-link rounded #{controller_path == 'dashboard/tags' ? 'active fw-semibold' : 'text-body'}" %>
     </li>
     <li class="nav-item">
-      <%= link_to "Users", dashboard_users_path,
+      <%= link_to "Users", "#",
             class: "nav-link rounded #{controller_path == 'dashboard/users' ? 'active fw-semibold' : 'text-body'}" %>
     </li>
     <li class="nav-item">
-      <%= link_to "Sessions", dashboard_sessions_path,
+      <%= link_to "Sessions", "#",
             class: "nav-link rounded #{controller_path == 'dashboard/sessions' ? 'active fw-semibold' : 'text-body'}" %>
     </li>
   </ul>
