@@ -1,7 +1,5 @@
 # Ignore paths that SimpleCov also filters so both tools agree on the denominator
 ignore:
-  - "app/controllers/madmin/**"
-  - "app/madmin/**"
   - "app/mailers/**"
   - "app/jobs/**"
   - "app/channels/**"
