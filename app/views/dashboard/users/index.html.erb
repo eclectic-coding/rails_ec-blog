@@ -18,7 +18,7 @@
       <tbody>
         <% @users.each do |user| %>
           <tr>
-            <td><%= user.email_address %></td>
+            <td><%= link_to user.email_address, dashboard_user_path(user) %></td>
             <td>
               <% if user.admin? %>
                 <span class="badge bg-primary">Admin</span>

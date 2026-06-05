@@ -26,4 +26,46 @@
   </div>
 </div>
 
+<h2 class="h5 mb-3">Active Sessions</h2>
+
+<div class="card shadow-sm mb-4">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>IP Address</th>
+          <th>User Agent</th>
+          <th>Created</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @user.sessions.order(created_at: :desc).each do |session| %>
+          <tr class="<%= 'table-active' if session == Current.session %>">
+            <td class="text-muted small"><%= session.ip_address.presence || "—" %></td>
+            <td class="text-muted small text-truncate" style="max-width: 300px;"><%= session.user_agent.presence || "—" %></td>
+            <td class="text-muted small"><%= session.created_at.to_fs(:long) %></td>
+            <td>
+              <div class="d-flex justify-content-end">
+                <% if session == Current.session %>
+                  <span class="badge bg-secondary">current</span>
+                <% else %>
+                  <%= button_to "Revoke", dashboard_session_path(session), method: :delete,
+                        class: "btn btn-sm btn-outline-danger",
+                        form: { data: { turbo_confirm: "Revoke this session?" } } %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @user.sessions.empty? %>
+          <tr>
+            <td colspan="4" class="text-muted text-center py-3">No active sessions.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <%= link_to "Back to users", dashboard_users_path, class: "btn btn-link ps-0" %>
