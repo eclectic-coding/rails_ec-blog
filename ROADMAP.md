@@ -59,11 +59,11 @@ Replace the `madmin` gem with a custom `Dashboard::` namespace that lives fully 
 - ~~Shows IP address, user agent, created_at for each session~~
 - ~~One-click revoke~~
 
-### Phase 6 — Layout
+### ~~Phase 6 — Layout~~
 
-- New `app/views/layouts/dashboard.html.erb` extending the existing Bootstrap setup (same `<head>`, same importmap)
-- Bootstrap sidebar or top navbar with links to Articles, Users, Tags, Sessions
-- Replaces the madmin Tailwind layout entirely
+- ~~New `app/views/layouts/dashboard.html.erb` extending the existing Bootstrap setup (same `<head>`, same importmap)~~
+- ~~Bootstrap sidebar or top navbar with links to Articles, Users, Tags, Sessions~~
+- ~~Replaces the madmin Tailwind layout entirely~~
 
 ### Phase 7 — Remove madmin
 
@@ -91,5 +91,5 @@ Once all phases are complete and tests pass:
 | ~~3 — Users~~ | ~~Low~~ | ~~Simple form~~ |
 | ~~4 — Tags~~ | ~~Low~~ | ~~Simplest CRUD~~ |
 | ~~5 — Sessions~~ | ~~Low~~ | ~~Read-only~~ |
-| 6 — Layout | Low–Medium | Bootstrap, no new concepts |
+| ~~6 — Layout~~ | ~~Low–Medium~~ | ~~Bootstrap, no new concepts~~ |
 | 7 — Remove madmin | Low | Delete files + bundle |
