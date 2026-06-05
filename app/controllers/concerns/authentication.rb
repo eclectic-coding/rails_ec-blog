@@ -54,7 +54,7 @@ module Authentication
     respond_to do |format|
       format.html do
         session[:return_to_after_authenticating] = request.url
-        redirect_to new_session_path
+        redirect_to main_app.new_session_path
       end
       format.json { head :unauthorized }
     end

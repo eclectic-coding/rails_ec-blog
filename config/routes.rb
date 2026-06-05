@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   end
   resources :tags, only: [:show, :create]
   resource :session
-  resources :passwords, param: :token
 
   root to: 'static#home'
   get "static/home"
