@@ -1,0 +1,51 @@
+<%= content_for :title, "Dashboard" %>
+
+<h1 class="h3 mb-4">Dashboard</h1>
+
+<div class="row g-3 mb-5">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small mb-1">Total Articles</div>
+        <div class="fs-3 fw-semibold"><%= @article_count %></div>
+        <%= link_to "View all", "#", class: "stretched-link text-decoration-none small" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small mb-1">Published</div>
+        <div class="fs-3 fw-semibold"><%= @published_count %></div>
+        <%= link_to "View all", "#", class: "stretched-link text-decoration-none small" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small mb-1">Tags</div>
+        <div class="fs-3 fw-semibold"><%= @tag_count %></div>
+        <%= link_to "View all", "#", class: "stretched-link text-decoration-none small" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small mb-1">Users</div>
+        <div class="fs-3 fw-semibold"><%= @user_count %></div>
+        <%= link_to "View all", "#", class: "stretched-link text-decoration-none small" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="h5 mb-3">Quick actions</h2>
+<div class="d-flex gap-2">
+  <%= link_to "New Article", "#", class: "btn btn-primary" %>
+  <%= link_to "New Tag",     "#", class: "btn btn-outline-secondary" %>
+</div>
