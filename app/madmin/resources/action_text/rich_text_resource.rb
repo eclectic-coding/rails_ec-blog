@@ -1,4 +1,6 @@
 class ActionText::RichTextResource < Madmin::Resource
+  menu false
+
   # Attributes
   attribute :id, form: false
   attribute :name
