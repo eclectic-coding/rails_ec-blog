@@ -83,33 +83,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
-      # Add Node + JS deps + build so asset pipeline is available in CI tests
-      - name: Install Node.js 22 (NodeSource)
-        run: |
-          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-
-      - name: Cache node modules and npm/yarn caches
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            ~/.npm
-            ~/.cache/yarn
-          key: node-${{ runner.os }}-${{ hashFiles('package.json', 'yarn.lock', 'package-lock.json') }}
-          restore-keys: |
-            node-${{ runner.os }}-
-
-      - name: Install JS dependencies
-        # Use yarn if present, fallback to npm ci
-        run: |
-          if [ -f yarn.lock ]; then
-            yarn install --frozen-lockfile
-          elif [ -f package-lock.json ]; then
-            npm ci
-          else
-            echo "No JS lockfile found; skipping JS dependency install"
-          fi
 
       - name: Build / Precompile assets
         env:
