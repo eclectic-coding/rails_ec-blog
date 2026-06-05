@@ -1,0 +1,25 @@
+<%= content_for :title, @tag.display_name %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0"><%= @tag.display_name %></h1>
+  <%= link_to "Edit", edit_dashboard_tag_path(@tag), class: "btn btn-outline-secondary" %>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3">Name</dt>
+      <dd class="col-sm-9"><%= @tag.display_name %></dd>
+
+      <dt class="col-sm-3">Articles</dt>
+      <dd class="col-sm-9 mb-0"><%= @tag.articles.count %></dd>
+    </dl>
+  </div>
+</div>
+
+<div class="d-flex gap-2">
+  <%= link_to "Back to tags", dashboard_tags_path, class: "btn btn-link ps-0" %>
+  <%= button_to "Delete", dashboard_tag_path(@tag), method: :delete,
+        class: "btn btn-outline-danger btn-sm",
+        form: { data: { turbo_confirm: "Delete tag #{@tag.display_name}?" } } %>
+</div>

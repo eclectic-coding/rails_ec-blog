@@ -1,0 +1,27 @@
+<% form_url = tag.persisted? ? dashboard_tag_path(tag.id) : dashboard_tags_path %>
+<%= form_with model: [:dashboard, tag], url: form_url, class: "needs-validation" do |f| %>
+  <% if tag.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% tag.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, class: "form-control #{"is-invalid" if tag.errors[:name].any?}" %>
+    <% if tag.errors[:name].any? %>
+      <div class="invalid-feedback"><%= tag.errors[:name].first %></div>
+    <% end %>
+    <div class="form-text">Lowercase; hyphens are converted to spaces automatically.</div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit tag.persisted? ? "Save changes" : "Create tag", class: "btn btn-primary" %>
+    <% back = tag.persisted? ? dashboard_tag_path(tag.id) : dashboard_tags_path %>
+    <%= link_to "Cancel", back, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
