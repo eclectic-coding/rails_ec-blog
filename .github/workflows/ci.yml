@@ -21,6 +21,18 @@ jobs:
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager --ignore-config config/brakeman.ignore
 
+  security_audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
 
@@ -128,7 +140,7 @@ jobs:
           bin/rspec
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v53
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/coverage.json
