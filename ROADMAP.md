@@ -42,11 +42,11 @@ Replace the `madmin` gem with a custom `Dashboard::` namespace that lives fully 
 - ~~`create` always sets `user = Current.user` (guaranteed admin — no fallback needed)~~
 - ~~Port the 8-line custom create action from `Madmin::ArticlesController`~~
 
-### Phase 3 — Users
+### ~~Phase 3 — Users~~
 
-- `Dashboard::UsersController` — index, show, edit, update
-- Form fields: email address, admin toggle, password change
-- No create/destroy (admin account is seeded)
+- ~~`Dashboard::UsersController` — index, show, edit, update~~
+- ~~Form fields: email address, admin toggle, password change~~
+- ~~No create/destroy (admin account is seeded)~~
 
 ### Phase 4 — Tags
 
@@ -88,7 +88,7 @@ Once all phases are complete and tests pass:
 |---|---|---|
 | ~~1 — Skeleton + routes~~ | ~~Low~~ | ~~~30 min~~ |
 | ~~2 — Articles~~ | ~~Medium~~ | ~~Form reuse makes this fast~~ |
-| 3 — Users | Low | Simple form |
+| ~~3 — Users~~ | ~~Low~~ | ~~Simple form~~ |
 | 4 — Tags | Low | Simplest CRUD |
 | 5 — Sessions | Low | Read-only |
 | 6 — Layout | Low–Medium | Bootstrap, no new concepts |
