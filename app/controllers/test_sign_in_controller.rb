@@ -6,6 +6,6 @@ class TestSignInController < ApplicationController
 
     user = User.find(params[:user_id])
     start_new_session_for user
-    redirect_to root_path
+    redirect_to dashboard_root_path
   end
 end
