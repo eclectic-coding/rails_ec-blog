@@ -68,14 +68,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: ["3.3", "3.4", "4.0"]
+
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set up Ruby
+      - name: Set up Ruby ${{ matrix.ruby-version }}
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
       # Add Node + JS deps + build so asset pipeline is available in CI tests
       - name: Install Node.js 22 (NodeSource)
