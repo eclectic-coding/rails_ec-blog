@@ -107,6 +107,7 @@ jobs:
           bin/rspec
 
       - name: Upload coverage to Codecov
+        if: matrix.ruby-version == '3.4'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
