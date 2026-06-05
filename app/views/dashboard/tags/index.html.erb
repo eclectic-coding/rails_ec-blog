@@ -20,11 +20,13 @@
           <tr>
             <td><%= tag.display_name %></td>
             <td class="text-muted small"><%= tag.articles.count %></td>
-            <td class="text-end">
-              <%= link_to "Edit", edit_dashboard_tag_path(tag), class: "btn btn-sm btn-outline-secondary" %>
-              <%= button_to "Delete", dashboard_tag_path(tag), method: :delete,
-                    class: "btn btn-sm btn-outline-danger",
-                    form: { data: { turbo_confirm: "Delete tag #{tag.display_name}?" } } %>
+            <td>
+              <div class="d-flex gap-1 justify-content-end">
+                <%= link_to "Edit", edit_dashboard_tag_path(tag), class: "btn btn-sm btn-outline-secondary" %>
+                <%= button_to "Delete", dashboard_tag_path(tag), method: :delete,
+                      class: "btn btn-sm btn-outline-danger",
+                      form: { data: { turbo_confirm: "Delete tag #{tag.display_name}?" } } %>
+              </div>
             </td>
           </tr>
         <% end %>
