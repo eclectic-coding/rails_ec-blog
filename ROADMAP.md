@@ -65,20 +65,20 @@ Replace the `madmin` gem with a custom `Dashboard::` namespace that lives fully 
 - ~~Bootstrap sidebar or top navbar with links to Articles, Users, Tags, Sessions~~
 - ~~Replaces the madmin Tailwind layout entirely~~
 
-### Phase 7 — Remove madmin
+### ~~Phase 7 — Remove madmin~~
 
-Once all phases are complete and tests pass:
+~~Once all phases are complete and tests pass:~~
 
-- Remove `gem "madmin"` from Gemfile
-- Delete:
-  - `app/controllers/madmin/`
-  - `app/madmin/`
-  - `app/views/madmin/`
-  - `app/views/layouts/madmin/`
-  - `app/javascript/madmin/`
-  - `app/assets/stylesheets/madmin_custom.css`
-- Remove madmin request specs, update route constraint location
-- Run `bundle install` and full test suite
+- ~~Remove `gem "madmin"` from Gemfile~~
+- ~~Delete:~~
+  - ~~`app/controllers/madmin/`~~
+  - ~~`app/madmin/`~~
+  - ~~`app/views/madmin/`~~
+  - ~~`app/views/layouts/madmin/`~~
+  - ~~`app/javascript/madmin/`~~
+  - ~~`app/assets/stylesheets/madmin_custom.css`~~
+- ~~Remove madmin request specs, update route constraint location~~
+- ~~Run `bundle install` and full test suite~~
 
 ---
 
@@ -92,4 +92,4 @@ Once all phases are complete and tests pass:
 | ~~4 — Tags~~ | ~~Low~~ | ~~Simplest CRUD~~ |
 | ~~5 — Sessions~~ | ~~Low~~ | ~~Read-only~~ |
 | ~~6 — Layout~~ | ~~Low–Medium~~ | ~~Bootstrap, no new concepts~~ |
-| 7 — Remove madmin | Low | Delete files + bundle |
+| ~~7 — Remove madmin~~ | ~~Low~~ | ~~Delete files + bundle~~ |
