@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   draw :madmin
+  draw :dashboard
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   resources :articles do
