@@ -3,19 +3,17 @@ require "rails_helper"
 RSpec.describe "Madmin dashboard", type: :request do
   describe "GET /admin" do
     context "when unauthenticated" do
-      it "redirects to the sign-in page" do
+      it "returns 404 (route constraint blocks the request)" do
         get madmin_root_path
-        expect(response).to redirect_to(new_session_path)
+        expect(response).to have_http_status(:not_found)
       end
     end
 
     context "when authenticated as a non-admin" do
-      it "redirects to root with an authorization alert" do
+      it "returns 404 (route constraint blocks the request)" do
         sign_in_as(create(:user))
         get madmin_root_path
-        expect(response).to redirect_to(root_path)
-        follow_redirect!
-        expect(response.body).to include("Not authorized.")
+        expect(response).to have_http_status(:not_found)
       end
     end
 
