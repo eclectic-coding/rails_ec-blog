@@ -1,0 +1,83 @@
+<%= form_with model: [:dashboard, article], html: { multipart: true } do |form| %>
+  <%= render "shared/form_errors", object: article %>
+
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :tag_ids, "Tags", class: "form-label" %>
+    <%= form.collection_select :tag_ids, Tag.ordered, :id, :display_name,
+          {},
+          { multiple: true, class: "form-select", data: { controller: "tom-select" } } %>
+    <div class="form-text">Type to search existing tags or create a new one by typing and pressing Enter.</div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-auto d-flex align-items-center">
+      <div class="form-check">
+        <%= form.check_box :is_published, class: "form-check-input" %>
+        <%= form.label :is_published, class: "form-check-label ms-1" %>
+      </div>
+    </div>
+    <div class="col-auto">
+      <%= form.label :published_at, "Published date", class: "form-label" %>
+      <%= form.date_field :published_at, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :image, class: "form-label" %>
+
+    <div data-controller="image-picker"
+         data-image-picker-direct-upload-url-value="<%= rails_direct_uploads_url %>">
+
+      <%= form.hidden_field :image,
+            id: "article_image_signed_id",
+            disabled: true,
+            data: { "image-picker-target": "signedId" } %>
+
+      <div class="d-flex align-items-start gap-2">
+        <div class="flex-grow-1">
+          <div class="input-group">
+            <button type="button" class="btn btn-outline-secondary"
+                    data-action="click->image-picker#openModal"
+                    data-image-picker-target="chooseButton">
+              <%= article.image.attached? ? "Change Image" : "Choose Image" %>
+            </button>
+            <input type="text" readonly class="form-control"
+                   data-image-picker-target="filename"
+                   aria-label="Selected image"
+                   value="<%= article.image.attached? ? article.image.filename.to_s : "No image selected" %>">
+          </div>
+          <div class="form-text">Choose from your image library or upload a new one. JPEG, PNG, WEBP or GIF, max 5 MB.</div>
+        </div>
+
+        <div class="flex-shrink-0">
+          <% if article.persisted? %>
+            <%= render "articles/image_preview", article: article %>
+          <% else %>
+            <img src="" alt="preview" class="article-thumb d-none" data-image-picker-target="preview">
+          <% end %>
+        </div>
+      </div>
+
+      <%= render "articles/image_picker_modal" %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :content, class: "form-label" %>
+    <%= form.lexxy_rich_text_area :content %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit class: "btn btn-primary" %>
+    <% if article.persisted? %>
+      <%= link_to "Cancel", dashboard_article_path(article), class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", dashboard_articles_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,12 @@
+<%= content_for :title, "New Article" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">New Article</h1>
+  <%= link_to "← Articles", dashboard_articles_path, class: "btn btn-sm btn-outline-secondary" %>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-4">
+    <%= render "form", article: @article %>
+  </div>
+</div>
