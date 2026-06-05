@@ -7,6 +7,6 @@ namespace :dashboard, path: "admin", constraints: DASHBOARD_ADMIN_CONSTRAINT do
   resources :articles
   resources :tags
   resources :users
-  resources :sessions, only: [:index, :destroy]
+  resources :sessions, only: [:destroy]
   root to: "dashboard#index"
 end
