@@ -2,18 +2,37 @@ require "rails_helper"
 
 RSpec.describe ApplicationController, type: :controller do
   controller do
-    # Allow unauthenticated access so the before_action from the concern doesn't block the test action
-    allow_unauthenticated_access only: [:test]
+    allow_unauthenticated_access only: %i[test auth_check]
 
     def test
-      # call the private helper and render its value so we can assert on it
       render plain: after_authentication_url
+    end
+
+    def auth_check
+      render plain: authenticated?.to_s
     end
   end
 
-  # Ensure the anonymous controller action has a route for GET /test in the test environment
   before do
-    routes.draw { get "test" => "anonymous#test" }
+    routes.draw do
+      get "test" => "anonymous#test"
+      get "auth_check" => "anonymous#auth_check"
+    end
+  end
+
+  describe "#authenticated?" do
+    it "returns false when no session cookie is present" do
+      get :auth_check
+      expect(response.body).to eq("false")
+    end
+
+    it "returns true when a valid session cookie is present" do
+      user = create(:user)
+      session_record = user.sessions.create!
+      cookies.signed[:session_id] = session_record.id
+      get :auth_check
+      expect(response.body).to eq("true")
+    end
   end
 
   describe "#after_authentication_url" do

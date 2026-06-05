@@ -92,6 +92,18 @@ RSpec.describe "Dashboard::Articles", type: :request do
       end
     end
 
+    it "purges the image when remove_image is set and image is attached" do
+      patch dashboard_article_path(article), params: { article: { remove_image: "1" } }
+      expect(article.reload.image.attached?).to be(false)
+      expect(flash[:notice]).to include("Image removed")
+    end
+
+    it "notices no image when remove_image is set but no image is attached" do
+      article.image.purge
+      patch dashboard_article_path(article), params: { article: { remove_image: "1" } }
+      expect(flash[:notice]).to include("No image was attached")
+    end
+
     describe "DELETE /admin/articles/:id" do
       it "destroys the article and redirects to dashboard index" do
         article
