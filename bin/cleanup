@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#set -e
+set -e
 
 echo "[ bin/cleanup ] Running tests"
 bin/rspec
