@@ -1,4 +1,5 @@
 gem "inline_svg"
+gem "ruby-vips", "~> 2.0"
 # gem "name_of_person"
 # gem "strong_migrations" # Uncomment if you want to use strong_migrations
 gem "bootstrap", "~> 5.3.3"
