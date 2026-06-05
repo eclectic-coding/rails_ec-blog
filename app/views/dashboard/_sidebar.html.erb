@@ -1,0 +1,41 @@
+<nav class="d-flex flex-column py-3 px-2 h-100">
+  <p class="text-uppercase text-muted fw-semibold small px-2 mb-2">Admin</p>
+
+  <ul class="nav flex-column flex-grow-1">
+    <li class="nav-item">
+      <%= link_to dashboard_root_path,
+            class: "nav-link rounded #{current_page?(dashboard_root_path) ? 'active fw-semibold' : 'text-body'}" do %>
+        Dashboard
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Articles", dashboard_articles_path,
+            class: "nav-link rounded #{controller_path == 'dashboard/articles' ? 'active fw-semibold' : 'text-body'}" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Tags", dashboard_tags_path,
+            class: "nav-link rounded #{controller_path == 'dashboard/tags' ? 'active fw-semibold' : 'text-body'}" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Users", dashboard_users_path,
+            class: "nav-link rounded #{controller_path == 'dashboard/users' ? 'active fw-semibold' : 'text-body'}" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to "Sessions", dashboard_sessions_path,
+            class: "nav-link rounded #{controller_path == 'dashboard/sessions' ? 'active fw-semibold' : 'text-body'}" %>
+    </li>
+  </ul>
+
+  <hr class="my-2">
+
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <%= link_to "← Public site", root_path, class: "nav-link text-body small" %>
+    </li>
+    <li class="nav-item">
+      <%= button_to "Sign Out", session_path, method: :delete,
+            class: "nav-link btn btn-link text-body small text-start p-0 px-3 py-1 w-100",
+            form: { class: "d-grid" } %>
+    </li>
+  </ul>
+</nav>
