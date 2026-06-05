@@ -28,19 +28,19 @@ Replace the `madmin` gem with a custom `Dashboard::` namespace that lives fully 
 
 ---
 
-### Phase 1 — Dashboard skeleton
+### ~~Phase 1 — Dashboard skeleton~~
 
-- Create `Dashboard::BaseController < ApplicationController` with `before_action :admin_only!`
-- Create a `dashboard#index` landing page
-- Rewrite `config/routes/madmin.rb` → `config/routes/dashboard.rb` with the same constraint pointing at the `Dashboard::` namespace
-- Keep the `/admin` path so no URLs change
+- ~~Create `Dashboard::BaseController < ApplicationController` with `before_action :admin_only!`~~
+- ~~Create a `dashboard#index` landing page~~
+- ~~Rewrite `config/routes/madmin.rb` → `config/routes/dashboard.rb` with the same constraint pointing at the `Dashboard::` namespace~~
+- ~~Keep the `/admin` path so no URLs change~~
 
-### Phase 2 — Articles CRUD
+### ~~Phase 2 — Articles CRUD~~
 
-- `Dashboard::ArticlesController` — full CRUD
-- Render the existing `articles/_form.html.erb` partial directly (Bootstrap, works out of the box)
-- `create` always sets `user = Current.user` (guaranteed admin — no fallback needed)
-- Port the 8-line custom create action from `Madmin::ArticlesController`
+- ~~`Dashboard::ArticlesController` — full CRUD~~
+- ~~Render the existing `articles/_form.html.erb` partial directly (Bootstrap, works out of the box)~~
+- ~~`create` always sets `user = Current.user` (guaranteed admin — no fallback needed)~~
+- ~~Port the 8-line custom create action from `Madmin::ArticlesController`~~
 
 ### Phase 3 — Users
 
@@ -86,8 +86,8 @@ Once all phases are complete and tests pass:
 
 | Phase | Complexity | Notes |
 |---|---|---|
-| 1 — Skeleton + routes | Low | ~30 min |
-| 2 — Articles | Medium | Form reuse makes this fast |
+| ~~1 — Skeleton + routes~~ | ~~Low~~ | ~~~30 min~~ |
+| ~~2 — Articles~~ | ~~Medium~~ | ~~Form reuse makes this fast~~ |
 | 3 — Users | Low | Simple form |
 | 4 — Tags | Low | Simplest CRUD |
 | 5 — Sessions | Low | Read-only |
