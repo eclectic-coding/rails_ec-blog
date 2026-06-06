@@ -4,9 +4,6 @@
       <div class="py-3 px-4">
         <div class="d-flex align-items-center">
           <h1 class="flex-grow-1 text-center h2 mb-3 m-0"><%= @article.title %></h1>
-          <%= content_tag :div, class: "" do %>
-            <%= link_to 'Edit', edit_dashboard_article_path(@article), class: 'btn btn-primary' %>
-          <% end  if admin?%>
         </div>
 
         <div class="mb-3">
