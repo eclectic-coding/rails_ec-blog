@@ -1,32 +1,16 @@
 require "rails_helper"
 
 RSpec.describe "Dashboard articles index", type: :system do
-  before(:all) do
-    # Guard against stale data from previous failed runs
-    Session.delete_all
-    ActionText::RichText.delete_all
-    ActiveStorage::Attachment.delete_all
-    ActiveStorage::Blob.delete_all
-    ArticleTag.delete_all
-    Article.delete_all
-    Tag.delete_all
-    User.delete_all
+  include_context "database cleanup"
 
+  before(:all) do
+    purge_all_records
     @admin = create(:user, :admin)
     create_list(:article, 15, user: @admin)              # 15 drafts — bulk fill (oldest timestamps)
     create(:article, :published, user: @admin)           # 1 published — newest, triggers pagination (16 total)
   end
 
-  after(:all) do
-    Session.delete_all
-    ActionText::RichText.delete_all
-    ActiveStorage::Attachment.delete_all
-    ActiveStorage::Blob.delete_all
-    ArticleTag.delete_all
-    Article.delete_all
-    Tag.delete_all
-    User.delete_all
-  end
+  after(:all) { purge_all_records }
 
   before(:each) do
     driven_by(:headless_chrome)
