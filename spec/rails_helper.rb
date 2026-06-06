@@ -17,11 +17,11 @@ end
 
 require "spec_helper"
 
-ENV["RAILS_ENV"] ||= "test"
+ENV["RAILS_ENV"] = "test"
 
 require_relative "../config/environment"
-# Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+# Prevent specs from running against non-test databases
+abort("Specs must run in test environment! Current: #{Rails.env}") unless Rails.env.test?
 require "rspec/rails"
 require "capybara/rails"
 require "capybara/rspec"

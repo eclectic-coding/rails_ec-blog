@@ -23,7 +23,7 @@ module Dashboard
       if @article.save
         redirect_to dashboard_article_path(@article), notice: "Article was successfully created."
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -44,7 +44,7 @@ module Dashboard
 
         redirect_to dashboard_article_path(@article), notice: notices.join(" "), status: :see_other
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

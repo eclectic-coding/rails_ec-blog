@@ -55,8 +55,8 @@ class ArticlesController < ApplicationController
       else
         # Log minimal error for server-side troubleshooting
         Rails.logger.debug "Article save failed: #{ @article.errors.full_messages.join(', ') }"
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @article.errors, status: :unprocessable_content }
       end
     end
   end
@@ -80,8 +80,8 @@ class ArticlesController < ApplicationController
         format.html { redirect_to @article, notice: notices.join(' '), status: :see_other }
         format.json { render :show, status: :ok, location: @article }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_content }
+        format.json { render json: @article.errors, status: :unprocessable_content }
       end
     end
   end

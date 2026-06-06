@@ -1,569 +1,414 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
 # Guard clause: only run seeds in development environment
 unless Rails.env.development?
   puts "Skipping seed data - only runs in development environment"
   raise "Skipping seed data - only runs in development environment"
 end
 
-require 'open-uri'
+require "open-uri"
 
 # Create tags
 puts "Creating tags..."
-tags_data = ['ruby', 'rails', 'javascript', 'css', 'programming', 'web development', 'tutorial', 'best practices']
-tags = tags_data.map do |tag_name|
-  Tag.find_or_create_by!(name: tag_name)
-end
+tags_data = ["ruby", "rails", "javascript", "css", "programming", "web development", "tutorial", "best practices"]
+tags = tags_data.map { |name| Tag.find_or_create_by!(name: name) }
 puts "Created #{tags.count} tags"
 
-# Sample markdown contents with different typography and code blocks
 article_contents = [
   {
     title: "Getting Started with Ruby on Rails",
-    content: <<~MARKDOWN
-      # Introduction to Rails
-
-      Ruby on Rails is a **powerful** web application framework written in *Ruby*. It follows the **MVC** pattern and emphasizes convention over configuration.
-
-      ## Why Choose Rails?
-
-      - Rapid development
-      - Strong community support
-      - Built-in security features
-
-      ### Sample Code
-
-      ```ruby
-      class ApplicationController < ActionController::Base
-        before_action :authenticate_user!
-
-        def index
-          @users = User.all
-        end
-      end
-      ```
-
-      Rails makes it easy to build modern web applications with minimal configuration.
-    MARKDOWN
+    content: <<~HTML
+      <h2>What is Rails?</h2>
+      <p>Ruby on Rails is a full-stack web application framework written in Ruby. It follows the MVC pattern and emphasizes convention over configuration, letting you build production-ready applications quickly.</p>
+      <h2>Why Choose Rails?</h2>
+      <ul>
+        <li>Rapid development with sensible defaults</li>
+        <li>Rich ecosystem of gems</li>
+        <li>Built-in security features (CSRF, SQL injection protection)</li>
+        <li>Active Record makes database work a pleasure</li>
+      </ul>
+      <h2>Your First Route</h2>
+      <p>Open <code>config/routes.rb</code> and add a root route to get started:</p>
+      <pre data-language="ruby">Rails.application.routes.draw do
+  root "articles#index"
+  resources :articles
+end</pre>
+      <p>Then generate a controller with <code>bin/rails generate controller Articles index</code> and you have a working page.</p>
+    HTML
   },
   {
     title: "Understanding Active Record Associations",
-    content: <<~MARKDOWN
-      # Active Record Associations
+    content: <<~HTML
+      <h2>Defining Relationships</h2>
+      <p>Active Record associations let you declare relationships between models in plain Ruby. Rails handles the SQL so you can focus on your domain logic.</p>
+      <h2>The Most Common Associations</h2>
+      <pre data-language="ruby">class User &lt; ApplicationRecord
+  has_many :articles, dependent: :destroy
+  has_one  :profile
+end
 
-      Active Record makes it **simple** to define relationships between models. Let's explore the different types of associations.
-
-      ## Types of Associations
-
-      1. `belongs_to`
-      2. `has_many`
-      3. `has_one`
-      4. `has_and_belongs_to_many`
-
-      ### Example Implementation
-
-      ```ruby
-      class User < ApplicationRecord
-        has_many :articles, dependent: :destroy
-        has_one :profile
-        validates :email, presence: true
-      end
-      ```
-
-      > Remember: Always add proper validations and foreign keys!
-
-      The `dependent: :destroy` option ensures that associated records are cleaned up properly.
-    MARKDOWN
+class Article &lt; ApplicationRecord
+  belongs_to :user
+  has_many   :article_tags
+  has_many   :tags, through: :article_tags
+end</pre>
+      <h2>Tips</h2>
+      <ul>
+        <li>Always add a database-level foreign key alongside <code>belongs_to</code></li>
+        <li>Use <code>dependent: :destroy</code> to prevent orphaned records</li>
+        <li>Prefer <code>has_many :through</code> over <code>has_and_belongs_to_many</code> when you need extra columns on the join</li>
+      </ul>
+    HTML
   },
   {
     title: "Mastering CSS Grid Layout",
-    content: <<~MARKDOWN
-      # CSS Grid Layout Guide
-
-      CSS Grid is a **two-dimensional** layout system for the web. It makes creating complex responsive layouts *much easier*.
-
-      ## Basic Grid Setup
-
-      ```css
-      .container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        padding: 20px;
-      }
-      ```
-
-      ### Key Properties
-
-      - `grid-template-columns` - defines column tracks
-      - `grid-template-rows` - defines row tracks
-      - `gap` - sets spacing between items
-
-      **Important:** Browser support is excellent across all modern browsers!
-    MARKDOWN
+    content: <<~HTML
+      <h2>Why Grid?</h2>
+      <p>CSS Grid is the first CSS layout system built for two-dimensional design. It makes complex, responsive layouts trivial to write and easy to read.</p>
+      <h2>Basic Setup</h2>
+      <pre data-language="css">.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}</pre>
+      <h2>Key Concepts</h2>
+      <ul>
+        <li><strong>fr unit</strong> — fractional share of available space</li>
+        <li><strong>grid-template-areas</strong> — name regions for readable layouts</li>
+        <li><strong>auto-fill / auto-fit</strong> — responsive columns without media queries</li>
+      </ul>
+      <p>Combine Grid for page layout with Flexbox for component alignment and you have a complete toolkit.</p>
+    HTML
   },
   {
     title: "JavaScript Async/Await Patterns",
-    content: <<~MARKDOWN
-      # Modern Async JavaScript
-
-      The **async/await** syntax makes working with *Promises* much more readable and maintainable.
-
-      ## Basic Example
-
-      ```javascript
-      async function fetchUserData(userId) {
-        try {
-          const response = await fetch(`/api/users/${userId}`);
-          const data = await response.json();
-          return data;
-        } catch (error) {
-          console.error('Error fetching user:', error);
-        }
-      }
-      ```
-
-      ### Benefits
-
-      1. **Cleaner code** - no callback hell
-      2. **Better error handling** - try/catch blocks
-      3. **Easier debugging** - standard call stack
-
-      > Pro tip: Always handle errors properly in production code!
-    MARKDOWN
+    content: <<~HTML
+      <h2>From Callbacks to Async/Await</h2>
+      <p>Async/await is syntactic sugar over Promises that makes asynchronous code read like synchronous code — easier to write, easier to debug.</p>
+      <h2>Basic Pattern</h2>
+      <pre data-language="javascript">async function fetchArticle(id) {
+  try {
+    const response = await fetch(`/api/articles/${id}`);
+    if (!response.ok) throw new Error(response.statusText);
+    return await response.json();
+  } catch (error) {
+    console.error("Fetch failed:", error);
+  }
+}</pre>
+      <h2>Common Pitfalls</h2>
+      <ul>
+        <li>Forgetting <code>await</code> inside loops — use <code>Promise.all</code> for parallel fetches</li>
+        <li>Catching errors too broadly — handle at the right level</li>
+        <li>Using async/await where a plain Promise chain is cleaner</li>
+      </ul>
+    HTML
   },
   {
     title: "Testing with RSpec: A Comprehensive Guide",
-    content: <<~MARKDOWN
-      # RSpec Testing Best Practices
+    content: <<~HTML
+      <h2>Why RSpec?</h2>
+      <p>RSpec's readable DSL encourages you to describe behavior rather than just test methods. Tests become living documentation of what your code does.</p>
+      <h2>A Well-Structured Spec</h2>
+      <pre data-language="ruby">RSpec.describe Article, type: :model do
+  subject(:article) { build(:article) }
 
-      RSpec is the **most popular** testing framework for Ruby applications. Let's explore how to write *effective* tests.
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:title) }
+    it { is_expected.to belong_to(:user) }
+  end
 
-      ## Structure of a Test
-
-      ```ruby
-      RSpec.describe Article, type: :model do
-        describe 'validations' do
-          it 'validates presence of title' do
-            article = Article.new(title: nil)
-            expect(article).not_to be_valid
-          end
-        end
-      end
-      ```
-
-      ### Key Concepts
-
-      - **describe** - groups related tests
-      - **it** - defines a single test case
-      - **expect** - makes assertions
-
-      Always follow the *Arrange-Act-Assert* pattern for clarity!
-    MARKDOWN
+  describe "#publish!" do
+    it "sets is_published and published_at" do
+      expect { article.publish! }
+        .to change(article, :is_published).to(true)
+        .and change(article, :published_at).from(nil)
+    end
+  end
+end</pre>
+      <h2>Good Habits</h2>
+      <ul>
+        <li>One expectation per example keeps failures obvious</li>
+        <li>Use FactoryBot — never fixtures</li>
+        <li>Describe behavior, not implementation</li>
+      </ul>
+    HTML
   },
   {
     title: "Building RESTful APIs with Rails",
-    content: <<~MARKDOWN
-      # RESTful API Development
+    content: <<~HTML
+      <h2>Rails as an API</h2>
+      <p>Rails ships with an API-only mode that strips out middleware you don't need, giving you a leaner stack for JSON services.</p>
+      <h2>A Clean Controller</h2>
+      <pre data-language="ruby">module Api
+  module V1
+    class ArticlesController &lt; ApplicationController
+      def index
+        articles = Article.published.order(published_at: :desc)
+        render json: articles, status: :ok
+      end
 
-      Creating **RESTful APIs** in Rails is straightforward thanks to its *opinionated* structure.
-
-      ## Sample Controller
-
-      ```ruby
-      class Api::V1::ArticlesController < ApplicationController
-        def index
-          articles = Article.published.recent
-          render json: articles, status: :ok
-        end
-
-        def create
-          article = Article.new(article_params)
-          if article.save
-            render json: article, status: :created
-          else
-            render json: { errors: article.errors }, status: :unprocessable_entity
-          end
+      def create
+        article = Article.new(article_params)
+        if article.save
+          render json: article, status: :created
+        else
+          render json: { errors: article.errors }, status: :unprocessable_content
         end
       end
-      ```
-
-      ### HTTP Status Codes
-
-      | Code | Meaning |
-      |------|---------|
-      | 200 | OK |
-      | 201 | Created |
-      | 422 | Unprocessable Entity |
-
-      Always use the **appropriate status codes** for better API design!
-    MARKDOWN
+    end
+  end
+end</pre>
+      <h2>Versioning</h2>
+      <p>Namespace your controllers under <code>Api::V1</code> from day one. Introducing a <code>V2</code> without breaking existing clients is much easier when the structure is already there.</p>
+    HTML
   },
   {
-    title: "PostgreSQL Performance Optimization",
-    content: <<~MARKDOWN
-      # Optimizing PostgreSQL Queries
+    title: "Rails Database Performance Tips",
+    content: <<~HTML
+      <h2>The N+1 Problem</h2>
+      <p>The most common Rails performance issue: loading a collection and then hitting the database once per record to fetch an association.</p>
+      <pre data-language="ruby"># Bad — 1 query for articles + N queries for users
+articles = Article.all
+articles.each { |a| puts a.user.email }
 
-      **PostgreSQL** is a powerful database, but you need to optimize queries for *best performance*.
-
-      ## Adding Indexes
-
-      ```sql
-      CREATE INDEX idx_articles_published_at
-      ON articles(published_at)
-      WHERE is_published = true;
-
-      CREATE INDEX idx_users_email
-      ON users(email_address);
-      ```
-
-      ### Tips for Better Performance
-
-      1. Use indexes on frequently queried columns
-      2. Avoid N+1 queries
-      3. Use `EXPLAIN ANALYZE` to understand query plans
-
-      > Remember: Too many indexes can slow down writes!
-    MARKDOWN
+# Good — 2 queries total
+articles = Article.includes(:user).all
+articles.each { |a| puts a.user.email }</pre>
+      <h2>Add Indexes That Matter</h2>
+      <pre data-language="ruby">add_index :articles, :published_at
+add_index :articles, [:user_id, :is_published]</pre>
+      <h2>Quick Wins</h2>
+      <ul>
+        <li>Use <code>pluck</code> when you only need one column</li>
+        <li>Scope queries with <code>select</code> to avoid loading unused columns</li>
+        <li>Counter caches eliminate count queries on associations</li>
+      </ul>
+    HTML
   },
   {
     title: "Docker for Rails Development",
-    content: <<~MARKDOWN
-      # Containerizing Rails Apps
+    content: <<~HTML
+      <h2>Why Docker?</h2>
+      <p>Docker gives every developer on your team the same environment — the same Ruby version, the same database, the same system libraries. No more "works on my machine".</p>
+      <h2>A Minimal Dockerfile</h2>
+      <pre data-language="dockerfile">FROM ruby:3.4-slim
 
-      **Docker** makes it easy to create *consistent* development environments across teams.
+WORKDIR /app
 
-      ## Sample Dockerfile
+RUN apt-get update &amp;&amp; apt-get install -y build-essential libsqlite3-dev
 
-      ```dockerfile
-      FROM ruby:3.3.0
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
 
-      WORKDIR /app
+COPY . .
 
-      COPY Gemfile Gemfile.lock ./
-      RUN bundle install
-
-      COPY . .
-
-      EXPOSE 3000
-      CMD ["rails", "server", "-b", "0.0.0.0"]
-      ```
-
-      ### Benefits of Docker
-
-      - **Consistency** - same environment everywhere
-      - **Isolation** - no conflicts with system packages
-      - **Portability** - easy to share and deploy
-
-      Use `docker-compose` for managing multiple services!
-    MARKDOWN
+EXPOSE 3000
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]</pre>
+      <h2>Development Compose</h2>
+      <p>Use <code>docker-compose.yml</code> to wire up Rails with a database and any other services (Redis, Sidekiq) in a single <code>docker compose up</code>.</p>
+    HTML
   },
   {
-    title: "Tailwind CSS: Utility-First Styling",
-    content: <<~MARKDOWN
-      # Getting Started with Tailwind
-
-      Tailwind CSS is a **utility-first** CSS framework that makes styling *incredibly fast*.
-
-      ## Example Usage
-
-      ```html
-      <div class="max-w-4xl mx-auto p-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">
-          Welcome to Tailwind
-        </h1>
-        <p class="text-gray-600 leading-relaxed">
-          Build beautiful designs without leaving your HTML.
-        </p>
-      </div>
-      ```
-
-      ### Common Utilities
-
-      - `flex` / `grid` - layout systems
-      - `text-{size}` - typography
-      - `bg-{color}` - background colors
-      - `p-{size}` - padding
-
-      **Pro tip:** Use `@apply` for reusable component styles!
-    MARKDOWN
+    title: "Hotwire: Reactive Rails Without JavaScript Frameworks",
+    content: <<~HTML
+      <h2>What is Hotwire?</h2>
+      <p>Hotwire (Turbo + Stimulus) lets you build fast, reactive interfaces by sending HTML over the wire instead of JSON. You keep all your logic in Ruby, on the server.</p>
+      <h2>Turbo Frames</h2>
+      <pre data-language="erb">&lt;%= turbo_frame_tag "article_\#{article.id}" do %&gt;
+  &lt;%= render article %&gt;
+&lt;% end %&gt;</pre>
+      <p>Wrap any section of the page in a Turbo Frame and links inside it will update only that frame — no page reload, no JavaScript required.</p>
+      <h2>Turbo Streams</h2>
+      <p>After a form submission, respond with a Turbo Stream to append, prepend, replace, or remove elements on the page — all from a Rails controller returning HTML.</p>
+      <ul>
+        <li>No Redux, no fetch, no state management</li>
+        <li>Progressive enhancement — works without JavaScript too</li>
+        <li>Pairs naturally with Action Cable for real-time updates</li>
+      </ul>
+    HTML
   },
   {
     title: "Git Workflow Best Practices",
-    content: <<~MARKDOWN
-      # Effective Git Workflows
+    content: <<~HTML
+      <h2>Keep Commits Small and Focused</h2>
+      <p>A commit should do one thing. Small commits are easier to review, easier to revert, and make <code>git bisect</code> useful when tracking down bugs.</p>
+      <h2>Feature Branch Workflow</h2>
+      <pre data-language="bash"># Branch from main
+git checkout -b feature/turbo-pagination
 
-      A **solid Git workflow** is essential for *team collaboration* and code quality.
+# Commit early, commit often
+git add app/controllers/articles_controller.rb
+git commit -m "feat: add Pagy pagination to articles index"
 
-      ## Feature Branch Workflow
-
-      ```bash
-      # Create a new feature branch
-      git checkout -b feature/user-authentication
-
-      # Make changes and commit
-      git add .
-      git commit -m "Add user authentication"
-
-      # Push to remote
-      git push origin feature/user-authentication
-      ```
-
-      ### Commit Message Guidelines
-
-      1. Use present tense ("Add feature" not "Added feature")
-      2. Keep subject line under 50 characters
-      3. Add detailed description if needed
-
-      > Always review your changes before committing!
-    MARKDOWN
+# Keep your branch current
+git fetch origin
+git rebase origin/main</pre>
+      <h2>Write Good Commit Messages</h2>
+      <ul>
+        <li>Subject line: imperative mood, 50 chars or fewer</li>
+        <li>Body: explain <em>why</em>, not what (the diff shows what)</li>
+        <li>Reference issue numbers when relevant</li>
+      </ul>
+    HTML
   },
   {
-    title: "React Hooks: useState and useEffect",
-    content: <<~MARKDOWN
-      # Understanding React Hooks
-
-      React Hooks allow you to use **state** and other React features in *functional components*.
-
-      ## Basic Hooks Example
-
-      ```javascript
-      import React, { useState, useEffect } from 'react';
-
-      function UserProfile({ userId }) {
-        const [user, setUser] = useState(null);
-        const [loading, setLoading] = useState(true);
-
-        useEffect(() => {
-          fetch(`/api/users/${userId}`)
-            .then(res => res.json())
-            .then(data => {
-              setUser(data);
-              setLoading(false);
-            });
-        }, [userId]);
-
-        if (loading) return <div>Loading...</div>;
-        return <div>{user.name}</div>;
-      }
-      ```
-
-      ### Hook Rules
-
-      - Only call hooks at the **top level**
-      - Only call hooks from React functions
-
-      Hooks make your components *cleaner* and more reusable!
-    MARKDOWN
+    title: "Action Text and Rich Content in Rails",
+    content: <<~HTML
+      <h2>Adding Action Text</h2>
+      <p>Action Text brings rich-text editing to Rails with Trix. Run the installer and you get file storage, embedded attachments, and a polished editor out of the box.</p>
+      <pre data-language="bash">bin/rails action_text:install
+bin/rails db:migrate</pre>
+      <h2>In Your Model</h2>
+      <pre data-language="ruby">class Article &lt; ApplicationRecord
+  has_rich_text :content
+end</pre>
+      <h2>In Your Form</h2>
+      <pre data-language="erb">&lt;%= form.rich_text_area :content %&gt;</pre>
+      <h2>Rendering</h2>
+      <p>Use <code>&lt;%= article.content %&gt;</code> in your view. Action Text handles sanitization automatically — only a safe allowlist of HTML tags is ever rendered.</p>
+    HTML
   },
   {
-    title: "Security Best Practices for Web Apps",
-    content: <<~MARKDOWN
-      # Web Application Security
+    title: "Security Best Practices for Rails Apps",
+    content: <<~HTML
+      <h2>Rails Security Defaults</h2>
+      <p>Rails ships with strong defaults: CSRF protection on all non-GET requests, SQL injection protection through parameterized queries, and XSS protection through automatic HTML escaping.</p>
+      <h2>Parameterized Queries</h2>
+      <pre data-language="ruby"># Never interpolate user input into SQL
+User.where("email = '\#{params[:email]}'")  # dangerous
 
-      **Security** should never be an afterthought. Protect your users by following these *essential* practices.
-
-      ## Common Vulnerabilities
-
-      ### SQL Injection Prevention
-
-      ```ruby
-      # BAD - vulnerable to SQL injection
-      User.where("email = '\#{params[:email]}'")
-
-      # GOOD - uses parameterized queries
-      User.where(email: params[:email])
-      ```
-
-      ### Key Security Measures
-
-      1. **Validate all inputs** - never trust user data
-      2. **Use HTTPS** - encrypt data in transit
-      3. **Implement CSRF protection** - prevent cross-site attacks
-      4. **Hash passwords** - never store plain text
-
-      > Regular security audits are crucial for production apps!
-    MARKDOWN
+# Always use parameterized form
+User.where(email: params[:email])           # safe</pre>
+      <h2>Checklist</h2>
+      <ul>
+        <li>Run <code>brakeman</code> in CI to catch vulnerabilities automatically</li>
+        <li>Run <code>bundler-audit</code> to flag gems with known CVEs</li>
+        <li>Use Strong Parameters — never pass <code>params</code> directly to a model</li>
+        <li>Set a Content Security Policy in <code>config/initializers/content_security_policy.rb</code></li>
+      </ul>
+    HTML
   },
   {
-    title: "Building a CI/CD Pipeline",
-    content: <<~MARKDOWN
-      # Continuous Integration & Deployment
+    title: "Building a CI/CD Pipeline with GitHub Actions",
+    content: <<~HTML
+      <h2>Why Automate?</h2>
+      <p>A CI pipeline catches broken builds before they reach main. A CD pipeline removes the fear of deploying by making it a routine, automated event.</p>
+      <h2>Basic Rails CI Workflow</h2>
+      <pre data-language="yaml">name: CI
+on: [push, pull_request]
 
-      **CI/CD** automates your testing and deployment process, ensuring *reliable* releases.
-
-      ## GitHub Actions Example
-
-      ```yaml
-      name: CI
-
-      on: [push, pull_request]
-
-      jobs:
-        test:
-          runs-on: ubuntu-latest
-          steps:
-            - uses: actions/checkout@v2
-            - name: Setup Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                ruby-version: 3.3.0
-            - name: Install dependencies
-              run: bundle install
-            - name: Run tests
-              run: bundle exec rspec
-      ```
-
-      ### Benefits
-
-      - **Automated testing** - catch bugs early
-      - **Faster deployments** - ship with confidence
-      - **Consistent process** - reduce human error
-
-      Start simple and iterate on your pipeline!
-    MARKDOWN
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - run: bin/rails db:test:prepare
+      - run: bin/rspec
+      - run: bin/brakeman --no-pager</pre>
+      <h2>Next Steps</h2>
+      <ul>
+        <li>Add a deploy job that runs on push to <code>main</code> only</li>
+        <li>Use Kamal for zero-downtime deploys to a VPS</li>
+        <li>Cache the bundle with <code>bundler-cache: true</code> to keep builds fast</li>
+      </ul>
+    HTML
   },
   {
-    title: "TypeScript for JavaScript Developers",
-    content: <<~MARKDOWN
-      # Introduction to TypeScript
+    title: "Stimulus: Just Enough JavaScript",
+    content: <<~HTML
+      <h2>The Stimulus Philosophy</h2>
+      <p>Stimulus doesn't take over your page. It connects small, focused JavaScript controllers to existing HTML elements — perfect alongside Turbo or any server-rendered app.</p>
+      <h2>A Simple Controller</h2>
+      <pre data-language="javascript">// app/javascript/controllers/clipboard_controller.js
+import { Controller } from "@hotwired/stimulus"
 
-      TypeScript adds **static typing** to JavaScript, making your code *more maintainable* and less error-prone.
+export default class extends Controller {
+  static targets = ["source"]
 
-      ## Type Definitions
-
-      ```typescript
-      interface User {
-        id: number;
-        name: string;
-        email: string;
-        isActive: boolean;
-      }
-
-      function greetUser(user: User): string {
-        return `Hello, ${user.name}!`;
-      }
-
-      const user: User = {
-        id: 1,
-        name: "John Doe",
-        email: "john@example.com",
-        isActive: true
-      };
-      ```
-
-      ### Advantages
-
-      - **Catch errors at compile time** - before runtime
-      - **Better IDE support** - autocomplete and refactoring
-      - **Self-documenting code** - types serve as documentation
-
-      The learning curve is **worth it** for larger projects!
-    MARKDOWN
+  copy() {
+    navigator.clipboard.writeText(this.sourceTarget.value)
+  }
+}</pre>
+      <h2>Connecting to HTML</h2>
+      <pre data-language="html">&lt;div data-controller="clipboard"&gt;
+  &lt;input data-clipboard-target="source" value="Copy me"&gt;
+  &lt;button data-action="click-&gt;clipboard#copy"&gt;Copy&lt;/button&gt;
+&lt;/div&gt;</pre>
+      <p>No build step needed with importmap — just write the file and use it.</p>
+    HTML
   },
   {
-    title: "Microservices Architecture Patterns",
-    content: <<~MARKDOWN
-      # Understanding Microservices
+    title: "Deploying Rails with Kamal",
+    content: <<~HTML
+      <h2>What is Kamal?</h2>
+      <p>Kamal is Rails' official deployment tool. It uses Docker to package your app and deploys it to any VPS with zero downtime via container rolling restarts.</p>
+      <h2>Minimal config/deploy.yml</h2>
+      <pre data-language="yaml">service: my_blog
+image: user/my_blog
 
-      **Microservices** break down monolithic applications into *smaller, independent* services.
+servers:
+  web:
+    - 192.168.1.1
 
-      ## Service Communication
+registry:
+  username: user
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
-      ```python
-      from flask import Flask, jsonify
-      import requests
-
-      app = Flask(__name__)
-
-      @app.route('/api/user-profile/<int:user_id>')
-      def get_user_profile(user_id):
-          # Call other microservices
-          user = requests.get(f'http://user-service/users/{user_id}')
-          orders = requests.get(f'http://order-service/orders?user={user_id}')
-
-          return jsonify({
-              'user': user.json(),
-              'orders': orders.json()
-          })
-      ```
-
-      ### Key Considerations
-
-      1. **Service boundaries** - define clear responsibilities
-      2. **Data management** - each service owns its data
-      3. **Communication** - REST, gRPC, or message queues
-
-      > Start with a monolith and break it down gradually!
-
-      Microservices add **complexity**, so only use them when needed.
-    MARKDOWN
+env:
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL</pre>
+      <h2>Deploy in Three Steps</h2>
+      <ol>
+        <li>Push your image: <code>kamal build push</code></li>
+        <li>First deploy: <code>kamal setup</code></li>
+        <li>Every deploy after: <code>kamal deploy</code></li>
+      </ol>
+      <p>Kamal handles health checks, rollbacks, and secrets management — production-grade deploys without Heroku pricing.</p>
+    HTML
   }
 ]
 
-# Image URLs for placeholder images (using picsum.photos for random images)
 image_urls = (1..15).map { |i| "https://picsum.photos/seed/article#{i}/1200/800" }
 
-puts "Creating articles with markdown content and images..."
+puts "Creating articles..."
 
-user = User.find(1)
+user = User.find_by!(admin: true)
 
-article_contents.each_with_index do |article_data, index|
-  # Check if article already exists
-  existing_article = Article.find_by(title: article_data[:title])
+article_contents.each_with_index do |data, index|
+  existing = Article.find_by(title: data[:title])
 
-  if existing_article
-    # Assign tags to existing articles if they don't have any
-    if existing_article.tags.empty?
-      num_tags = rand(1..3)
-      existing_article.tags = tags.sample(num_tags)
-      existing_article.save
-      puts "✓ Article already exists, added tags: #{existing_article.title}"
-    else
-      puts "✓ Article already exists: #{existing_article.title}"
-    end
+  if existing
+    puts "✓ Already exists: #{existing.title}"
     next
   end
 
-  # Create new article
   article = Article.new(
-    title: article_data[:title],
-    content: article_data[:content],
+    title: data[:title],
+    content: data[:content],
     is_published: true,
-    published_at: Time.current - rand(1..30).days,
+    published_at: Time.current - (15 - index).days,
     user: user
   )
 
-  # Attach image before saving
   begin
-    image_file = URI.open(image_urls[index])
     article.image.attach(
-      io: image_file,
+      io: URI.open(image_urls[index]),
       filename: "article_#{index + 1}.jpg",
-      content_type: 'image/jpeg'
+      content_type: "image/jpeg"
     )
-
-    # Assign random tags (1-3 tags per article)
-    num_tags = rand(1..3)
-    article.tags = tags.sample(num_tags)
+    article.tags = tags.sample(rand(1..3))
 
     if article.save
-      puts "✓ Created article: #{article.title} with image and #{article.tags.count} tags"
+      puts "✓ Created: #{article.title}"
     else
-      puts "✗ Error saving #{article.title}: #{article.errors.full_messages.join(', ')}"
+      puts "✗ Failed: #{article.title} — #{article.errors.full_messages.join(', ')}"
     end
   rescue => e
-    puts "✗ Error creating #{article.title}: #{e.message}"
+    puts "✗ Error on #{data[:title]}: #{e.message}"
   end
 end
 
-puts "\nSeed data creation complete!"
-puts "Created #{Article.count} articles total."
+puts "\nDone. #{Article.count} articles total."

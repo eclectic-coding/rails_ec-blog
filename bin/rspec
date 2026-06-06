@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Lightweight rspec runner wrapper — runs specs via Bundler so callers can run ./bin/rspec [...args]
 set -euo pipefail
+export RAILS_ENV=test
 exec bundle exec rspec "$@"
 

@@ -17,4 +17,8 @@ Rails.application.routes.draw do
   get "static/home"
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  if Rails.env.test?
+    get "test/sign_in/:user_id", to: "test_sign_in#create", as: "test_sign_in"
+  end
 end

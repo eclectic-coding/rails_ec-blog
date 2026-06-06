@@ -53,13 +53,13 @@ RSpec.describe "Dashboard::Tags", type: :request do
 
       it "renders new with 422 on invalid params" do
         post dashboard_tags_path, params: { tag: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "renders new with 422 on duplicate name" do
         tag
         post dashboard_tags_path, params: { tag: { name: tag.name } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe "Dashboard::Tags", type: :request do
 
       it "renders edit with 422 on invalid params" do
         patch dashboard_tag_path(tag), params: { tag: { name: "" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
