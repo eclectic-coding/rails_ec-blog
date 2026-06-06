@@ -7,6 +7,7 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "lexxy" %>
+    <%= yield :head %>
     <%= javascript_importmap_tags %>
   </head>
 
