@@ -19,7 +19,7 @@ module Articles
             turbo_stream.replace("notices", partial: "shared/notices")
           ]
         end
-        format.html { redirect_to edit_article_path(@article), notice: (flash.now[:notice] || flash.now[:alert]) }
+        format.html { redirect_to edit_dashboard_article_path(@article), notice: (flash.now[:notice] || flash.now[:alert]) }
       end
     end
 
