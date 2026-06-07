@@ -273,4 +273,35 @@ RSpec.describe Article, type: :model do
       expect { article.valid? }.not_to raise_error
     end
   end
+
+  describe ".sorted" do
+    let(:user)   { create(:user) }
+    let!(:alpha) { create(:article, title: "Alpha", user: user) }
+    let!(:beta)  { create(:article, title: "Beta",  user: user) }
+    let!(:gamma) { create(:article, title: "Gamma", user: user) }
+
+    it "sorts by title ascending" do
+      expect(Article.sorted("title", "asc").map(&:title)).to eq(%w[Alpha Beta Gamma])
+    end
+
+    it "sorts by title descending" do
+      expect(Article.sorted("title", "desc").map(&:title)).to eq(%w[Gamma Beta Alpha])
+    end
+
+    it "sorts by date ascending" do
+      result = Article.sorted("date", "asc").to_a
+      expect(result.first).to eq(alpha)
+      expect(result.last).to eq(gamma)
+    end
+
+    it "sorts by date descending" do
+      result = Article.sorted("date", "desc").to_a
+      expect(result.first).to eq(gamma)
+      expect(result.last).to eq(alpha)
+    end
+
+    it "falls back to recent order for unrecognised column" do
+      expect(Article.sorted("unknown", "asc")).to eq(Article.recent)
+    end
+  end
 end

@@ -2,19 +2,10 @@ module Dashboard
   class ArticlesController < Dashboard::BaseController
     before_action :set_article, only: %i[show edit update destroy]
 
-    SORT_ORDERS = {
-      ["title", "asc"] => Arel.sql("articles.title ASC"),
-      ["title", "desc"] => Arel.sql("articles.title DESC"),
-      ["date",  "asc"] => Arel.sql("COALESCE(articles.published_at, articles.created_at) ASC"),
-      ["date",  "desc"] => Arel.sql("COALESCE(articles.published_at, articles.created_at) DESC"),
-      ["tags",  "asc"] => Arel.sql("(SELECT MIN(tags.name) FROM tags INNER JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = articles.id) ASC"),
-      ["tags",  "desc"] => Arel.sql("(SELECT MIN(tags.name) FROM tags INNER JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = articles.id) DESC")
-    }.freeze
-
     def index
-      @sort      = SORT_ORDERS.key?([params[:sort], "asc"]) ? params[:sort] : "date"
+      @sort      = %w[title date tags].include?(params[:sort]) ? params[:sort] : "date"
       @direction = params[:direction] == "asc" ? "asc" : "desc"
-      @pagy, @articles = pagy(Article.includes(:tags).order(SORT_ORDERS[[@sort, @direction]]))
+      @pagy, @articles = pagy(Article.includes(:tags).sorted(@sort, @direction))
     end
 
     def show

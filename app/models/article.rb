@@ -29,6 +29,18 @@ class Article < ApplicationRecord
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
 
 
+  def self.sorted(column, direction)
+    case [column, direction]
+    when ["title", "asc"]  then order(Arel.sql("articles.title ASC"))
+    when ["title", "desc"] then order(Arel.sql("articles.title DESC"))
+    when ["date",  "asc"]  then order(Arel.sql("COALESCE(articles.published_at, articles.created_at) ASC"))
+    when ["date",  "desc"] then order(Arel.sql("COALESCE(articles.published_at, articles.created_at) DESC"))
+    when ["tags",  "asc"]  then order(Arel.sql("(SELECT MIN(tags.name) FROM tags INNER JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = articles.id) ASC"))
+    when ["tags",  "desc"] then order(Arel.sql("(SELECT MIN(tags.name) FROM tags INNER JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = articles.id) DESC"))
+    else recent
+    end
+  end
+
   def self.visible_to(user)
     if user&.admin?
       all.recent
