@@ -106,6 +106,16 @@ action-text-attachment {
 
 // ── Dark mode overrides for editor content ───────────────────────────────────
 [data-bs-theme="dark"] {
+  // Lexxy's color system is defined entirely in :root CSS vars — override them
+  // here so the editor and toolbar adopt dark mode colors.
+  --lexxy-color-ink: oklch(88% 0 0);
+  --lexxy-color-ink-medium: oklch(68% 0 0);
+  --lexxy-color-ink-light: oklch(50% 0 0);
+  --lexxy-color-ink-lighter: oklch(32% 0 0);
+  --lexxy-color-ink-lightest: oklch(24% 0 0);
+  --lexxy-color-ink-inverted: oklch(20% 0 0);
+  --lexxy-color-canvas: oklch(22% 0 0);
+
   .trix-content,
   .lexxy-content {
     color: var(--bs-body-color);

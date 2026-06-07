@@ -45,6 +45,14 @@ export default class extends Controller {
         }
       },
 
+      onInitialize: function() {
+        const label = document.querySelector(`label[for="${this.input.id}"]`)
+        if (label) {
+          if (!label.id) label.id = `label-${this.input.id}`
+          this.control_input.setAttribute('aria-labelledby', label.id)
+        }
+      },
+
       // Handle creating new tags via AJAX
       create: function(input, callback) {
         // Make AJAX request to create the tag
