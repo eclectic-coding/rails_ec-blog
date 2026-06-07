@@ -300,6 +300,20 @@ RSpec.describe Article, type: :model do
       expect(result.last).to eq(alpha)
     end
 
+    it "sorts by status ascending (drafts first)" do
+      published = create(:article, :published, user: user)
+      draft     = create(:article, user: user)
+      result    = Article.sorted("status", "asc").to_a
+      expect(result.index(draft)).to be < result.index(published)
+    end
+
+    it "sorts by status descending (published first)" do
+      published = create(:article, :published, user: user)
+      draft     = create(:article, user: user)
+      result    = Article.sorted("status", "desc").to_a
+      expect(result.index(published)).to be < result.index(draft)
+    end
+
     it "falls back to recent order for unrecognised column" do
       expect(Article.sorted("unknown", "asc")).to eq(Article.recent)
     end

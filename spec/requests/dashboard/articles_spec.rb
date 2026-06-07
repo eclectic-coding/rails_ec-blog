@@ -44,8 +44,8 @@ RSpec.describe "Dashboard::Articles", type: :request do
           expect(response).to have_http_status(:ok)
         end
 
-        it "accepts tags sort" do
-          get dashboard_articles_path(sort: "tags", direction: "asc")
+        it "accepts status sort" do
+          get dashboard_articles_path(sort: "status", direction: "asc")
           expect(response).to have_http_status(:ok)
         end
 

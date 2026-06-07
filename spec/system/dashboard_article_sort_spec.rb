@@ -43,10 +43,10 @@ RSpec.describe "Dashboard article sort", type: :system do
     expect(page).to have_css("tbody tr")
   end
 
-  it "sorts by tags without a full page reload" do
-    within("thead") { click_link "Tags" }
+  it "sorts by status without a full page reload" do
+    within("thead") { click_link "Status" }
 
-    expect(page).to have_current_path(/sort=tags/)
+    expect(page).to have_current_path(/sort=status/)
     expect(page).to have_css("tbody tr")
   end
 

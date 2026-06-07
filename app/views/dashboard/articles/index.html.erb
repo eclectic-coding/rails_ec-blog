@@ -12,8 +12,8 @@
         <thead class="table-light">
           <tr>
             <th><%= link_to "Title#{sort_indicator(:title)}".html_safe, dashboard_articles_path(sort: :title, direction: sort_direction(:title)), class: "text-decoration-none text-dark fw-semibold" %></th>
-            <th><%= link_to "Tags#{sort_indicator(:tags)}".html_safe, dashboard_articles_path(sort: :tags, direction: sort_direction(:tags)), class: "text-decoration-none text-dark fw-semibold" %></th>
-            <th>Status</th>
+            <th>Tags</th>
+            <th><%= link_to "Status#{sort_indicator(:status)}".html_safe, dashboard_articles_path(sort: :status, direction: sort_direction(:status)), class: "text-decoration-none text-dark fw-semibold" %></th>
             <th><%= link_to "Date#{sort_indicator(:date)}".html_safe, dashboard_articles_path(sort: :date, direction: sort_direction(:date)), class: "text-decoration-none text-dark fw-semibold" %></th>
             <th class="text-end">Actions</th>
           </tr>

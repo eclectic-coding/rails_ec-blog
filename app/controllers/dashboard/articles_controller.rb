@@ -3,7 +3,7 @@ module Dashboard
     before_action :set_article, only: %i[show edit update destroy]
 
     def index
-      @sort      = %w[title date tags].include?(params[:sort]) ? params[:sort] : "date"
+      @sort      = %w[title date status].include?(params[:sort]) ? params[:sort] : "date"
       @direction = params[:direction] == "asc" ? "asc" : "desc"
       @pagy, @articles = pagy(Article.includes(:tags).sorted(@sort, @direction))
     end

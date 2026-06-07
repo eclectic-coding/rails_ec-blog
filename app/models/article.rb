@@ -35,8 +35,8 @@ class Article < ApplicationRecord
     when ["title", "desc"] then order(Arel.sql("articles.title DESC"))
     when ["date",  "asc"]  then order(Arel.sql("COALESCE(articles.published_at, articles.created_at) ASC"))
     when ["date",  "desc"] then order(Arel.sql("COALESCE(articles.published_at, articles.created_at) DESC"))
-    when ["tags",  "asc"]  then order(Arel.sql("(SELECT MIN(tags.name) FROM tags INNER JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = articles.id) ASC"))
-    when ["tags",  "desc"] then order(Arel.sql("(SELECT MIN(tags.name) FROM tags INNER JOIN article_tags ON article_tags.tag_id = tags.id WHERE article_tags.article_id = articles.id) DESC"))
+    when ["status", "asc"]  then order(Arel.sql("articles.is_published ASC"))
+    when ["status", "desc"] then order(Arel.sql("articles.is_published DESC"))
     else recent
     end
   end
