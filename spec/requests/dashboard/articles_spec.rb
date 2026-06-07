@@ -37,6 +37,28 @@ RSpec.describe "Dashboard::Articles", type: :request do
         get dashboard_articles_path
         expect(response).to have_http_status(:ok)
       end
+
+      context "with sort params" do
+        it "accepts title sort" do
+          get dashboard_articles_path(sort: "title", direction: "asc")
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "accepts tags sort" do
+          get dashboard_articles_path(sort: "tags", direction: "asc")
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "accepts date sort" do
+          get dashboard_articles_path(sort: "date", direction: "asc")
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "defaults to date desc when sort param is unrecognised" do
+          get dashboard_articles_path(sort: "injected_sql", direction: "evil")
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
 
     describe "GET /admin/articles/:id" do
