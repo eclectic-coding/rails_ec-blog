@@ -50,7 +50,10 @@ module Dashboard
 
     def destroy
       @article.destroy!
-      redirect_to dashboard_articles_path, notice: "Article was successfully deleted.", status: :see_other
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(ActionView::RecordIdentifier.dom_id(@article)) }
+        format.html { redirect_to dashboard_articles_path, notice: "Article was successfully deleted.", status: :see_other }
+      end
     end
 
     private

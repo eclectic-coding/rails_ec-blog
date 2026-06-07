@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         <% @articles.each do |article| %>
-          <tr>
+          <tr id="<%= dom_id(article) %>">
             <td class="fw-medium"><%= article.title %></td>
             <td>
               <% article.tags.each do |tag| %>

@@ -112,6 +112,16 @@ RSpec.describe "Dashboard::Articles", type: :request do
         }.to change(Article, :count).by(-1)
         expect(response).to redirect_to(dashboard_articles_path)
       end
+
+      it "responds with turbo stream that removes the row" do
+        article
+        expect {
+          delete dashboard_article_path(article), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+        }.to change(Article, :count).by(-1)
+        expect(response).to have_turbo_stream
+          .with_action(:remove)
+          .targeting(ActionView::RecordIdentifier.dom_id(article))
+      end
     end
   end
 end
