@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csp_meta_tag %>
     <%= csrf_meta_tags %>
+
+    <%= javascript_tag do %>
+      (function() { document.documentElement.setAttribute("data-bs-theme", localStorage.getItem("theme") || "light"); })();
+    <% end %>
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "lexxy" %>
     <%= yield :head %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="d-flex flex-column h-100">
+  <body class="d-flex flex-column h-100" data-controller="dark-mode">
     <%= render "shared/navbar" %>
 
     <div class="toast-container position-fixed top-0 end-0 p-3 flash-toast-container" data-controller="flash">
@@ -22,13 +27,13 @@
 
     <div class="d-flex flex-grow-1 overflow-hidden">
       <%# Desktop sidebar — hidden below lg breakpoint %>
-      <aside class="d-none d-lg-flex flex-column flex-shrink-0 bg-white border-end dashboard-sidebar">
+      <aside class="d-none d-lg-flex flex-column flex-shrink-0 bg-body border-end dashboard-sidebar">
         <%= render "dashboard/sidebar" %>
       </aside>
 
-      <main class="flex-grow-1 overflow-auto bg-light">
+      <main class="flex-grow-1 overflow-auto bg-body-secondary">
         <%# Mobile sidebar toggle — visible below lg breakpoint %>
-        <div class="d-lg-none border-bottom bg-white px-3 py-2">
+        <div class="d-lg-none border-bottom bg-body px-3 py-2">
           <button class="btn btn-sm btn-outline-secondary" type="button"
                   data-bs-toggle="offcanvas" data-bs-target="#dashboardOffcanvas"
                   aria-controls="dashboardOffcanvas">

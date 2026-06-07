@@ -9,6 +9,10 @@
     <%= csp_meta_tag %>
     <%= csrf_meta_tags %>
 
+    <%= javascript_tag do %>
+      (function() { document.documentElement.setAttribute("data-bs-theme", localStorage.getItem("theme") || "light"); })();
+    <% end %>
+
     <%= yield :head %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -16,7 +20,7 @@
     <%= javascript_importmap_tags %>
    </head>
 
-  <body class="d-flex flex-column h-100 bg-light">
+  <body class="d-flex flex-column h-100 bg-body" data-controller="dark-mode">
     <main class="">
       <%= render "shared/navbar" %>
       <!-- Toast container fixed so toasts can be positioned below the navbar -->

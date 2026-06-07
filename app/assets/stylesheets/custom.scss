@@ -274,3 +274,67 @@
   min-width: 120px;
 }
 
+// ── Dark mode overrides ────────────────────────────────────────────────────────
+[data-bs-theme="dark"] {
+  .article-feed-header {
+    border-left-color: #4a4a6a;
+  }
+
+  .card-draft {
+    background-color: #2a1f00;
+    border-color: #b38600;
+  }
+
+  .article-popup {
+    background: var(--bs-body-bg);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .5);
+  }
+
+  .image-library-filename {
+    background: rgba(15, 23, 42, 0.85);
+    color: #e2e8f0;
+  }
+
+  .ts-wrapper.multi .ts-control {
+    background-color: var(--bs-body-bg);
+    border-color: #3a3f4e;
+    color: var(--bs-body-color);
+  }
+
+  .ts-dropdown {
+    background-color: var(--bs-body-bg);
+    border-color: #3a3f4e;
+    color: var(--bs-body-color);
+  }
+
+  .ts-dropdown .option {
+    color: var(--bs-body-color);
+  }
+
+  .ts-dropdown .option:hover,
+  .ts-dropdown .option.active {
+    background-color: hsl(250, 78%, 63%);
+    color: #fff;
+  }
+
+  .ts-dropdown .option.selected {
+    background-color: hsl(250, 78%, 20%);
+    color: hsl(250, 78%, 80%);
+  }
+
+  .ts-dropdown .no-results {
+    color: #9ca3af;
+  }
+
+  .ts-dropdown .create {
+    background-color: hsl(250, 78%, 15%);
+    border-top-color: #3a3f4e;
+    color: hsl(250, 78%, 70%);
+  }
+
+  .ts-dropdown .create:hover {
+    background-color: hsl(250, 78%, 20%);
+    color: hsl(250, 78%, 80%);
+  }
+}
+
