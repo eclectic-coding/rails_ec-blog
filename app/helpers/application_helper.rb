@@ -27,6 +27,16 @@ module ApplicationHelper
       .presence || "Application"
   end
 
+  def sort_direction(column)
+    return "asc" unless @sort == column.to_s
+    @direction == "asc" ? "desc" : "asc"
+  end
+
+  def sort_indicator(column)
+    return "" unless @sort == column.to_s
+    @direction == "asc" ? " ↑" : " ↓"
+  end
+
   # Generates a preview of article content from ActionText rich text
   def article_preview(content, length: 50)
     return "" if content.blank?

@@ -37,6 +37,28 @@ RSpec.describe "Dashboard::Articles", type: :request do
         get dashboard_articles_path
         expect(response).to have_http_status(:ok)
       end
+
+      context "with sort params" do
+        it "accepts title sort" do
+          get dashboard_articles_path(sort: "title", direction: "asc")
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "accepts status sort" do
+          get dashboard_articles_path(sort: "status", direction: "asc")
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "accepts date sort" do
+          get dashboard_articles_path(sort: "date", direction: "asc")
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "defaults to date desc when sort param is unrecognised" do
+          get dashboard_articles_path(sort: "injected_sql", direction: "evil")
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
 
     describe "GET /admin/articles/:id" do
@@ -111,6 +133,16 @@ RSpec.describe "Dashboard::Articles", type: :request do
           delete dashboard_article_path(article)
         }.to change(Article, :count).by(-1)
         expect(response).to redirect_to(dashboard_articles_path)
+      end
+
+      it "responds with turbo stream that removes the row" do
+        article
+        expect {
+          delete dashboard_article_path(article), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+        }.to change(Article, :count).by(-1)
+        expect(response).to have_turbo_stream
+          .with_action(:remove)
+          .targeting(ActionView::RecordIdentifier.dom_id(article))
       end
     end
   end

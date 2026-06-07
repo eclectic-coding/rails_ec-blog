@@ -3,7 +3,12 @@ module Dashboard
     before_action :set_article, only: %i[show edit update destroy]
 
     def index
-      @pagy, @articles = pagy(Article.includes(:tags).order(Arel.sql("COALESCE(published_at, created_at) DESC")))
+      @sort      = %w[title date status].include?(params[:sort]) ? params[:sort] : "date"
+      @direction = params[:direction] == "asc" ? "asc" : "desc"
+      @query     = params[:q].to_s.strip
+      scope      = Article.includes(:tags)
+      scope      = scope.where("articles.title LIKE ?", "%#{@query}%") if @query.present?
+      @pagy, @articles = pagy(scope.sorted(@sort, @direction))
     end
 
     def show
@@ -50,7 +55,10 @@ module Dashboard
 
     def destroy
       @article.destroy!
-      redirect_to dashboard_articles_path, notice: "Article was successfully deleted.", status: :see_other
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(ActionView::RecordIdentifier.dom_id(@article)) }
+        format.html { redirect_to dashboard_articles_path, notice: "Article was successfully deleted.", status: :see_other }
+      end
     end
 
     private
