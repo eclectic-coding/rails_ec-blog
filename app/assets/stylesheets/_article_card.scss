@@ -108,11 +108,11 @@
 
     &__tag {
       background-color: #2a2d36;
-      color: $primary;
+      color: var(--bs-primary-text-emphasis);
 
       &:hover {
         background-color: #3a3f4e;
-        color: $primary;
+        color: var(--bs-primary-text-emphasis);
       }
     }
 
