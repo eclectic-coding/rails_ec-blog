@@ -101,3 +101,30 @@
 
 // ──────────────────────────────────────────────────────────────────────────────
 
+[data-bs-theme="dark"] {
+  .article-card {
+    background: var(--bs-body-bg);
+    box-shadow: 0 .25rem .45rem -.15rem rgba(0, 0, 0, .4);
+
+    &__tag {
+      background-color: #2a2d36;
+      color: var(--bs-primary-text-emphasis);
+
+      &:hover {
+        background-color: #3a3f4e;
+        color: var(--bs-primary-text-emphasis);
+      }
+    }
+
+    &__meta {
+      color: #9ca3af;
+    }
+
+    &--draft {
+      background-color: #2a1f00;
+      border-color: #b38600;
+      box-shadow: 0 0 0 .25rem rgba(255, 193, 7, .12);
+    }
+  }
+}
+

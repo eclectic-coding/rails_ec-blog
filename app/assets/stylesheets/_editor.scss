@@ -104,6 +104,31 @@ action-text-attachment {
   color: hsl(250, 78%, 50%);
 }
 
+// ── Dark mode overrides for editor content ───────────────────────────────────
+[data-bs-theme="dark"] {
+  .trix-content,
+  .lexxy-content {
+    color: var(--bs-body-color);
+  }
+
+  .trix-content code:not([data-language]),
+  .lexxy-content code:not([data-language]) {
+    background-color: #1e2433;
+    color: #e2e8f0;
+  }
+
+  .trix-content pre {
+    background-color: #1e2433;
+    color: #e2e8f0;
+  }
+
+  .trix-content blockquote,
+  .lexxy-content blockquote {
+    border-left-color: #3a3f4e;
+    color: #9ca3af;
+  }
+}
+
 // ── Prism "Tomorrow Night" theme ─────────────────────────────────────────────
 .lexxy-content {
   // Dark container for ALL code blocks:
