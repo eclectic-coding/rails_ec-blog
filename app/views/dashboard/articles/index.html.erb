@@ -2,7 +2,19 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Articles</h1>
-  <%= link_to "New Article", new_dashboard_article_path, class: "btn btn-primary btn-sm" %>
+  <div class="d-flex gap-2 align-items-center">
+    <%= form_with url: dashboard_articles_path, method: :get,
+                  data: { controller: "article-search", turbo_frame: "articles-table" } do |f| %>
+      <%= f.hidden_field :sort, value: @sort %>
+      <%= f.hidden_field :direction, value: @direction %>
+      <%= f.search_field :q, value: @query,
+            placeholder: "Search titles…",
+            class: "form-control form-control-sm",
+            autocomplete: "off",
+            data: { article_search_target: "input", action: "input->article-search#search" } %>
+    <% end %>
+    <%= link_to "New Article", new_dashboard_article_path, class: "btn btn-primary btn-sm" %>
+  </div>
 </div>
 
 <%= turbo_frame_tag "articles-table" do %>
@@ -11,10 +23,10 @@
       <table class="table table-hover align-middle mb-0">
         <thead class="table-light">
           <tr>
-            <th><%= link_to "Title#{sort_indicator(:title)}".html_safe, dashboard_articles_path(sort: :title, direction: sort_direction(:title)), class: "text-decoration-none text-dark fw-semibold" %></th>
+            <th><%= link_to "Title#{sort_indicator(:title)}".html_safe, dashboard_articles_path(sort: :title, direction: sort_direction(:title), q: @query), class: "text-decoration-none text-dark fw-semibold" %></th>
             <th>Tags</th>
-            <th><%= link_to "Status#{sort_indicator(:status)}".html_safe, dashboard_articles_path(sort: :status, direction: sort_direction(:status)), class: "text-decoration-none text-dark fw-semibold" %></th>
-            <th><%= link_to "Date#{sort_indicator(:date)}".html_safe, dashboard_articles_path(sort: :date, direction: sort_direction(:date)), class: "text-decoration-none text-dark fw-semibold" %></th>
+            <th><%= link_to "Status#{sort_indicator(:status)}".html_safe, dashboard_articles_path(sort: :status, direction: sort_direction(:status), q: @query), class: "text-decoration-none text-dark fw-semibold" %></th>
+            <th><%= link_to "Date#{sort_indicator(:date)}".html_safe, dashboard_articles_path(sort: :date, direction: sort_direction(:date), q: @query), class: "text-decoration-none text-dark fw-semibold" %></th>
             <th class="text-end">Actions</th>
           </tr>
         </thead>

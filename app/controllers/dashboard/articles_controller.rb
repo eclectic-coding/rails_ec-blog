@@ -5,7 +5,10 @@ module Dashboard
     def index
       @sort      = %w[title date status].include?(params[:sort]) ? params[:sort] : "date"
       @direction = params[:direction] == "asc" ? "asc" : "desc"
-      @pagy, @articles = pagy(Article.includes(:tags).sorted(@sort, @direction))
+      @query     = params[:q].to_s.strip
+      scope      = Article.includes(:tags)
+      scope      = scope.where("articles.title LIKE ?", "%#{@query}%") if @query.present?
+      @pagy, @articles = pagy(scope.sorted(@sort, @direction))
     end
 
     def show
