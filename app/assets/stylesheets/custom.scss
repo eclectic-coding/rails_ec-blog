@@ -274,6 +274,12 @@
   min-width: 120px;
 }
 
+// ── Profile picture ───────────────────────────────────────────────────────────
+.profile-pic {
+  border: 4px solid $primary;
+  max-width: 120px;
+}
+
 // ── Dark mode overrides ────────────────────────────────────────────────────────
 [data-bs-theme="dark"] {
   // Active sidebar link: --bs-primary stays as the compiled mid-tone purple in

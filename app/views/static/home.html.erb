@@ -1,18 +1,18 @@
-<div class="row">
-  <div class="col-sm-6 d-flex justify-content-between align-items-center mx-auto mb-3">
-    <h1 class="article-feed-header">Latest Posts</h1>
-    <%= link_to "View All Articles", articles_path, class: 'btn btn-outline-primary' %>
+<div class="row align-items-center justify-content-center">
+  <div class="d-none d-md-block col-md-2 text-center">
+    <%= image_tag "profile-pic.jpg",
+                  alt: "Profile photo",
+                  class: "profile-pic img-fluid rounded-circle" %>
   </div>
-</div>
+  <div class="col-12 col-md-5">
+    <h1 class="text-primary mb-0">Chuck Smith</h1>
+    <p class="lead">Senior Software Engineer</p>
+  </div>
 
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <% if @latest_articles.any? %>
-      <% @latest_articles.each do |post| %>
-        <%= render partial: "articles/article", locals: { article: post } %>
-      <% end %>
-    <% else %>
-      <p class="text-center text-muted">No published articles yet.</p>
-    <% end %>
+  <div class="col-12 col-md-7">
+    <div class="lead mt-4 ps-0 ps-md-5">
+      <p>Paragraph</p>
+      <p>Paragraph</p>
+    </div>
   </div>
 </div>
