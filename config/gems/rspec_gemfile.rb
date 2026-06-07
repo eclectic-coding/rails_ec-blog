@@ -12,5 +12,5 @@ group :test do
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'simplecov-json', require: false
   gem "test-prof"
-  gem "turbo_rspec"
+  gem "turbo_rspec", require: false
 end
