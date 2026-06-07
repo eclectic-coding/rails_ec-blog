@@ -39,7 +39,7 @@
               </td>
               <td>
                 <div class="d-flex gap-1 justify-content-end">
-                  <%= link_to "Edit", edit_dashboard_article_path(article), class: "btn btn-sm btn-outline-secondary" %>
+                  <%= link_to "Edit", edit_dashboard_article_path(article), class: "btn btn-sm btn-outline-secondary", data: { turbo_frame: "_top" } %>
                   <%= button_to "Delete", dashboard_article_path(article), method: :delete,
                         data: { turbo_confirm: "Delete \"#{article.title}\"?" },
                         class: "btn btn-sm btn-outline-danger" %>
