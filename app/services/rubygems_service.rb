@@ -2,20 +2,24 @@ require "net/http"
 require "json"
 
 class RubygemsService
-  CACHE_KEY = "rubygems/eclecticCoding/gems"
   CACHE_TTL = 1.hour
-  API_URL   = URI("https://rubygems.org/api/v1/owners/eclecticCoding/gems.json")
 
   def self.gems
-    Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_TTL) { fetch_gems }
+    Rails.cache.fetch("rubygems/#{username}/gems", expires_in: CACHE_TTL) { fetch_gems }
   end
 
   def self.fetch_gems
-    response = Net::HTTP.get_response(API_URL)
+    url = URI("https://rubygems.org/api/v1/owners/#{username}/gems.json")
+    response = Net::HTTP.get_response(url)
     return [] unless response.is_a?(Net::HTTPSuccess)
 
     JSON.parse(response.body)
   rescue StandardError
     []
+  end
+
+  def self.username
+    Rails.application.credentials.dig(:rubygems, :username) ||
+      ENV.fetch("RUBYGEMS_USERNAME", nil)
   end
 end

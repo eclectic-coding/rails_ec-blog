@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe RubygemsService do
+  before { allow(described_class).to receive(:username).and_return("eclecticCoding") }
+
   let(:api_url) { "https://rubygems.org/api/v1/owners/eclecticCoding/gems.json" }
 
   let(:gem_payload) do
