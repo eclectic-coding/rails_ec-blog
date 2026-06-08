@@ -1,0 +1,26 @@
+<script type="application/ld+json" nonce="<%= content_security_policy_nonce %>">
+<%= json_escape({
+  "@context":        "https://schema.org",
+  "@type":           "BlogPosting",
+  "headline":        article.title,
+  "description":     article_preview(article.content, length: 160),
+  "url":             article_url(article),
+  "datePublished":   (article.published_at || article.created_at)&.iso8601,
+  "dateModified":    article.updated_at&.iso8601,
+  "author": {
+    "@type": "Person",
+    "name":  "Chuck Smith",
+    "url":   root_url
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name":  "Eclectic Coding",
+    "url":   root_url
+  },
+  "image":           article.image.attached? ? rails_blob_url(article.image, only_path: false) : nil,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id":   article_url(article)
+  }
+}.compact.to_json.html_safe) %>
+</script>

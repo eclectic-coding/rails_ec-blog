@@ -18,6 +18,17 @@ RSpec.describe "Statics", type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    it "includes meta description on home page" do
+      get root_url
+      expect(response.body).to include('name="description"')
+    end
+
+    it "sets canonical to root URL" do
+      get root_url
+      expect(response.body).to include('rel="canonical"')
+        .and include(root_url)
+    end
+
     it "calls RubygemsService" do
       expect(RubygemsService).to receive(:gems).and_return([])
       get "/"

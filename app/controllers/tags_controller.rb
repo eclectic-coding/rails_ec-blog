@@ -19,6 +19,12 @@ class TagsController < ApplicationController
     @tag = Tag.find_by_param(params[:id]) || raise(ActiveRecord::RecordNotFound)
     @pagy, @articles = pagy(@tag.articles.includes(:tags).visible_to(current_user))
 
+    set_meta_tags(
+      title:       "#{@tag.display_name} Articles",
+      description: "Articles tagged with #{@tag.display_name} on Eclectic Coding.",
+      canonical:    tag_url(@tag)
+    )
+
     respond_to do |format|
       format.html
       format.turbo_stream
