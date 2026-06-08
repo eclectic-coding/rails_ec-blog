@@ -2,7 +2,7 @@ class StaticController < ApplicationController
   allow_unauthenticated_access
 
   def home
-    @latest_articles = Article.published.recent.limit(3)
+    @latest_articles = Article.published.recent.limit(5)
     @gems = RubygemsService.gems
   end
 end

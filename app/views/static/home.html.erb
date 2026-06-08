@@ -9,15 +9,48 @@
     <p class="lead">Senior Software Engineer</p>
   </div>
 
-  <div class="col-12 col-md-7">
-    <div class="lead mt-4 ps-0 ps-md-5">
+  <div class="col-12 col-md-7 ps-md-5">
+    <div class="lead mt-4">
       <p>I am passionate about building, useful, and maintainable, Ruby on Rails applications. I am currently looking
-        for my next role. Previously I was at <a href="https://opscompass.org" class="text-primary-emphasis">Opscompass</a>, and several contracts with TekSystems.</p>
-      <p>Paragraph</p>
+        for my next role. Previously I was at
+        <a href="https://opscompass.org" class="text-primary-emphasis" target="_blank" rel="noopener noreferrer" aria-label="Opscompass (opens in new tab)">Opscompass</a>,
+        and several contracts with <a href="https://www.teksystems.com/en/" target="_blank" rel="noopener noreferrer" aria-label="TekSystems (opens in new tab)">TekSystems.</a></p>
+      <p>Beyond work, I enjoy writing software packages that solve real world problems. Look below for some of the Rubygem projects have been coding recently.</p>
+    </div>
+    <div class="d-flex justify-content-start align-items-center">
+      <div>
+        <a href="https://github.com/eclectic-coding" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in new tab)">GitHub</a>
+      </div>
+      <div class="ms-2">
+        <a href="https://bsky.app/profile/eclecticcoding.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky (opens in new tab)">Bluesky</a>
+      </div>
+      <div class="ms-2">
+        <a href="https://www.linkedin.com/in/dev-chuck-smith/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)">LinkedIn</a>
+      </div>
+      <div class="ms-2">
+        <a href="mailto:chuck@eclecticcoding.com" aria-label="Send email to chuck@eclecticcoding.com">Email</a></div>
     </div>
   </div>
 </div>
 
+<section class="row justify-content-center my-5">
+  <div class="col-12 col-md-7 d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Recent Articles</h2>
+    <%= link_to "View All", articles_path, class: "text-primary-emphasis" %>
+  </div>
+  <div class="col-12 col-md-7">
+    <ul class="list-unstyled mb-0">
+      <% @latest_articles.each do |article| %>
+        <li class="d-flex justify-content-between align-items-baseline py-2 border-bottom">
+          <%= link_to article.title, article_path(article), class: "text-truncate me-3" %>
+          <small class="text-muted flex-shrink-0">
+            <%= (article.published_at || article.created_at).strftime("%b %Y") %>
+          </small>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</section>
 <% if @gems.any? %>
   <section class="my-5">
     <h2 class="h4 mb-4">Open Source Gems</h2>
