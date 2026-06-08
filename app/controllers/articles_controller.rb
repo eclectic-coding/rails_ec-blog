@@ -7,6 +7,18 @@ class ArticlesController < ApplicationController
     resume_session
     @pagy, @articles = pagy(Article.includes(:tags).visible_to(current_user))
 
+    set_meta_tags(
+      title:       "Articles",
+      description: "Articles on Ruby on Rails, open source development, and " \
+                   "software engineering by Chuck Smith.",
+      og: {
+        title: "Articles | Eclectic Coding",
+        type:  "website",
+        url:   articles_url
+      },
+      canonical:    articles_url
+    )
+
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -14,6 +26,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
+    set_article_meta_tags
     respond_to do |format|
       format.html
       format.md { render markdown: @article }
@@ -21,6 +34,32 @@ class ArticlesController < ApplicationController
   end
 
   private
+
+  def set_article_meta_tags
+    description = helpers.article_preview(@article.content, length: 160)
+    og_image    = @article.image.attached? ? rails_blob_url(@article.image, only_path: false) : nil
+
+    meta = {
+      title:       @article.title,
+      description: description,
+      og: {
+        title:       @article.title,
+        description: description,
+        type:        "article",
+        url:         article_url(@article)
+      },
+      twitter: {
+        title:       @article.title,
+        description: description
+      },
+      canonical:    article_url(@article)
+    }
+
+    meta[:og][:image]      = og_image if og_image
+    meta[:twitter][:image] = og_image if og_image
+
+    set_meta_tags(meta)
+  end
 
   def set_visible_article
     begin

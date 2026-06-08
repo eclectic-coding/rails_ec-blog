@@ -8,6 +8,7 @@ gem "openssl", "~> 3.3", ">= 3.3.2"
 gem "pagy"
 gem "lexxy", "~> 0.7.4.beta"
 gem "friendly_id"
+gem "meta-tags"
 
 group :development, :test do
   gem "erb_lint"

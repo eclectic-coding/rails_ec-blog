@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <%= render "json_ld", article: @article %>
+<% end %>
+
 <div class="row">
   <div class="col-12 col-md-8 mx-auto">
     <div class="card <%= @article.published_at.present? ? 'bg-body-tertiary border-0' : 'card-draft' %>">
