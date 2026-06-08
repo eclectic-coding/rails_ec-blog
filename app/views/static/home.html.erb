@@ -1,18 +1,82 @@
-<div class="row">
-  <div class="col-sm-6 d-flex justify-content-between align-items-center mx-auto mb-3">
-    <h1 class="article-feed-header">Latest Posts</h1>
-    <%= link_to "View All Articles", articles_path, class: 'btn btn-outline-primary' %>
+<div class="row align-items-center justify-content-center">
+  <div class="d-none d-md-block col-md-2 text-center">
+    <%= image_tag "profile-pic.jpg",
+                  alt: "Profile photo",
+                  class: "profile-pic img-fluid rounded-circle" %>
+  </div>
+  <div class="col-12 col-md-5">
+    <h1 class="text-primary-emphasis mb-0">Chuck Smith</h1>
+    <p class="lead">Senior Software Engineer</p>
+  </div>
+
+  <div class="col-12 col-md-7 ps-md-5">
+    <div class="lead mt-4">
+      <p>I am passionate about building, useful, and maintainable, Ruby on Rails applications. I am currently looking
+        for my next role. Previously I was at
+        <a href="https://opscompass.org" class="text-primary-emphasis" target="_blank" rel="noopener noreferrer" aria-label="Opscompass (opens in new tab)">Opscompass</a>,
+        and several contracts with <a href="https://www.teksystems.com/en/" target="_blank" rel="noopener noreferrer" aria-label="TekSystems (opens in new tab)">TekSystems.</a></p>
+      <p>Beyond work, I enjoy writing software packages that solve real world problems. Look below for some of the Rubygem projects have been coding recently.</p>
+    </div>
+    <div class="d-flex justify-content-start align-items-center">
+      <div>
+        <a href="https://github.com/eclectic-coding" target="_blank" rel="noopener noreferrer" aria-label="GitHub (opens in new tab)">GitHub</a>
+      </div>
+      <div class="ms-2">
+        <a href="https://bsky.app/profile/eclecticcoding.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky (opens in new tab)">Bluesky</a>
+      </div>
+      <div class="ms-2">
+        <a href="https://www.linkedin.com/in/dev-chuck-smith/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in new tab)">LinkedIn</a>
+      </div>
+      <div class="ms-2">
+        <a href="mailto:chuck@eclecticcoding.com" aria-label="Send email to chuck@eclecticcoding.com">Email</a></div>
+    </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <% if @latest_articles.any? %>
-      <% @latest_articles.each do |post| %>
-        <%= render partial: "articles/article", locals: { article: post } %>
-      <% end %>
-    <% else %>
-      <p class="text-center text-muted">No published articles yet.</p>
-    <% end %>
+<section class="row justify-content-center my-5">
+  <div class="col-12 col-md-7 d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Recent Articles</h2>
+    <%= link_to "View All", articles_path, class: "text-primary-emphasis" %>
   </div>
-</div>
+  <div class="col-12 col-md-7">
+    <ul class="list-unstyled mb-0">
+      <% @latest_articles.each do |article| %>
+        <li class="d-flex justify-content-between align-items-baseline py-2 border-bottom">
+          <%= link_to article.title, article_path(article), class: "text-truncate me-3" %>
+          <small class="text-muted flex-shrink-0">
+            <%= (article.published_at || article.created_at).strftime("%b %Y") %>
+          </small>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</section>
+<% if @gems.any? %>
+  <section class="my-5">
+    <h2 class="h4 mb-4">Open Source Gems</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% @gems.each do |gem| %>
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h3 class="h6 card-title mb-0 text-primary-emphasis fw-semibold"><%= gem["name"] %></h3>
+                <span class="badge bg-secondary-subtle text-secondary-emphasis ms-2 flex-shrink-0">v<%= gem["version"] %></span>
+              </div>
+              <p class="card-text small text-muted flex-grow-1"><%= truncate(gem["info"], length: 140) %></p>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <small class="text-muted"><%= number_with_delimiter(gem["downloads"]) %> downloads</small>
+                <div class="d-flex gap-2">
+                  <%= link_to "RubyGems", gem["project_uri"], class: "btn btn-sm btn-outline-secondary", target: "_blank", rel: "noopener noreferrer" %>
+                  <% if gem["homepage_uri"].present? %>
+                    <%= link_to "GitHub", gem["homepage_uri"], class: "btn btn-sm btn-outline-secondary", target: "_blank", rel: "noopener noreferrer" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
