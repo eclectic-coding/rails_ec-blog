@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_27_135209) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_130355) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -81,6 +81,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_27_135209) do
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.boolean "is_featured", default: false, null: false
+    t.datetime "last_synced_at"
+    t.string "name", null: false
+    t.integer "position"
+    t.string "project_type", null: false
+    t.string "rubygem_name"
+    t.string "source_url"
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.string "version"
+    t.index ["position"], name: "index_projects_on_position"
+    t.index ["project_type"], name: "index_projects_on_project_type"
+    t.index ["rubygem_name"], name: "index_projects_on_rubygem_name", unique: true, where: "rubygem_name IS NOT NULL"
   end
 
   create_table "sessions", force: :cascade do |t|
