@@ -8,8 +8,8 @@ RSpec.describe "Projects", type: :request do
     end
 
     it "renders featured projects before non-featured" do
-      non_featured = create(:project, name: "Plain Gem", is_featured: false)
-      featured     = create(:project, name: "Star Gem",  is_featured: true)
+      create(:project, name: "Plain Gem", is_featured: false)
+      create(:project, name: "Star Gem",  is_featured: true)
 
       get projects_path
 
