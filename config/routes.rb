@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   draw :dashboard
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
+  resources :projects, only: [:index]
   resources :articles, only: %i[index show] do
     collection do
       get :image_library, to: 'articles/image_library#index'
