@@ -41,6 +41,7 @@ RSpec.describe RubygemsImportService do
         expect(project.source_url).to eq("https://github.com/eclectic-coding/safe_memoize")
         expect(project.version).to eq("1.7.0")
         expect(project.project_type).to eq("rubygem")
+        expect(project.last_synced_at).to be_within(2.seconds).of(Time.current)
       end
 
       it "returns the count of imported gems" do

@@ -23,13 +23,14 @@ class RubygemsImportService
       source_url = nil unless source_url&.match?(Project::SAFE_URL_PATTERN)
 
       Project.create!(
-        name:         rubygem_name,
-        description:  gem["info"],
-        url:          gem["project_uri"],
-        source_url:   source_url,
-        version:      gem["version"],
-        rubygem_name: rubygem_name,
-        project_type: "rubygem"
+        name:           rubygem_name,
+        description:    gem["info"],
+        url:            gem["project_uri"],
+        source_url:     source_url,
+        version:        gem["version"],
+        rubygem_name:   rubygem_name,
+        project_type:   "rubygem",
+        last_synced_at: Time.current
       )
       imported += 1
     end
