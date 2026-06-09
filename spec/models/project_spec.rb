@@ -28,6 +28,18 @@ RSpec.describe Project, type: :model do
       expect(build(:project, rubygem_name: nil)).to be_valid
     end
 
+    it "rejects url without http/https scheme" do
+      expect(build(:project, url: "javascript:alert(1)")).not_to be_valid
+    end
+
+    it "rejects source_url without http/https scheme" do
+      expect(build(:project, source_url: "ftp://example.com")).not_to be_valid
+    end
+
+    it "allows blank source_url" do
+      expect(build(:project, source_url: nil)).to be_valid
+    end
+
     it "enforces uniqueness of rubygem_name when present" do
       create(:project, :rubygem, rubygem_name: "my-gem")
       expect(build(:project, :rubygem, rubygem_name: "my-gem")).not_to be_valid

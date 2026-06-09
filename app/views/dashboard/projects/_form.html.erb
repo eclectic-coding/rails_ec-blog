@@ -1,0 +1,88 @@
+<% form_url = project.persisted? ? dashboard_project_path(project) : dashboard_projects_path %>
+<%= form_with model: [:dashboard, project], url: form_url, class: "needs-validation" do |f| %>
+  <% if project.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% project.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div data-controller="project-type">
+    <div class="mb-3">
+      <%= f.label :name, class: "form-label" %>
+      <%= f.text_field :name, class: "form-control #{"is-invalid" if project.errors[:name].any?}" %>
+      <% if project.errors[:name].any? %>
+        <div class="invalid-feedback"><%= project.errors[:name].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :description, class: "form-label" %>
+      <%= f.text_area :description, rows: 3, class: "form-control #{"is-invalid" if project.errors[:description].any?}" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :url, "Project URL", class: "form-label" %>
+      <%= f.url_field :url, class: "form-control #{"is-invalid" if project.errors[:url].any?}", placeholder: "https://" %>
+      <% if project.errors[:url].any? %>
+        <div class="invalid-feedback"><%= project.errors[:url].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :source_url, "Source URL", class: "form-label" %>
+      <%= f.url_field :source_url, class: "form-control", placeholder: "https://github.com/..." %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :project_type, class: "form-label" %>
+      <%= f.select :project_type,
+            Project::TYPES.map { |t| [t.humanize, t] },
+            { include_blank: "Select type" },
+            class: "form-select #{"is-invalid" if project.errors[:project_type].any?}",
+            data: { project_type_target: "typeSelect", action: "change->project-type#toggle" } %>
+      <% if project.errors[:project_type].any? %>
+        <div class="invalid-feedback"><%= project.errors[:project_type].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-3" data-project-type-target="rubygemGroup">
+      <%= f.label :rubygem_name, "RubyGems name", class: "form-label" %>
+      <%= f.text_field :rubygem_name, class: "form-control #{"is-invalid" if project.errors[:rubygem_name].any?}",
+            placeholder: "my-gem-name" %>
+      <% if project.errors[:rubygem_name].any? %>
+        <div class="invalid-feedback"><%= project.errors[:rubygem_name].first %></div>
+      <% end %>
+      <div class="form-text">Gem slug as it appears on rubygems.org — used for the daily sync job.</div>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :version, class: "form-label" %>
+      <%= f.text_field :version, class: "form-control", placeholder: "1.0.0" %>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-sm-6">
+        <%= f.label :position, class: "form-label" %>
+        <%= f.number_field :position, class: "form-control", min: 1, placeholder: "Leave blank for no order" %>
+        <div class="form-text">Lower numbers appear first. Blank = unordered.</div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <div class="form-check">
+        <%= f.check_box :is_featured, class: "form-check-input" %>
+        <%= f.label :is_featured, "Featured project", class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= f.submit project.persisted? ? "Save changes" : "Create project", class: "btn btn-primary" %>
+      <% back = project.persisted? ? dashboard_project_path(project) : dashboard_projects_path %>
+      <%= link_to "Cancel", back, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+<% end %>

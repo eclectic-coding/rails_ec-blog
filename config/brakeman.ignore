@@ -10,6 +10,28 @@
       "line": 30,
       "confidence": "High",
       "note": "Admin-only dashboard; permitting :admin is intentional — only admins can reach this controller"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "e4f0e835815d694ad573bcc6ea20dbed52b94cda7c685bf1f7a3d96ca3ce217a",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/dashboard/projects/show.html.erb",
+      "line": 15,
+      "confidence": "Weak",
+      "note": "False positive — Project#url is validated to match /\\Ahttps?:\\/\\/.+\\z/i, preventing javascript: and other unsafe protocols"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "00a275aa763572581a3cf332caf79fb965838bac0a578ee5143e476d014f93e1",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/dashboard/projects/show.html.erb",
+      "line": 19,
+      "confidence": "Weak",
+      "note": "False positive — Project#source_url is validated to match /\\Ahttps?:\\/\\/.+\\z/i, preventing javascript: and other unsafe protocols"
     }
   ]
 }

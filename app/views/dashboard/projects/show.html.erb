@@ -1,0 +1,54 @@
+<%= content_for :title, @project.name %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0"><%= @project.name %></h1>
+  <%= link_to "Edit", edit_dashboard_project_path(@project), class: "btn btn-outline-secondary" %>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3">Type</dt>
+      <dd class="col-sm-9"><span class="badge text-bg-secondary"><%= @project.project_type %></span></dd>
+
+      <dt class="col-sm-3">URL</dt>
+      <dd class="col-sm-9"><%= link_to @project.url, @project.url, target: "_blank", rel: "noopener" %></dd>
+
+      <% if @project.source_url.present? %>
+        <dt class="col-sm-3">Source</dt>
+        <dd class="col-sm-9"><%= link_to @project.source_url, @project.source_url, target: "_blank", rel: "noopener" %></dd>
+      <% end %>
+
+      <% if @project.description.present? %>
+        <dt class="col-sm-3">Description</dt>
+        <dd class="col-sm-9"><%= @project.description %></dd>
+      <% end %>
+
+      <% if @project.rubygem? %>
+        <dt class="col-sm-3">RubyGems name</dt>
+        <dd class="col-sm-9"><code><%= @project.rubygem_name %></code></dd>
+      <% end %>
+
+      <dt class="col-sm-3">Version</dt>
+      <dd class="col-sm-9"><%= @project.version.presence || "—" %></dd>
+
+      <dt class="col-sm-3">Position</dt>
+      <dd class="col-sm-9"><%= @project.position.presence || "—" %></dd>
+
+      <dt class="col-sm-3">Featured</dt>
+      <dd class="col-sm-9"><%= @project.is_featured? ? "Yes" : "No" %></dd>
+
+      <dt class="col-sm-3">Last Synced</dt>
+      <dd class="col-sm-9 mb-0">
+        <%= @project.last_synced_at ? "#{time_ago_in_words(@project.last_synced_at)} ago" : "Never" %>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<div class="d-flex gap-2">
+  <%= link_to "Back to projects", dashboard_projects_path, class: "btn btn-link ps-0" %>
+  <%= button_to "Delete", dashboard_project_path(@project), method: :delete,
+        class: "btn btn-outline-danger btn-sm",
+        form: { data: { turbo_confirm: "Delete project #{@project.name}?" } } %>
+</div>
