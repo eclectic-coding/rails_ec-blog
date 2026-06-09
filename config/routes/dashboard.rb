@@ -8,6 +8,9 @@ namespace :dashboard, path: "admin", constraints: DASHBOARD_ADMIN_CONSTRAINT do
   resources :tags
   resources :users
   resources :projects
+  namespace :projects do
+    resource :rubygems_import, only: [:create]
+  end
   resources :sessions, only: [:destroy]
   root to: "dashboard#index"
 end

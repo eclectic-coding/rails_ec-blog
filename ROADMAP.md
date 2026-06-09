@@ -4,18 +4,6 @@
 
 Replace the ad-hoc `RubygemsService` display with a proper `Project` resource that supports any type of software project (RubyGems, GitHub repos, npm packages, etc.), admin-managed CRUD, and an optional daily sync for gem metadata.
 
-### Phase 3 — RubyGems Import Helper
-
-Add a one-click "Import from RubyGems" action (`POST /admin/projects/import_rubygems`) that:
-
-1. Calls `RubygemsService.gems` (existing fetch-all endpoint)
-2. For each gem not already in `projects` (matched by `rubygem_name`), upserts a `Project` row with `project_type: "rubygem"` and populated `name`, `description`, `url`, `version`
-3. Redirects to index with a summary flash ("3 gems imported, 2 already existed")
-
-This makes initial population fast without manual entry.
-
----
-
 ### Phase 4 — Daily Sync Job
 
 Create `ProjectSyncJob < ApplicationJob` that updates gem metadata for all projects where `rubygem_name` is present:
