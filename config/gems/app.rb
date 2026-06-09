@@ -1,3 +1,4 @@
+gem "solid_queue"
 gem "inline_svg"
 gem "ruby-vips", "~> 2.0"
 # gem "name_of_person"
