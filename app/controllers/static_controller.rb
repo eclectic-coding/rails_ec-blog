@@ -3,7 +3,7 @@ class StaticController < ApplicationController
 
   def home
     @latest_articles = Article.published.recent.limit(5)
-    @gems = RubygemsService.gems
+    @gems = Project.featured_first.limit(6)
 
     set_meta_tags(
       title:       "Chuck Smith — Senior Rails Engineer",

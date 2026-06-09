@@ -1,0 +1,20 @@
+<%= turbo_stream.append "projects" do %>
+  <% @projects.each do |project| %>
+    <%= render partial: "project", locals: { project: project } %>
+  <% end %>
+<% end %>
+
+<% if @pagy.next %>
+  <%= turbo_stream.replace "pagination" do %>
+    <div id="pagination"
+         data-infinite-scroll-target="pagination"
+         data-infinite-scroll-url-value="<%= projects_path(page: @pagy.next) %>"
+         class="d-flex justify-content-center my-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading more projects...</span>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove "pagination" %>
+<% end %>
