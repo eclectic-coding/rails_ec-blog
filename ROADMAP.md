@@ -4,45 +4,6 @@
 
 Replace the ad-hoc `RubygemsService` display with a proper `Project` resource that supports any type of software project (RubyGems, GitHub repos, npm packages, etc.), admin-managed CRUD, and an optional daily sync for gem metadata.
 
-### Motivation
-
-The current `RubygemsService` only covers RubyGems and has no persistence — it fetches live on every page load (with caching). A persisted `Project` model gives full editorial control, supports non-gem projects, and decouples the public display from the upstream API.
-
----
-
-### Phase 1 — Project Model & Migration
-
-Create the `projects` table with fields that cover both manually-entered and API-synced projects:
-
-| Column | Type | Notes |
-|---|---|---|
-| `name` | string | display name |
-| `description` | text | short blurb |
-| `url` | string | live project / docs URL |
-| `source_url` | string | GitHub or repo link |
-| `project_type` | string | `rubygem`, `github`, `npm`, `other` |
-| `rubygem_name` | string | gem slug used for sync (nullable) |
-| `version` | string | current release (synced or manual) |
-| `is_featured` | boolean | pin to top of public list |
-| `position` | integer | manual sort order |
-| `last_synced_at` | datetime | set by sync job |
-| `timestamps` | | standard |
-
-Validations: `name` and `url` required; `project_type` in allowlist.
-
----
-
-### Phase 2 — Admin CRUD
-
-Add a `Admin::ProjectsController` (or route under the existing `dashboard/` namespace, matching current convention) with standard `index / new / create / edit / update / destroy` actions, gated behind `admin_only!`.
-
-- Index table shows name, type, version, last_synced_at, featured toggle
-- Form: all fields; `rubygem_name` shown only when type is `rubygem`
-- Stimulus controller to conditionally show/hide `rubygem_name` field based on `project_type` select
-- Flash notices on create/update/destroy
-
----
-
 ### Phase 3 — RubyGems Import Helper
 
 Add a one-click "Import from RubyGems" action (`POST /admin/projects/import_rubygems`) that:
