@@ -1,8 +1,11 @@
 class Project < ApplicationRecord
   TYPES = %w[rubygem github npm other].freeze
 
+  SAFE_URL_PATTERN = /\Ahttps?:\/\/.+\z/i
+
   validates :name, presence: true
-  validates :url, presence: true
+  validates :url, presence: true, format: { with: SAFE_URL_PATTERN, message: "must start with http:// or https://" }
+  validates :source_url, format: { with: SAFE_URL_PATTERN, message: "must start with http:// or https://" }, allow_blank: true
   validates :project_type, inclusion: { in: TYPES }
   validates :rubygem_name, uniqueness: true, allow_nil: true
 
