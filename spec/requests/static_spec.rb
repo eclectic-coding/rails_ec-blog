@@ -1,10 +1,6 @@
 require "rails_helper"
 
 RSpec.describe "Statics", type: :request do
-  before do
-    allow(RubygemsService).to receive(:gems).and_return([])
-  end
-
   describe "GET /home" do
     it "returns http success" do
       get "/static/home"
@@ -29,19 +25,15 @@ RSpec.describe "Statics", type: :request do
         .and include(root_url)
     end
 
-    it "calls RubygemsService" do
-      expect(RubygemsService).to receive(:gems).and_return([])
-      get "/"
-    end
-
-    context "when gems are returned" do
-      let(:gems) do
-        [{ "name" => "safe_memoize", "version" => "1.7.0", "downloads" => 2890,
-           "info" => "A memoization library.", "project_uri" => "https://rubygems.org/gems/safe_memoize",
-           "homepage_uri" => "https://github.com/eclectic-coding/safe_memoize" }]
+    context "when rubygem projects exist" do
+      before do
+        create(:project, :rubygem,
+          name:        "safe_memoize",
+          version:     "1.7.0",
+          description: "A memoization library.",
+          url:         "https://rubygems.org/gems/safe_memoize",
+          source_url:  "https://github.com/eclectic-coding/safe_memoize")
       end
-
-      before { allow(RubygemsService).to receive(:gems).and_return(gems) }
 
       it "displays the gem name" do
         get "/"
