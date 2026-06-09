@@ -14,7 +14,13 @@ class RubygemsImportService
       rubygem_name = gem["name"].presence
       next unless rubygem_name
 
-      if Project.exists?(rubygem_name: rubygem_name)
+      existing = Project.find_by(rubygem_name: rubygem_name)
+      if existing
+        existing.update!(
+          version:        gem["version"],
+          description:    gem["info"],
+          last_synced_at: Time.current
+        )
         skipped += 1
         next
       end

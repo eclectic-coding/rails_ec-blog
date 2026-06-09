@@ -52,11 +52,21 @@ RSpec.describe RubygemsImportService do
         expect(described_class.call.skipped).to eq(0)
       end
 
-      it "skips gems already tracked by rubygem_name" do
+      it "counts existing gems as skipped" do
         create(:project, :rubygem, rubygem_name: "safe_memoize")
         result = described_class.call
         expect(result.imported).to eq(1)
         expect(result.skipped).to eq(1)
+      end
+
+      it "refreshes version, description, and last_synced_at for existing projects" do
+        project = create(:project, :rubygem, rubygem_name: "safe_memoize",
+                         version: "0.0.1", description: "old", last_synced_at: 1.week.ago)
+        described_class.call
+        project.reload
+        expect(project.version).to eq("1.7.0")
+        expect(project.description).to eq("A memoization library.")
+        expect(project.last_synced_at).to be_within(2.seconds).of(Time.current)
       end
 
       it "omits source_url when homepage_uri is nil" do
