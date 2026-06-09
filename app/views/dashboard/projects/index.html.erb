@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Projects</h1>
   <div class="d-flex gap-2">
-    <%= button_to "Import from RubyGems", import_rubygems_dashboard_projects_path,
+    <%= button_to "Import from RubyGems", dashboard_projects_rubygems_import_path,
           method: :post,
           class: "btn btn-outline-secondary",
           form: { data: { turbo_confirm: "Import all your RubyGems as projects?" } } %>
