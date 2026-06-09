@@ -36,7 +36,7 @@ plugin :tmp_restart
 
 # Run the Solid Queue supervisor inside of Puma for single-server deployments.
 # Uncomment the following line if you install the solid_queue gem:
-# plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
 
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
