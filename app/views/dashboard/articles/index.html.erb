@@ -33,7 +33,7 @@
         <tbody>
           <% @articles.each do |article| %>
             <tr id="<%= dom_id(article) %>">
-              <td class="fw-medium"><%= article.title %></td>
+              <td class="fw-medium"><%= link_to article.title, dashboard_article_path(article), class: "text-decoration-none text-body", data: { turbo_frame: "_top" } %></td>
               <td>
                 <% article.tags.each do |tag| %>
                   <span class="badge bg-secondary-subtle text-secondary-emphasis me-1"><%= tag.display_name %></span>
