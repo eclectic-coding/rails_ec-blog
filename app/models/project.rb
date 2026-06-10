@@ -1,6 +1,8 @@
 class Project < ApplicationRecord
   TYPES = %w[rubygem github npm other].freeze
 
+  belongs_to :article, optional: true
+
   SAFE_URL_PATTERN = /\Ahttps?:\/\/.+\z/i
 
   validates :name, presence: true

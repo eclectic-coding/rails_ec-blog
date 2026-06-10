@@ -1,6 +1,7 @@
 module Dashboard
   class ProjectsController < Dashboard::BaseController
     before_action :set_project, only: %i[show edit update destroy]
+    before_action :set_articles, only: %i[new edit create update]
 
     def index
       @pagy, @projects = pagy(Project.featured_first)
@@ -45,11 +46,15 @@ module Dashboard
       @project = Project.find(params.require(:id))
     end
 
+    def set_articles
+      @articles = Article.order(:title)
+    end
+
     def project_params
       params.require(:project).permit(
         :name, :description, :url, :source_url,
         :project_type, :rubygem_name, :version,
-        :is_featured, :position
+        :is_featured, :position, :article_id
       )
     end
   end
