@@ -31,9 +31,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Install libvips
-        run: sudo apt-get install -y --fix-missing libvips
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -88,7 +85,7 @@ jobs:
           bundler-cache: true
 
       - name: Install libvips
-        run: sudo apt-get install -y --fix-missing libvips
+        run: sudo apt-get update && sudo apt-get install -y libvips
 
       - name: Build / Precompile assets
         env:
