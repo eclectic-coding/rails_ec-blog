@@ -83,6 +83,19 @@ bin/cleanup        # full gate — run before pushing
 
 Coverage report is written to `coverage/index.html`.
 
+## Rake Tasks
+
+```bash
+# Backfill FriendlyId slugs for articles missing one
+bin/rails slugs:backfill_articles
+
+# Generate OG social card images for published articles that don't have one yet
+bin/rails og_images:generate
+
+# Regenerate OG social cards for all published articles (e.g. after a design change)
+bin/rails og_images:generate FORCE=true
+```
+
 ## Architecture Notes
 
 - Custom session-based auth (Rails 8 generator, no Devise). Only `admin?` users can write.
