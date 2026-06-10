@@ -25,6 +25,21 @@ code.hljs {
   border-radius: inherit !important;
 }
 
+// ── Lexxy toolbar icon alignment ─────────────────────────────────────────────
+// Lexxy uses :where() (zero specificity) for toolbar buttons. Bootstrap's
+// element-level resets (0,0,1) beat that, causing SVGs in <summary>-based
+// dropdown toggles (fill/link) to fall back to top-left inline flow.
+// Re-declare with explicit specificity so grid centering always wins.
+lexxy-toolbar .lexxy-editor__toolbar-button {
+  display: grid;
+  place-items: center;
+
+  > svg,
+  > span {
+    grid-area: 1/1;
+  }
+}
+
 // ── ActionText / Lexxy rendered content ─────────────────────────────────────
 .trix-content,
 .lexxy-content,

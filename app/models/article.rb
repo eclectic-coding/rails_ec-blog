@@ -11,6 +11,8 @@ class Article < ApplicationRecord
 
   has_rich_text :content
 
+  has_one :project
+
   has_one_attached :image
   has_one_attached :og_image
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_130355) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_231418) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -84,6 +84,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_130355) do
   end
 
   create_table "projects", force: :cascade do |t|
+    t.integer "article_id"
     t.datetime "created_at", null: false
     t.text "description"
     t.boolean "is_featured", default: false, null: false
@@ -96,6 +97,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_130355) do
     t.datetime "updated_at", null: false
     t.string "url", null: false
     t.string "version"
+    t.index ["article_id"], name: "index_projects_on_article_id"
     t.index ["position"], name: "index_projects_on_position"
     t.index ["project_type"], name: "index_projects_on_project_type"
     t.index ["rubygem_name"], name: "index_projects_on_rubygem_name", unique: true, where: "rubygem_name IS NOT NULL"
@@ -131,5 +133,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_130355) do
   add_foreign_key "article_tags", "articles"
   add_foreign_key "article_tags", "tags"
   add_foreign_key "articles", "users"
+  add_foreign_key "projects", "articles"
   add_foreign_key "sessions", "users"
 end

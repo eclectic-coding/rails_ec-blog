@@ -39,8 +39,17 @@
       <dd class="col-sm-9"><%= @project.is_featured? ? "Yes" : "No" %></dd>
 
       <dt class="col-sm-3">Last Synced</dt>
-      <dd class="col-sm-9 mb-0">
+      <dd class="col-sm-9">
         <%= @project.last_synced_at ? "#{time_ago_in_words(@project.last_synced_at)} ago" : "Never" %>
+      </dd>
+
+      <dt class="col-sm-3">Related Article</dt>
+      <dd class="col-sm-9 mb-0">
+        <% if @project.article %>
+          <%= link_to @project.article.title, article_path(@project.article) %>
+        <% else %>
+          <span class="text-muted">—</span>
+        <% end %>
       </dd>
     </dl>
   </div>
