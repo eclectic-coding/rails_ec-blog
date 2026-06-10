@@ -5,9 +5,7 @@ end
 
 namespace :dashboard, path: "admin", constraints: DASHBOARD_ADMIN_CONSTRAINT do
   resources :articles do
-    member do
-      post :regenerate_og_image
-    end
+    resource :og_image, only: [:create], module: "articles"
   end
   resources :tags
   resources :users

@@ -1,6 +1,6 @@
 module Dashboard
   class ArticlesController < Dashboard::BaseController
-    before_action :set_article, only: %i[show edit update destroy regenerate_og_image]
+    before_action :set_article, only: %i[show edit update destroy]
 
     def index
       @sort      = %w[title date status].include?(params[:sort]) ? params[:sort] : "date"
@@ -51,13 +51,6 @@ module Dashboard
       else
         render :edit, status: :unprocessable_content
       end
-    end
-
-    def regenerate_og_image
-      OgImageGenerationJob.perform_later(@article.id)
-      redirect_to dashboard_article_path(@article),
-                  notice: "OG image generation queued.",
-                  status: :see_other
     end
 
     def destroy
