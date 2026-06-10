@@ -4,19 +4,18 @@
       <div class="d-flex justify-content-between align-items-start mb-2">
         <h5 class="card-title mb-0">
           <% if project.article %>
-            <%= link_to project.name, article_path(project.article),
-                  class: "text-decoration-none stretched-link" %>
+            <%= link_to project.name, article_path(project.article), class: "text-decoration-none" %>
           <% else %>
-            <%= link_to project.name, project.url,
-                  target: "_blank", rel: "noopener noreferrer",
-                  class: "text-decoration-none stretched-link" %>
+            <%= project.name %>
           <% end %>
         </h5>
         <div class="d-flex gap-1 flex-shrink-0 ms-2">
           <% if project.is_featured? %>
             <span class="badge text-bg-warning">Featured</span>
           <% end %>
-          <span class="badge text-bg-secondary"><%= project.project_type %></span>
+          <%= link_to project.project_type, project.url,
+                target: "_blank", rel: "noopener noreferrer",
+                class: "badge text-bg-secondary text-decoration-none" %>
         </div>
       </div>
 
@@ -33,7 +32,7 @@
         <% if project.source_url.present? %>
           <%= link_to "Source", project.source_url,
                 target: "_blank", rel: "noopener noreferrer",
-                class: "btn btn-sm btn-outline-secondary position-relative" %>
+                class: "btn btn-sm btn-outline-secondary" %>
         <% end %>
       </div>
     </div>
