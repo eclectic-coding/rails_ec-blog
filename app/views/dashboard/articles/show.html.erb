@@ -58,5 +58,27 @@
         </div>
       </div>
     <% end %>
+
+    <div class="card shadow-sm mt-3">
+      <div class="card-body text-center">
+        <h6 class="card-title text-muted small text-uppercase mb-3">OG Social Card</h6>
+        <% if @article.og_image.attached? %>
+          <%= image_tag rails_blob_url(@article.og_image),
+                class: "img-fluid rounded mb-2", alt: "OG card: #{@article.title}" %>
+          <div class="d-grid">
+            <%= button_to "Regenerate", regenerate_og_image_dashboard_article_path(@article),
+                  method: :post, class: "btn btn-sm btn-outline-secondary" %>
+          </div>
+        <% elsif @article.is_published? && @article.image.attached? %>
+          <p class="text-muted small mb-2">Not yet generated.</p>
+          <div class="d-grid">
+            <%= button_to "Generate Now", regenerate_og_image_dashboard_article_path(@article),
+                  method: :post, class: "btn btn-sm btn-primary" %>
+          </div>
+        <% else %>
+          <p class="text-muted small mb-0">Publish the article to generate an OG card.</p>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

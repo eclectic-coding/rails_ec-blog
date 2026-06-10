@@ -4,7 +4,11 @@ DASHBOARD_ADMIN_CONSTRAINT = ->(request) do
 end
 
 namespace :dashboard, path: "admin", constraints: DASHBOARD_ADMIN_CONSTRAINT do
-  resources :articles
+  resources :articles do
+    member do
+      post :regenerate_og_image
+    end
+  end
   resources :tags
   resources :users
   resources :projects
