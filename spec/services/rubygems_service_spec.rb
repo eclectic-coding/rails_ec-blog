@@ -21,6 +21,21 @@ RSpec.describe RubygemsService do
 
   before { Rails.cache.clear }
 
+  describe ".username" do
+    before { allow(described_class).to receive(:username).and_call_original }
+
+    it "returns the value from credentials when present" do
+      allow(Rails.application.credentials).to receive(:dig).with(:rubygems, :username).and_return("cred_user")
+      expect(described_class.username).to eq("cred_user")
+    end
+
+    it "falls back to RUBYGEMS_USERNAME env var when credentials are absent" do
+      allow(Rails.application.credentials).to receive(:dig).with(:rubygems, :username).and_return(nil)
+      allow(ENV).to receive(:fetch).with("RUBYGEMS_USERNAME", nil).and_return("env_user")
+      expect(described_class.username).to eq("env_user")
+    end
+  end
+
   describe ".gems" do
     context "when the API returns a successful response" do
       before do

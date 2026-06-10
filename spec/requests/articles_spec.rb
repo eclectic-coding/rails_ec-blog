@@ -86,6 +86,22 @@ RSpec.describe "/articles", type: :request do
         expect(response.body).to include('property="og:image"')
       end
 
+      it "uses og_image blob URL in og:image when an OG card is attached" do
+        article.og_image.attach(
+          io:           StringIO.new("fake-jpeg"),
+          filename:     "og-test.jpg",
+          content_type: "image/jpeg"
+        )
+        get article_url(article)
+        expect(response.body).to include(rails_blob_url(article.og_image))
+      end
+
+      it "falls back to cover image URL in og:image when no OG card is attached" do
+        get article_url(article)
+        og_img_url = rails_blob_url(article.image)
+        expect(response.body).to include(og_img_url)
+      end
+
       it "includes JSON-LD BlogPosting" do
         get article_url(article)
         expect(response.body).to include('application/ld+json')

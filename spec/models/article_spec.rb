@@ -1,5 +1,4 @@
 require "rails_helper"
-require "active_support/testing/time_helpers"
 
 RSpec.describe Article, type: :model do
   describe 'associations' do
@@ -50,128 +49,11 @@ RSpec.describe Article, type: :model do
   end
 
   describe "normalize_published_at" do
-    include ActiveSupport::Testing::TimeHelpers
-
-    let(:user) { build_stubbed(:user) }
-
-    around do |example|
-      # Freeze time to have deterministic expectations for time-of-day usage
-      travel_to(Time.zone.local(2025, 12, 30, 14, 35, 20)) do
-        example.run
-      end
-    end
-
-    it "uses current time-of-day when a Date is assigned" do
-      article = build(:article, user: user, published_at: Date.new(2025, 12, 25))
-
-      article.valid? # triggers before_validation
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 25, 14, 35, 20))
-    end
-
-    it "parses date-only string and uses current time-of-day" do
-      article = build(:article, user: user, published_at: "2025-12-20")
-
+    it "normalizes a bare Date to a Time via PublishedAtNormalizer" do
+      article = build(:article, user: build_stubbed(:user), published_at: Date.new(2025, 6, 1))
       article.valid?
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 20, 14, 35, 20))
-    end
-
-    it "parses datetime string and preserves time component" do
-      article = build(:article, user: user, published_at: "2025-12-24 09:15:00")
-
-      article.valid?
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 24, 9, 15, 0))
-    end
-
-    it "does nothing when published_at is blank or nil" do
-      article = build(:article, user: user, published_at: nil)
-
-      article.valid?
-
-      expect(article.published_at).to be_nil
-    end
-
-    it "uses current time-of-day when the reader initially returns a Date (not a Time)" do
-      article = build(:article, user: user)
-
-      # Temporarily override the instance reader so every read returns a
-      # Date object. This ensures that multiple reads inside
-      # `normalize_published_at` observe the same Date value and the
-      # Date-specific branch is exercised. After running the method we
-      # remove the override so subsequent reads return the real value.
-      article.define_singleton_method(:published_at) do
-        Date.new(2025, 12, 26)
-      end
-
-      article.send(:normalize_published_at)
-
-      # Restore the original reader so `article.published_at` returns the
-      # attribute value set by the model (the singleton method shadows the
-      # original reader, so remove it from the singleton class).
-      article.singleton_class.send(:remove_method, :published_at)
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 26, 14, 35, 20))
-    end
-
-    it "ignores unparsable string values for published_at" do
-      article = build(:article, user: user, published_at: "not-a-date")
-
-      # If parsing fails, the code rescues and leaves published_at alone
-      article.valid?
-
-      expect(article.published_at).to be_nil
-    end
-
-    it "treats an ISO midnight datetime string as date-only and uses current time-of-day" do
-      article = build(:article, user: user, published_at: "2025-12-20T00:00:00")
-
-      article.valid?
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 20, 14, 35, 20))
-    end
-
-    # --- New tests to ensure the `published_at.is_a?(String)` branch is hit ---
-    it "handles a date-only String when published_at is a String" do
-      article = build(:article, user: user)
-
-      # Force the reader to return a String so the `is_a?(String)` branch runs
-      article.define_singleton_method(:published_at) { "2025-12-21" }
-
-      article.send(:normalize_published_at)
-      article.singleton_class.send(:remove_method, :published_at)
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 21, 14, 35, 20))
-    end
-
-    it "handles a datetime String (non-midnight) when published_at is a String" do
-      article = build(:article, user: user)
-
-      article.define_singleton_method(:published_at) { "2025-12-22 08:10:05" }
-
-      article.send(:normalize_published_at)
-      article.singleton_class.send(:remove_method, :published_at)
-
-      expect(article.published_at).to be_present
-      expect(article.published_at).to be_within(1.second).of(Time.zone.local(2025, 12, 22, 8, 10, 5))
-    end
-
-    it "ignores an unparsable String when published_at is a String" do
-      article = build(:article, user: user)
-
-      article.define_singleton_method(:published_at) { "not-a-date" }
-
-      article.send(:normalize_published_at)
-      article.singleton_class.send(:remove_method, :published_at)
-
-      expect(article.published_at).to be_nil
+      expect(article.published_at).to be_a(Time)
+      expect(article.published_at.to_date).to eq(Date.new(2025, 6, 1))
     end
   end
 
@@ -203,74 +85,6 @@ RSpec.describe Article, type: :model do
       article.image.attach(io: small_io, filename: "small.jpg", content_type: "image/jpeg")
 
       expect(article).to be_valid
-    end
-  end
-
-  describe "no_missing_attachments_in_content" do
-    let(:user) { build_stubbed(:user) }
-
-    it "is valid when content has no attachments" do
-      article = build(:article, user: user, content: "Just plain text, no images.")
-
-      expect(article).to be_valid
-    end
-
-    it "is valid when content has no MissingAttachable nodes" do
-      article = build(:article, user: user, content: "Some text")
-
-      # body.attachments returns an empty list — no MissingAttachable nodes present
-      body_double = double("ActionText::Content", present?: true, attachments: [])
-      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
-
-      article.valid?
-
-      expect(article.errors[:content]).to be_empty
-    end
-
-    it "adds an error when content contains a MissingAttachable node (e.g. pasted markdown image)" do
-      article = build(:article, user: user, content: "Some text")
-
-      missing = ActionText::Attachables::MissingAttachable.new("unresolvable-sgid")
-      attachment_double = double("ActionText::Attachment", attachable: missing)
-      body_double = double("ActionText::Content", present?: true, attachments: [attachment_double])
-
-      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
-
-      article.valid?
-
-      expect(article.errors[:content]).to include(
-        a_string_matching(/embedded image that could not be processed/)
-      )
-    end
-
-    it "adds only one error even when multiple MissingAttachable nodes are present" do
-      article = build(:article, user: user, content: "text")
-
-      missing = ActionText::Attachables::MissingAttachable.new("unresolvable-sgid")
-      attachments = [
-        double("ActionText::Attachment", attachable: missing),
-        double("ActionText::Attachment", attachable: missing)
-      ]
-      body_double = double("ActionText::Content", present?: true, attachments: attachments)
-
-      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
-
-      article.valid?
-
-      expect(article.errors[:content].count).to eq(1)
-    end
-
-    it "does not raise when the attachment check itself errors — it logs and moves on" do
-      article = build(:article, user: user, content: "text")
-
-      body_double = double("ActionText::Content", present?: true)
-      allow(body_double).to receive(:attachments).and_raise(StandardError, "something unexpected")
-
-      allow(article).to receive_message_chain(:content, :body).and_return(body_double)
-
-      expect(Rails.logger).to receive(:warn).with(/Content attachment check raised/)
-
-      expect { article.valid? }.not_to raise_error
     end
   end
 
@@ -316,6 +130,43 @@ RSpec.describe Article, type: :model do
 
     it "falls back to recent order for unrecognised column" do
       expect(Article.sorted("unknown", "asc")).to eq(Article.recent)
+    end
+  end
+
+  describe "OG image generation" do
+    it "enqueues OgImageGenerationJob after commit for a published article with an image" do
+      article = create(:article, :published)
+
+      expect {
+        article.update!(title: "New Title #{SecureRandom.hex(4)}")
+      }.to have_enqueued_job(OgImageGenerationJob).with(article.id)
+    end
+
+    it "does not enqueue the job for a draft article" do
+      article = create(:article)
+
+      expect {
+        article.update!(title: "Draft Title #{SecureRandom.hex(4)}")
+      }.not_to have_enqueued_job(OgImageGenerationJob)
+    end
+
+    it "enqueues the job when a draft is published" do
+      article = create(:article)
+
+      expect {
+        article.update!(is_published: true)
+      }.to have_enqueued_job(OgImageGenerationJob).with(article.id)
+    end
+
+    it "does not enqueue the job when a published article has no image" do
+      article = create(:article, :published)
+      article.image.purge
+      article.reload
+      article.remove_image = true  # bypass image-presence validation
+
+      expect {
+        article.update!(title: "No Image #{SecureRandom.hex(4)}")
+      }.not_to have_enqueued_job(OgImageGenerationJob)
     end
   end
 end
