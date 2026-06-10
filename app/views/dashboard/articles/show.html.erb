@@ -49,16 +49,7 @@
       </div>
     </div>
 
-    <% if @article.image.attached? %>
-      <div class="card shadow-sm">
-        <div class="card-body text-center">
-          <h6 class="card-title text-muted small text-uppercase mb-3">Cover Image</h6>
-          <%= image_tag @article.image.variant(resize_to_limit: [400, 300]),
-                class: "img-fluid rounded", alt: @article.title %>
-        </div>
-      </div>
-    <% end %>
-
+    <%= render "cover_image", article: @article %>
     <%= render "og_card", article: @article %>
   </div>
 </div>

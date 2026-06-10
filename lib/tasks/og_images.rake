@@ -21,12 +21,19 @@ namespace :og_images do
     failed  = []
 
     scope.find_each do |article|
-      OgImageGenerationJob.perform_now(article.id)
-      puts "  [OK] ##{article.id} → #{article.slug}"
-      success += 1
-    rescue => e
-      puts "  [FAIL] ##{article.id} #{article.slug}: #{e.class}: #{e.message}"
-      failed << article.id
+      begin
+        OgImageGenerationJob.perform_now(article.id)
+      rescue => e
+        Rails.logger.warn("[og_images:generate] article=#{article.id}: #{e.class}: #{e.message}")
+      end
+
+      if article.reload.og_image.attached?
+        puts "  [OK] ##{article.id} → #{article.slug}"
+        success += 1
+      else
+        puts "  [FAIL] ##{article.id} #{article.slug}: OG image was not attached"
+        failed << article.id
+      end
     end
 
     puts "\nDone. #{success} OG image(s) generated."

@@ -1,0 +1,11 @@
+<div id="cover-image-<%= article.id %>" class="card shadow-sm mb-3">
+  <div class="card-body text-center">
+    <h6 class="card-title text-muted small text-uppercase mb-3">Cover Image</h6>
+    <% if article.image.attached? %>
+      <%= image_tag rails_blob_url(article.image),
+            class: "img-fluid rounded", alt: article.title %>
+    <% else %>
+      <p class="text-muted small mb-0">No cover image attached.</p>
+    <% end %>
+  </div>
+</div>
