@@ -37,7 +37,7 @@ class ArticlesController < ApplicationController
 
   def set_article_meta_tags
     description = helpers.article_preview(@article.content, length: 160)
-    og_image    = @article.image.attached? ? rails_blob_url(@article.image, only_path: false) : nil
+    og_image = og_image_url_for(@article)
 
     meta = {
       title:       @article.title,
@@ -59,6 +59,12 @@ class ArticlesController < ApplicationController
     meta[:twitter][:image] = og_image if og_image
 
     set_meta_tags(meta)
+  end
+
+  def og_image_url_for(article)
+    return rails_blob_url(article.og_image, only_path: false) if article.og_image.attached?
+
+    rails_blob_url(article.image, only_path: false) if article.image.attached?
   end
 
   def set_visible_article
