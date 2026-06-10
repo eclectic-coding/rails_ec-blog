@@ -10,6 +10,7 @@ class Article < ApplicationRecord
   has_rich_text :content
 
   has_one_attached :image
+  has_one_attached :og_image
 
   # Virtual attribute used by the form to indicate the user wants to remove the current attachment
   attr_accessor :remove_image
@@ -27,6 +28,7 @@ class Article < ApplicationRecord
 
   before_validation :normalize_published_at
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
+  after_commit :enqueue_og_image_generation, if: :should_regenerate_og_image?
 
 
   def self.sorted(column, direction)
@@ -132,5 +134,19 @@ class Article < ApplicationRecord
       "[Article] Content attachment check raised an error: #{e.class}: #{e.message}\n" \
       "#{Array(e.backtrace).first(5).join("\n")}"
     )
+  end
+
+  def should_regenerate_og_image?
+    return false unless is_published? && image.attached?
+
+    saved_change_to_title? || !og_image.attached? || image_newer_than_og_card?
+  end
+
+  def image_newer_than_og_card?
+    image.blob.created_at > og_image.blob.created_at
+  end
+
+  def enqueue_og_image_generation
+    OgImageGenerationJob.perform_later(id)
   end
 end

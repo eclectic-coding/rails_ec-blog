@@ -318,4 +318,41 @@ RSpec.describe Article, type: :model do
       expect(Article.sorted("unknown", "asc")).to eq(Article.recent)
     end
   end
+
+  describe "OG image generation" do
+    it "enqueues OgImageGenerationJob after commit for a published article with an image" do
+      article = create(:article, :published)
+
+      expect {
+        article.update!(title: "New Title #{SecureRandom.hex(4)}")
+      }.to have_enqueued_job(OgImageGenerationJob).with(article.id)
+    end
+
+    it "does not enqueue the job for a draft article" do
+      article = create(:article)
+
+      expect {
+        article.update!(title: "Draft Title #{SecureRandom.hex(4)}")
+      }.not_to have_enqueued_job(OgImageGenerationJob)
+    end
+
+    it "enqueues the job when a draft is published" do
+      article = create(:article)
+
+      expect {
+        article.update!(is_published: true)
+      }.to have_enqueued_job(OgImageGenerationJob).with(article.id)
+    end
+
+    it "does not enqueue the job when a published article has no image" do
+      article = create(:article, :published)
+      article.image.purge
+      article.reload
+      article.remove_image = true  # bypass image-presence validation
+
+      expect {
+        article.update!(title: "No Image #{SecureRandom.hex(4)}")
+      }.not_to have_enqueued_job(OgImageGenerationJob)
+    end
+  end
 end
