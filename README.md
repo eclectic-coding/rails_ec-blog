@@ -96,6 +96,34 @@ bin/rails og_images:generate
 bin/rails og_images:generate FORCE=true
 ```
 
+## Production Deployment (Hatchbox)
+
+After deploying a new release, SSH into the server and run:
+
+```bash
+cd ~/rails-blog/current
+RAILS_ENV=production bin/rails db:migrate
+```
+
+### First-time setup — Solid Queue database
+
+The queue database (`storage/queue.sqlite3`) uses a separate SQLite file that standard `db:migrate` does not touch. On a fresh server, initialize it via the Rails console:
+
+```bash
+RAILS_ENV=production bin/rails console
+```
+
+```ruby
+ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: Rails.root.join("storage/queue.sqlite3").to_s)
+load Rails.root.join("db/queue_schema.rb").to_s
+```
+
+This only needs to be run once per server. All Solid Queue tables will be created.
+
+### Solid Queue worker
+
+Solid Queue must be running to process background jobs (OG image generation, etc.). Set the environment variable `SOLID_QUEUE_IN_PUMA=true` in Hatchbox to run it inside the Puma web process, or configure a separate worker process with the command `bin/jobs`.
+
 ## Architecture Notes
 
 - Custom session-based auth (Rails 8 generator, no Devise). Only `admin?` users can write.
