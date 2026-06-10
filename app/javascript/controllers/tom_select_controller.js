@@ -15,14 +15,14 @@ export default class extends Controller {
 
   waitForTomSelect() {
     if (typeof TomSelect !== 'undefined') {
-      this.initialize()
+      this.setupTomSelect()
     } else {
       // TomSelect not loaded yet, wait and try again
       setTimeout(() => this.waitForTomSelect(), 50)
     }
   }
 
-  initialize() {
+  setupTomSelect() {
     // Get CSRF token for AJAX requests
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 
