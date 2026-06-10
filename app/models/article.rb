@@ -2,6 +2,8 @@ class Article < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
 
+  include Article::OgImageGeneration
+
   belongs_to :user
 
   has_many :article_tags, dependent: :destroy
@@ -17,10 +19,10 @@ class Article < ApplicationRecord
 
   validates :title, presence: true
   validates :tags, presence: { message: "must have at least one tag" }
+  validates :content, missing_action_text_attachments: true
 
   validate :image_presence
   validate :image_type_and_size
-  validate :no_missing_attachments_in_content
 
   scope :published, -> { where(is_published: true) }
   scope :draft, -> { where(is_published: false) }
@@ -28,7 +30,6 @@ class Article < ApplicationRecord
 
   before_validation :normalize_published_at
   before_save :autoset_published_at, if: -> { will_save_change_to_is_published? }
-  after_commit :enqueue_og_image_generation, if: :should_regenerate_og_image?
 
 
   def self.sorted(column, direction)
@@ -54,32 +55,7 @@ class Article < ApplicationRecord
   private
 
   def normalize_published_at
-    return if published_at.blank?
-
-    # If a Date was assigned (or a date-like string was parsed to a Date), convert to the same date
-    # but use the current time-of-day so articles with the same date sort by time.
-    if published_at.is_a?(Date) && !published_at.is_a?(Time)
-      now = Time.current
-      self.published_at = Time.zone.local(published_at.year, published_at.month, published_at.day,
-                                          now.hour, now.min, now.sec)
-    elsif published_at.is_a?(String)
-      parsed = Time.zone.parse(published_at) rescue nil
-      if parsed
-        # If the parsed time has zeroed time components, use current time-of-day on that date
-        if parsed.hour == 0 && parsed.min == 0 && parsed.sec == 0
-          now = Time.current
-          self.published_at = Time.zone.local(parsed.year, parsed.month, parsed.day,
-                                              now.hour, now.min, now.sec)
-        else
-          self.published_at = parsed.in_time_zone
-        end
-      end
-    elsif published_at.respond_to?(:hour) && published_at.hour == 0 && published_at.min == 0 && published_at.sec == 0
-      # Handle values that were typecast to Time/TimeWithZone at midnight (e.g., assigning a Date to a datetime column).
-      now = Time.current
-      self.published_at = Time.zone.local(published_at.year, published_at.month, published_at.day,
-                                          now.hour, now.min, now.sec)
-    end
+    self.published_at = Article::PublishedAtNormalizer.call(published_at)
   end
 
   def autoset_published_at
@@ -90,7 +66,6 @@ class Article < ApplicationRecord
     end
   end
 
-  # Simple Active Storage validations: size and content type
   def image_type_and_size
     return unless image.attached?
 
@@ -104,49 +79,10 @@ class Article < ApplicationRecord
     end
   end
 
-  # Ensure an image is attached
   def image_presence
     # If the form requested removal, allow no attachment
     return if remove_image.present?
 
     errors.add(:image, "must be attached") unless image.attached?
-  end
-
-  # Prevent saving content that contains unresolvable (embedded) image attachments.
-  # This happens when a user pastes markdown that includes inline images — the editor
-  # creates an <action-text-attachment> node whose sgid can't be resolved to an
-  # Active Storage blob, which would cause a 500 on the show page.
-  def no_missing_attachments_in_content
-    body = content.body
-    return unless body.present?
-
-    body.attachments.each do |attachment|
-      next unless attachment.attachable.is_a?(ActionText::Attachables::MissingAttachable)
-
-      errors.add(:content,
-        "contains an embedded image that could not be processed. " \
-        "Please remove inline images from your pasted content and use " \
-        "the image upload button instead.")
-      return
-    end
-  rescue => e
-    Rails.logger.warn(
-      "[Article] Content attachment check raised an error: #{e.class}: #{e.message}\n" \
-      "#{Array(e.backtrace).first(5).join("\n")}"
-    )
-  end
-
-  def should_regenerate_og_image?
-    return false unless is_published? && image.attached?
-
-    saved_change_to_title? || !og_image.attached? || image_newer_than_og_card?
-  end
-
-  def image_newer_than_og_card?
-    image.blob.created_at > og_image.blob.created_at
-  end
-
-  def enqueue_og_image_generation
-    OgImageGenerationJob.perform_later(id)
   end
 end
