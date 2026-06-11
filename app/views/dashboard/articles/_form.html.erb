@@ -1,6 +1,15 @@
 <%= form_with model: [:dashboard, article], html: { multipart: true } do |form| %>
   <%= render "shared/form_errors", object: article %>
 
+  <div class="d-flex gap-2 mb-4">
+    <%= form.submit class: "btn btn-primary" %>
+    <% if article.persisted? %>
+      <%= link_to "Cancel", dashboard_article_path(article), class: "btn btn-link" %>
+    <% else %>
+      <%= link_to "Cancel", dashboard_articles_path, class: "btn btn-link" %>
+    <% end %>
+  </div>
+
   <div class="mb-3">
     <%= form.label :title, class: "form-label" %>
     <%= form.text_field :title, class: "form-control" %>
