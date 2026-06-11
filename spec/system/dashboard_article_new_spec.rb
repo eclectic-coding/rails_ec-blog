@@ -48,7 +48,7 @@ RSpec.describe "Dashboard article new", type: :system do
     end
 
     it "shows validation errors when submitted without a title" do
-      click_button "Create Article"
+      first(:button, "Create Article").click
       expect(page).to have_text("Title can't be blank")
     end
   end

@@ -53,7 +53,7 @@ RSpec.describe "Dashboard article edit", type: :system do
 
     it "saves changes and shows a success notice" do
       fill_in "Title", with: "#{@article.title} edited"
-      click_button "Update Article"
+      first(:button, "Update Article").click
       expect(page).to have_text("Article was successfully updated.")
     end
   end
