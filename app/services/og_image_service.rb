@@ -20,7 +20,7 @@ class OgImageService
 
   def call
     photo  = Vips::Image.thumbnail_buffer(@image_bytes, OG_WIDTH,
-               height: OG_HEIGHT, crop: :centre, size: :both)
+               height: OG_HEIGHT, crop: :attention, size: :both)
     photo  = photo.extract_band(0, n: 3) if photo.bands > 3
 
     # Replace bottom BAND_HEIGHT pixels with a solid dark band (full opacity)
