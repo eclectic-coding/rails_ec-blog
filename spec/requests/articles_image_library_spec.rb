@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "GET /articles/image_library", type: :request do
-  let(:admin) { create(:user, :admin) }
-  let(:user)  { create(:user) }
+  let_it_be(:admin) { create(:user, :admin) }
+  let_it_be(:user)  { create(:user) }
   let(:fixture_path) { Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg') }
 
   def attach_image(article)

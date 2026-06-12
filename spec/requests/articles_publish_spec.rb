@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Article publishing", type: :request do
-  let(:admin) { create(:user, :admin) }
+  let_it_be(:admin) { create(:user, :admin) }
   let(:tag) { Tag.find_or_create_by!(name: 'test-tag') }
 
   it "sets published_at when an admin creates a published article and guest can view it" do
