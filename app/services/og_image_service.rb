@@ -1,9 +1,11 @@
 class OgImageService
-  OG_WIDTH        = 1200
-  OG_HEIGHT       = 630
-  OVERLAY_OPACITY = 0.72
-  TEXT_MAX_WIDTH  = 1100
-  FONT_SPEC       = "DejaVu Sans Bold 52"
+  OG_WIDTH       = 1200
+  OG_HEIGHT      = 630
+  IMAGE_HEIGHT   = 420  # top ~2/3: photo area, fully visible
+  BAND_HEIGHT    = OG_HEIGHT - IMAGE_HEIGHT  # bottom ~1/3: solid text area
+  BAND_COLOR     = [24.0, 24.0, 24.0].freeze
+  TEXT_MAX_WIDTH = 1100
+  FONT_SPEC      = "DejaVu Sans Bold 48"
 
   Result = Data.define(:bytes, :content_type)
 
@@ -17,28 +19,22 @@ class OgImageService
   end
 
   def call
-    base   = Vips::Image.thumbnail_buffer(@image_bytes, OG_WIDTH,
-               height: OG_HEIGHT, crop: :centre, size: :both)
-    base   = base.extract_band(0, n: 3) if base.bands > 3
-    canvas = apply_dark_overlay(base)
+    photo  = Vips::Image.thumbnail_buffer(@image_bytes, OG_WIDTH,
+               height: OG_HEIGHT, crop: :attention, size: :both)
+    photo  = photo.extract_band(0, n: 3) if photo.bands > 3
+
+    # Replace bottom BAND_HEIGHT pixels with a solid dark band (full opacity)
+    dark_band = photo.crop(0, IMAGE_HEIGHT, OG_WIDTH, BAND_HEIGHT)
+                     .linear([0.0, 0.0, 0.0], BAND_COLOR)
+                     .bandjoin_const([255])
+
+    canvas = photo.composite2(dark_band, :over, x: 0, y: IMAGE_HEIGHT)
     canvas = composite_text(canvas, @title) unless @title.empty?
+
     Result.new(bytes: canvas.write_to_buffer(".jpg[Q=88]"), content_type: "image/jpeg")
   end
 
   private
-
-  def apply_dark_overlay(img)
-    band_h = (OG_HEIGHT * 0.45).round
-    alpha  = (OVERLAY_OPACITY * 255).round
-    y_pos  = OG_HEIGHT - band_h
-
-    black_strip = img
-      .crop(0, y_pos, OG_WIDTH, band_h)
-      .linear([0.0, 0.0, 0.0], [0.0, 0.0, 0.0])
-      .bandjoin_const([alpha])
-
-    img.composite2(black_strip, :over, x: 0, y: y_pos)
-  end
 
   def composite_text(img, title)
     text_mask = Vips::Image.text(
@@ -54,9 +50,9 @@ class OgImageService
       .copy(interpretation: :srgb)
       .bandjoin(text_mask)
 
-    margin = 48
     x = ((OG_WIDTH - text_rgba.width) / 2).clamp(50, OG_WIDTH)
-    y = [OG_HEIGHT - text_rgba.height - margin, 10].max
+    # Vertically center text within the dark band
+    y = IMAGE_HEIGHT + [(BAND_HEIGHT - text_rgba.height) / 2, 8].max
 
     img.composite2(text_rgba, :over, x: x, y: y)
   end
