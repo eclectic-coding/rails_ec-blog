@@ -14,6 +14,7 @@ if ENV["RAILS_ENV"] ||= "test"
   end
 end
 
+require "test_prof"
 require "spec_helper"
 
 ENV["RAILS_ENV"] = "test"
