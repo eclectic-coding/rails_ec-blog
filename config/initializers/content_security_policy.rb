@@ -40,11 +40,11 @@ Rails.application.configure do
     policy.style_src   :self, :https, :unsafe_inline
   end
 
-  # Generate session nonces for permitted importmap, inline scripts, and inline styles.
-  # Uses the session id so the nonce is stable for the request
-  config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
+  # Generate a cryptographically random nonce per request.
+  # Using session.id here would produce an empty nonce on the first request (no cookie yet).
+  config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
   # Nonces for scripts only; style-src uses unsafe-inline which nonces would override
-  config.content_security_policy_nonce_directives = %w(script-src)
+  config.content_security_policy_nonce_directives = %w[script-src]
   # Automatically add nonce attributes to Rails-provided tag helpers
   config.content_security_policy_nonce_auto = true
 end
