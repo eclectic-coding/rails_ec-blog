@@ -20,6 +20,7 @@ require "spec_helper"
 ENV["RAILS_ENV"] = "test"
 
 require_relative "../config/environment"
+require "test_prof/recipes/rspec/let_it_be"
 # Prevent specs from running against non-test databases
 abort("Specs must run in test environment! Current: #{Rails.env}") unless Rails.env.test?
 require "rspec/rails"

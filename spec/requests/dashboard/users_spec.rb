@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Dashboard::Users", type: :request do
-  let(:admin) { create(:user, :admin) }
-  let(:user) { create(:user) }
+  let_it_be(:admin) { create(:user, :admin) }
+  let_it_be(:user, reload: true) { create(:user) }
 
   context "when unauthenticated" do
     it "returns 404 for all actions (route constraint)" do

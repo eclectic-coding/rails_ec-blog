@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Dashboard::Articles", type: :request do
-  let(:admin) { create(:user, :admin) }
+  let_it_be(:admin) { create(:user, :admin) }
   let(:article) { create(:article, user: admin) }
 
   context "when unauthenticated" do

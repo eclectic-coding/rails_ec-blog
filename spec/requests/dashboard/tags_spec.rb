@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Dashboard::Tags", type: :request do
-  let(:admin) { create(:user, :admin) }
-  let(:tag) { create(:tag) }
+  let_it_be(:admin) { create(:user, :admin) }
+  let_it_be(:tag, reload: true) { create(:tag) }
 
   context "when unauthenticated" do
     it "returns 404 for all actions (route constraint)" do
