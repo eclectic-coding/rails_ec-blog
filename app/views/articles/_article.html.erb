@@ -5,7 +5,7 @@
     <div class="article-card__banner">
       <% if article.image.attached? %>
         <%= link_to article_path(article), class: "anchor-card" do %>
-          <%= image_tag url_for(article.image.variant(resize_to_limit: [600, 400])),
+          <%= image_tag url_for(article.image.variant(resize_to_fill: [600, 400, { crop: :attention }])),
                 class: "article-card__img",
                 alt: article.title,
                 loading: "lazy" %>
