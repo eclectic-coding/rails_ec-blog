@@ -168,5 +168,14 @@ RSpec.describe Article, type: :model do
         article.update!(title: "No Image #{SecureRandom.hex(4)}")
       }.not_to have_enqueued_job(OgImageGenerationJob)
     end
+
+    it "enqueues the job when the cover image is replaced on a published article" do
+      article = create(:article, :published)
+      new_image = { io: StringIO.new("y" * 1024), filename: "new.png", content_type: "image/png" }
+
+      expect {
+        article.update!(image: new_image)
+      }.to have_enqueued_job(OgImageGenerationJob).with(article.id)
+    end
   end
 end
