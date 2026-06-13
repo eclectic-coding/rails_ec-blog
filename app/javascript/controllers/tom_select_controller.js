@@ -1,7 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="tom-select"
+// data-tom-select-mode-value: "tags" (default) or "search"
 export default class extends Controller {
+  static values = { mode: { type: String, default: "tags" } }
+
   connect() {
     // Skip if already initialized (prevents double initialization)
     if (this.element.tomselect) {
@@ -23,6 +26,23 @@ export default class extends Controller {
   }
 
   setupTomSelect() {
+    if (this.modeValue === "search") {
+      this.tomSelect = new TomSelect(this.element, {
+        maxItems: 1,
+        create: false,
+        allowEmptyOption: true,
+        placeholder: 'Search articles...',
+        onInitialize: function() {
+          const label = document.querySelector(`label[for="${this.input.id}"]`)
+          if (label) {
+            if (!label.id) label.id = `label-${this.input.id}`
+            this.control_input.setAttribute('aria-labelledby', label.id)
+          }
+        }
+      })
+      return
+    }
+
     // Get CSRF token for AJAX requests
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
 

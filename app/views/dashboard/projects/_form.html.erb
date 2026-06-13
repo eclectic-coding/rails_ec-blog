@@ -84,7 +84,8 @@
       <%= f.collection_select :article_id,
             @articles, :id, :title,
             { include_blank: "— none —" },
-            class: "form-select" %>
+            class: "form-select",
+            data: { controller: "tom-select", "tom-select-mode-value": "search" } %>
       <div class="form-text">When set, the project title links to this article instead of the external URL.</div>
     </div>
 
