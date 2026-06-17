@@ -53,14 +53,12 @@ RSpec.describe "Dashboard::Articles", type: :request do
       expect(flash[:notice]).to include("No image was attached")
     end
 
-    it "responds with a turbo stream that removes the row on delete" do
+    it "destroys the article and redirects to the index" do
       article
       expect {
-        delete dashboard_article_path(article), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+        delete dashboard_article_path(article)
       }.to change(Article, :count).by(-1)
-      expect(response).to have_turbo_stream
-        .with_action(:remove)
-        .targeting(ActionView::RecordIdentifier.dom_id(article))
+      expect(response).to redirect_to(dashboard_articles_path)
     end
   end
 end
