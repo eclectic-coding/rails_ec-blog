@@ -17,6 +17,13 @@ class OgImageGenerationJob < ApplicationJob
       filename:     "og-#{article.slug}.jpg",
       content_type: result.content_type
     )
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      "article_og_image_#{article.id}",
+      target: "og-card-#{article.id}",
+      partial: "dashboard/articles/og_card",
+      locals: { article: article.reload }
+    )
   rescue Vips::Error => e
     Rails.logger.error("[OgImageGenerationJob] article=#{article_id}: #{e.message}")
     raise

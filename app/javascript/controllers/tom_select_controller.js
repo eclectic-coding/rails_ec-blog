@@ -50,10 +50,14 @@ export default class extends Controller {
     this.tomSelect = new TomSelect(this.element, {
       plugins: ['remove_button'],
       maxItems: null,              // Allow unlimited selections
-      createOnBlur: true,          // Create tag when user clicks away
+      createOnBlur: false,         // Prevent accidental tag creation on blur
       placeholder: 'Select or type to create tags...',
       closeAfterSelect: false,     // Keep dropdown open after selecting
       hideSelected: true,          // Hide selected items from dropdown list
+
+      onItemAdd: function() {
+        this.setTextboxValue('')
+      },
 
       // Customize the create option text
       render: {
