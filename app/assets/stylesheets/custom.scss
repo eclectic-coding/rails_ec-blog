@@ -342,6 +342,10 @@
     background-color: var(--bs-body-bg);
     border-color: #3a3f4e;
     color: var(--bs-body-color);
+
+    input {
+      color: var(--bs-body-color);
+    }
   }
 
   .ts-dropdown {
