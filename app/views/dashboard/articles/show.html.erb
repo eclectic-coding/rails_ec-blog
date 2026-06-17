@@ -50,6 +50,7 @@
     </div>
 
     <%= render "cover_image", article: @article %>
+    <%= turbo_stream_from "article_og_image_#{@article.id}" %>
     <%= render "og_card", article: @article %>
   </div>
 </div>
