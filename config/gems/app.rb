@@ -14,6 +14,7 @@ gem "meta-tags"
 group :development, :test do
   gem "erb_lint"
   gem "faker"
+  gem "gem_changelog_diff"
 end
 
 group :development do
