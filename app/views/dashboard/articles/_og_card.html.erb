@@ -1,18 +1,23 @@
-<div id="og-card-<%= article.id %>" class="card shadow-sm mt-3">
+<div id="og-card-<%= article.id %>" class="card shadow-sm mt-3"
+  <% if article.is_published? && article.image.attached? && !article.og_image.attached? %>
+    data-controller="og-card-refresh"
+    data-og-card-refresh-url-value="<%= dashboard_article_path(article) %>"
+  <% end %>>
   <div class="card-body text-center">
     <h6 class="card-title text-muted small text-uppercase mb-3">OG Social Card</h6>
     <% if article.og_image.attached? %>
-      <%= image_tag rails_blob_url(article.og_image),
+      <%= image_tag rails_blob_path(article.og_image, only_path: true),
             class: "img-fluid rounded mb-2", alt: "OG card: #{article.title}" %>
       <div class="d-grid">
         <%= button_to "Regenerate", dashboard_article_og_image_path(article),
               method: :post, class: "btn btn-sm btn-outline-secondary" %>
       </div>
     <% elsif article.is_published? && article.image.attached? %>
-      <p class="text-muted small mb-2">Not yet generated.</p>
-      <div class="d-grid">
-        <%= button_to "Generate Now", dashboard_article_og_image_path(article),
-              method: :post, class: "btn btn-sm btn-primary" %>
+      <div class="py-3">
+        <div class="spinner-border text-primary spinner-border-sm" role="status">
+          <span class="visually-hidden">Generating...</span>
+        </div>
+        <p class="text-muted small mt-2 mb-0">Generating OG card&hellip;</p>
       </div>
     <% else %>
       <p class="text-muted small mb-0">Publish the article to generate an OG card.</p>

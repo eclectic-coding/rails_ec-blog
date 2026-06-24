@@ -30,5 +30,24 @@ RSpec.describe "Dashboard::Tags", type: :request do
       post dashboard_tags_path, params: { tag: { name: tag.name } }
       expect(response).to have_http_status(:unprocessable_content)
     end
+
+    it "destroys a tag with no articles" do
+      orphan = create(:tag, name: "orphan")
+      expect {
+        delete dashboard_tag_path(orphan)
+      }.to change(Tag, :count).by(-1)
+      expect(response).to redirect_to(dashboard_tags_path)
+    end
+
+    it "does not destroy a tag associated with articles" do
+      article = create(:article)
+      used_tag = article.tags.first
+
+      expect {
+        delete dashboard_tag_path(used_tag)
+      }.not_to change(Tag, :count)
+      expect(response).to redirect_to(dashboard_tags_path)
+      expect(flash[:alert]).to match(/associated with articles/)
+    end
   end
 end

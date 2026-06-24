@@ -61,9 +61,9 @@ RSpec.describe "Dashboard navigation", type: :system do
       expect(page).to have_current_path(dashboard_users_path)
     end
 
-    it "New Article quick action goes to new article form" do
-      find("a[href='#{new_dashboard_article_path}']").click
-      expect(page).to have_current_path(new_dashboard_article_path)
+    it "Manage Articles quick action goes to articles index" do
+      find("a[href='#{dashboard_articles_path}']", text: "Manage Articles").click
+      expect(page).to have_current_path(dashboard_articles_path)
     end
 
     it "Manage Users quick action goes to users index" do
@@ -71,9 +71,14 @@ RSpec.describe "Dashboard navigation", type: :system do
       expect(page).to have_current_path(dashboard_users_path)
     end
 
-    it "New Tag quick action goes to new tag form" do
-      find("a[href='#{new_dashboard_tag_path}']").click
-      expect(page).to have_current_path(new_dashboard_tag_path)
+    it "Manage Tags quick action goes to tags index" do
+      find("a[href='#{dashboard_tags_path}']", text: "Manage Tags").click
+      expect(page).to have_current_path(dashboard_tags_path)
+    end
+
+    it "Manage Projects quick action goes to projects index" do
+      find("a[href='#{dashboard_projects_path}']", text: "Manage Projects").click
+      expect(page).to have_current_path(dashboard_projects_path)
     end
   end
 end

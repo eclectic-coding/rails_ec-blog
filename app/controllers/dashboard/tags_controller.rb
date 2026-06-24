@@ -35,6 +35,11 @@ module Dashboard
     end
 
     def destroy
+      if @tag.articles.any?
+        redirect_to dashboard_tags_path, alert: "Tag cannot be deleted because it is associated with articles."
+        return
+      end
+
       @tag.destroy!
       redirect_to dashboard_tags_path, notice: "Tag was successfully deleted.", status: :see_other
     end
