@@ -29,10 +29,12 @@ RSpec.describe "Dashboard article sort", type: :system do
 
   it "toggles title sort to descending on second click" do
     click_link "Title"
+    expect(page).to have_current_path(/sort=title/)
     click_link "Title"
 
     expect(page).to have_current_path(/direction=desc/)
-    titles = all("tbody tr td.fw-medium").map(&:text)
+    expect(page).to have_css("tbody tr td.fw-medium", minimum: 3)
+    titles = all("tbody tr td.fw-medium", minimum: 3).map(&:text)
     expect(titles).to eq(titles.sort.reverse)
   end
 
