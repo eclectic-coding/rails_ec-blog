@@ -33,20 +33,9 @@ module Dashboard
     end
 
     def update
-      notices = []
-
       if @article.update(article_params)
-        notices << "Article was successfully updated."
-
-        if params.dig(:article, :remove_image).present? && params.dig(:article, :image).blank?
-          if @article.image.attached?
-            @article.image.purge
-            notices << "Image removed."
-          else
-            notices << "No image was attached to remove."
-          end
-        end
-
+        notices = ["Article was successfully updated."]
+        handle_image_removal(notices)
         redirect_to dashboard_article_path(@article), notice: notices.join(" "), status: :see_other
       else
         render :edit, status: :unprocessable_content
@@ -59,6 +48,17 @@ module Dashboard
     end
 
     private
+
+    def handle_image_removal(notices)
+      return unless params.dig(:article, :remove_image).present? && params.dig(:article, :image).blank?
+
+      if @article.image.attached?
+        @article.image.purge
+        notices << "Image removed."
+      else
+        notices << "No image was attached to remove."
+      end
+    end
 
     def set_article
       @article = Article.friendly.find(params.require(:id))
