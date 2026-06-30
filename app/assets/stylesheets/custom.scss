@@ -172,6 +172,10 @@
   margin-top: 70px;
 }
 
+// ── Utility classes ────────────────────────────────────────────────────────────
+.progress-thin { --bs-progress-height: 6px; }
+.mw-300 { max-width: 300px; }
+
 /* Tom-select styling with brand colors */
 @import url('https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css');
 

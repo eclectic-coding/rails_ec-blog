@@ -43,7 +43,7 @@
         <% @user.sessions.order(created_at: :desc).each do |session| %>
           <tr class="<%= 'table-active' if session == Current.session %>">
             <td class="text-muted small"><%= session.ip_address.presence || "—" %></td>
-            <td class="text-muted small text-truncate" style="max-width: 300px;"><%= session.user_agent.presence || "—" %></td>
+            <td class="text-muted small text-truncate mw-300"><%= session.user_agent.presence || "—" %></td>
             <td class="text-muted small"><%= session.created_at.to_fs(:long) %></td>
             <td>
               <div class="d-flex justify-content-end">
