@@ -5,5 +5,5 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, presence: true, length: { minimum: 6 }, if: :password_digest_changed?
+  validates :password, presence: true, length: { minimum: 12 }, if: :password_digest_changed?
 end
