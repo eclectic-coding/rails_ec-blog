@@ -3,12 +3,8 @@ module Dashboard
     before_action :set_article, only: %i[show edit update destroy]
 
     def index
-      @sort      = %w[title date status].include?(params[:sort]) ? params[:sort] : "date"
-      @direction = params[:direction] == "asc" ? "asc" : "desc"
-      @query     = params[:q].to_s.strip
-      scope      = Article.includes(:tags)
-      scope      = scope.where("articles.title LIKE ?", "%#{@query}%") if @query.present?
-      @pagy, @articles = pagy(scope.sorted(@sort, @direction))
+      @filter = Dashboard::ArticleFilter.new(params.permit(:sort, :direction, :q))
+      @pagy, @articles = pagy(@filter.scope)
     end
 
     def show

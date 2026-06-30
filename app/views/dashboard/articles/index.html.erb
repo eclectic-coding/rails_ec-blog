@@ -5,9 +5,9 @@
   <div class="d-flex gap-2 align-items-center">
     <%= form_with url: dashboard_articles_path, method: :get,
                   data: { controller: "article-search", turbo_frame: "articles-table" } do |f| %>
-      <%= f.hidden_field :sort, value: @sort %>
-      <%= f.hidden_field :direction, value: @direction %>
-      <%= f.search_field :q, value: @query,
+      <%= f.hidden_field :sort, value: @filter.sort %>
+      <%= f.hidden_field :direction, value: @filter.direction %>
+      <%= f.search_field :q, value: @filter.query,
             placeholder: "Search titles…",
             class: "form-control form-control-sm",
             autocomplete: "off",
@@ -23,10 +23,10 @@
       <table class="table table-hover align-middle mb-0">
         <thead class="table-dark">
           <tr>
-            <th><%= link_to "Title#{sort_indicator(:title)}".html_safe, dashboard_articles_path(sort: :title, direction: sort_direction(:title), q: @query), class: "text-decoration-none text-white fw-semibold", data: { turbo_action: "advance" } %></th>
+            <th><%= link_to "Title#{sort_indicator(:title)}".html_safe, dashboard_articles_path(sort: :title, direction: sort_direction(:title), q: @filter.query), class: "text-decoration-none text-white fw-semibold", data: { turbo_action: "advance" } %></th>
             <th>Tags</th>
-            <th><%= link_to "Status#{sort_indicator(:status)}".html_safe, dashboard_articles_path(sort: :status, direction: sort_direction(:status), q: @query), class: "text-decoration-none text-white fw-semibold", data: { turbo_action: "advance" } %></th>
-            <th><%= link_to "Date#{sort_indicator(:date)}".html_safe, dashboard_articles_path(sort: :date, direction: sort_direction(:date), q: @query), class: "text-decoration-none text-white fw-semibold", data: { turbo_action: "advance" } %></th>
+            <th><%= link_to "Status#{sort_indicator(:status)}".html_safe, dashboard_articles_path(sort: :status, direction: sort_direction(:status), q: @filter.query), class: "text-decoration-none text-white fw-semibold", data: { turbo_action: "advance" } %></th>
+            <th><%= link_to "Date#{sort_indicator(:date)}".html_safe, dashboard_articles_path(sort: :date, direction: sort_direction(:date), q: @filter.query), class: "text-decoration-none text-white fw-semibold", data: { turbo_action: "advance" } %></th>
             <th class="text-end">Actions</th>
           </tr>
         </thead>
