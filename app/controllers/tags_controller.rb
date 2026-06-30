@@ -17,7 +17,7 @@ class TagsController < ApplicationController
   # GET /tags/:name
   def show
     @tag = Tag.find_by_param(params[:id]) || raise(ActiveRecord::RecordNotFound)
-    @pagy, @articles = pagy(@tag.articles.includes(:tags).visible_to(current_user))
+    @pagy, @articles = pagy(@tag.articles.includes(:tags).with_rich_text_content.with_attached_image.visible_to(current_user))
 
     set_meta_tags(
       title:       "#{@tag.display_name} Articles",

@@ -3,12 +3,8 @@ module Dashboard
     before_action :set_article, only: %i[show edit update destroy]
 
     def index
-      @sort      = %w[title date status].include?(params[:sort]) ? params[:sort] : "date"
-      @direction = params[:direction] == "asc" ? "asc" : "desc"
-      @query     = params[:q].to_s.strip
-      scope      = Article.includes(:tags)
-      scope      = scope.where("articles.title LIKE ?", "%#{@query}%") if @query.present?
-      @pagy, @articles = pagy(scope.sorted(@sort, @direction))
+      @filter = Dashboard::ArticleFilter.new(params.permit(:sort, :direction, :q))
+      @pagy, @articles = pagy(@filter.scope)
     end
 
     def show
@@ -33,20 +29,9 @@ module Dashboard
     end
 
     def update
-      notices = []
-
       if @article.update(article_params)
-        notices << "Article was successfully updated."
-
-        if params.dig(:article, :remove_image).present? && params.dig(:article, :image).blank?
-          if @article.image.attached?
-            @article.image.purge
-            notices << "Image removed."
-          else
-            notices << "No image was attached to remove."
-          end
-        end
-
+        notices = ["Article was successfully updated."]
+        handle_image_removal(notices)
         redirect_to dashboard_article_path(@article), notice: notices.join(" "), status: :see_other
       else
         render :edit, status: :unprocessable_content
@@ -59,6 +44,17 @@ module Dashboard
     end
 
     private
+
+    def handle_image_removal(notices)
+      return unless params.dig(:article, :remove_image).present? && params.dig(:article, :image).blank?
+
+      if @article.image.attached?
+        @article.image.purge
+        notices << "Image removed."
+      else
+        notices << "No image was attached to remove."
+      end
+    end
 
     def set_article
       @article = Article.friendly.find(params.require(:id))

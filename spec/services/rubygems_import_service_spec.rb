@@ -79,6 +79,22 @@ RSpec.describe RubygemsImportService do
         described_class.call
         expect(Project.find_by(rubygem_name: "safe_memoize").source_url).to be_nil
       end
+
+      it "increments failed and continues when create! raises RecordInvalid" do
+        allow(Project).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new(Project.new))
+        result = described_class.call
+        expect(result.failed).to eq(2)
+        expect(result.imported).to eq(0)
+      end
+
+      it "increments failed and continues when update! raises RecordInvalid on an existing project" do
+        create(:project, :rubygem, rubygem_name: "safe_memoize")
+        allow_any_instance_of(Project).to receive(:update!).and_raise(ActiveRecord::RecordInvalid.new(Project.new))
+        result = described_class.call
+        expect(result.failed).to eq(1)
+        expect(result.skipped).to eq(0)
+        expect(result.imported).to eq(1)
+      end
     end
 
     context "when RubygemsService returns no gems" do

@@ -20,7 +20,7 @@ RSpec.describe "Dashboard::Users", type: :request do
     end
 
     it "updates password when provided" do
-      patch dashboard_user_path(user), params: { user: { password: "newpassword", password_confirmation: "newpassword" } }
+      patch dashboard_user_path(user), params: { user: { password: "newpassword1234", password_confirmation: "newpassword1234" } }
       expect(response).to redirect_to(dashboard_user_path(user))
     end
 

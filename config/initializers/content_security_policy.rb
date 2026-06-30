@@ -36,14 +36,15 @@ Rails.application.configure do
     policy.img_src     :self, :https, :data, :blob
     policy.object_src  :none
     policy.script_src  :self, :https
-    # Allow unsafe-inline for styles to support TomSelect and Lexical editor inline styles
+    # unsafe-inline required: TomSelect (complete bundle) injects a <style> tag,
+    # and Lexxy's DOMPurify creates <style> elements during sanitization init.
+    # Removing unsafe-inline here requires upstream fixes in both libraries.
     policy.style_src   :self, :https, :unsafe_inline
   end
 
   # Generate a cryptographically random nonce per request.
   # Using session.id here would produce an empty nonce on the first request (no cookie yet).
   config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
-  # Nonces for scripts only; style-src uses unsafe-inline which nonces would override
   config.content_security_policy_nonce_directives = %w[script-src]
   # Automatically add nonce attributes to Rails-provided tag helpers
   config.content_security_policy_nonce_auto = true

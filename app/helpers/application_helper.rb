@@ -28,13 +28,13 @@ module ApplicationHelper
   end
 
   def sort_direction(column)
-    return "asc" unless @sort == column.to_s
-    @direction == "asc" ? "desc" : "asc"
+    return "asc" unless @filter&.sort == column.to_s
+    @filter.direction == "asc" ? "desc" : "asc"
   end
 
   def sort_indicator(column)
-    return "" unless @sort == column.to_s
-    @direction == "asc" ? " ↑" : " ↓"
+    return "" unless @filter&.sort == column.to_s
+    @filter.direction == "asc" ? " ↑" : " ↓"
   end
 
   # Generates a preview of article content from ActionText rich text
