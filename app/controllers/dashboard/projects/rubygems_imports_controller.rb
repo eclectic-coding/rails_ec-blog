@@ -9,15 +9,16 @@ module Dashboard
           return
         end
 
-        redirect_to dashboard_projects_path, notice: build_notice(result.imported, result.skipped)
+        redirect_to dashboard_projects_path, notice: build_notice(result.imported, result.skipped, result.failed)
       end
 
       private
 
-      def build_notice(imported, skipped)
+      def build_notice(imported, skipped, failed)
         parts = []
         parts << "#{imported} #{"gem".pluralize(imported)} imported" if imported > 0
         parts << "#{skipped} already #{"existed".pluralize(skipped)}" if skipped > 0
+        parts << "#{failed} failed validation" if failed > 0
         parts.present? ? parts.join(", ") + "." : "Nothing to import."
       end
     end

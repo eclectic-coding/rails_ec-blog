@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
 
   def index
     resume_session
-    @pagy, @articles = pagy(Article.includes(:tags).visible_to(current_user))
+    @pagy, @articles = pagy(Article.includes(:tags).with_rich_text_content.with_attached_image.visible_to(current_user))
 
     set_meta_tags(
       title:       "Articles",
