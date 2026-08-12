@@ -485,7 +485,8 @@ GEM
       railties (>= 6.0.0)
     stimulus_spec (0.8.1)
       nokogiri (>= 1.13)
-    test-prof (1.6.1)
+    test-prof (1.6.3)
+      logger
     thor (1.5.0)
     thruster (0.1.22)
     thruster (0.1.22-aarch64-linux)
