@@ -508,7 +508,7 @@ GEM
     turbo-rails (2.0.23)
       actionpack (>= 7.1.0)
       railties (>= 7.1.0)
-    turbo_rspec (1.6.1)
+    turbo_rspec (1.6.2)
       nokogiri (>= 1.13)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
